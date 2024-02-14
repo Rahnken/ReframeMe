@@ -1,31 +1,43 @@
-import { zodValidator } from "@tanstack/zod-form-adapter";
-import { useForm } from "@tanstack/react-form";
+
 import { capitalize } from "../utils/stringUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { z } from "zod";
-import { signInUser } from "../api/auth";
+import { SignInRequest, signInUser } from "../api/auth";
+import { useMutation} from "@tanstack/react-query";
+import { TextInput } from "./TextInput";
+import { useState } from "react";
+import { ErrorMessage } from "./ErrorMessage";
+import {useNavigate} from '@tanstack/react-router'
 
 export const SignIn = () => {
-  const signinForm = useForm({
-    defaultValues: {
-      username: "",
-      password: "",
+
+ 
+  // This state will likely live elsewhere , just getting this setup for local work for now 
+  const [username,setUsername] = useState("") ;
+  const [password,setPassword] = useState(""); 
+  const [serverMessage, setServerMessage] = useState(""); // Use this state to hold server messages
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationKey: ["signInUser"],
+    mutationFn: (body:SignInRequest) => signInUser(body),
+    onSuccess: (data) => {
+      // Handle success state, e.g., navigate to a different page or show success message
+     navigate({to:'/dashboard',})
     },
-    onSubmit: async ({ value }) => {
-      const response = await signInUser(value);
-      console.log(response);
-      // If success -> Dashboard
-      if (response.token) console.log("Moving to Dashboard");
-      // If Failure -> Stay here , show Error Message
-      if (response.message) signinForm.state.errors.push(response.message);
+    onError: (error) => {
+      // Handle error state, e.g., show error message from server
+      setServerMessage(error.response?.data?.message || "An error occurred");
     },
   });
-  const inputStyleClasses =
-    "text-secondary-300 placeholder-secondary-200 border-2 focus:border-sky-900 hover:border-sky-900 border-primary-600 p-2 rounded-md ";
 
-  const errorStyle =
-    "text-red-600 text-l bg-neutral-400 p-2 rounded-lg border-2 border-red-600 ";
-
+  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setServerMessage(""); // Clear previous messages
+    const requestBody:SignInRequest = {username,password}
+    mutation.mutate(requestBody);
+  };
+  
   return (
     <div className=" flex flex-col content-center">
       <img
@@ -33,137 +45,32 @@ export const SignIn = () => {
         className="w-128 my-5 self-center"
         alt="Reframe Me Logo"
       />
-
-      <signinForm.Provider>
+        {serverMessage && <div>{serverMessage}</div>}
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            void signinForm.handleSubmit();
-          }}
+          onSubmit={handleSubmit}
           className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center"
         >
-          {response && (
-            <em role="alert" className={errorStyle}>
-              {signinForm.state.errors.join(", ")}
-            </em>
-          )}
-          <div className="p-2 w-3/4 flex flex-col ">
-            <signinForm.Field
-              name="username"
-              validatorAdapter={zodValidator}
-              validators={{
-                onChange: z
-                  .string()
-                  .min(3, "Username must be at least 3 characters"),
-                onChangeAsyncDebounceMs: 500,
-                onChangeAsync: z.string().refine(
-                  async (value) => {
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-                    return !value.includes("error");
-                  },
-                  {
-                    message: "No 'error' allowed in first name",
-                  }
-                ),
-              }}
-              children={(field) => {
-                return (
-                  <fieldset className="p-2 flex flex-col gap-2">
-                    <label
-                      className="self-start -translate-x-4 text-primary-600"
-                      htmlFor={field.name}
-                    >
-                      {capitalize(field.name)}:
-                    </label>
-                    <input
-                      className={inputStyleClasses}
-                      placeholder={field.name}
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {field.state.meta.errors.length > 0 &&
-                    field.state.value.length > 0 ? (
-                      <em role="alert" className={errorStyle}>
-                        {field.state.meta.errors.join(", ")}
-                      </em>
-                    ) : null}
-                  </fieldset>
-                );
-              }}
-            />
-            <signinForm.Field
-              name="password"
-              validatorAdapter={zodValidator}
-              validators={{
-                onChange: z
-                  .string()
-                  .min(8, "Password must be at least 8 characters"),
-                onChangeAsyncDebounceMs: 500,
-                onChangeAsync: z.string().refine(
-                  async (value) => {
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-                    return !value.includes("error");
-                  },
-                  {
-                    message: "No 'error' allowed in first name",
-                  }
-                ),
-              }}
-              children={(field) => {
-                return (
-                  <fieldset className="p-2 flex flex-col gap-2">
-                    <label
-                      className="self-start -translate-x-4  text-primary-500"
-                      htmlFor={field.name}
-                    >
-                      {capitalize(field.name)}:
-                    </label>
-                    <input
-                      className={inputStyleClasses}
-                      placeholder={field.name}
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="password"
-                    />
-                    {field.state.meta.errors.length > 0 &&
-                    field.state.value.length > 0 ? (
-                      <em role="alert" className={errorStyle}>
-                        {field.state.meta.errors.join(", ")}
-                      </em>
-                    ) : null}
-                  </fieldset>
-                );
-              }}
-            />
-            <signinForm.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <button
-                  type="submit"
-                  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
-                  disabled={!canSubmit}
-                >
-                  {isSubmitting ? (
-                    "..."
-                  ) : (
-                    <>
-                      {"Login"}{" "}
-                      <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" />{" "}
-                    </>
-                  )}
-                </button>
-              )}
-            />
-          </div>
+          <TextInput labelText={"Username"} inputAttr={{
+            name:"username",
+            placeholder:"username",
+            value:username,
+            onChange: (e) => setUsername(e.target.value),
+          }}/>
+          <ErrorMessage message={"Username is required..."} show={true}/>
+       
+          <TextInput labelText={"Password"} inputAttr={{
+            name:"password",
+            placeholder:"password",
+            type:"password",
+            value:password,
+            onChange: (e) => setPassword(e.target.value),
+          }}/>
+          <ErrorMessage message={"Password is required..."} show={true}/>
+
+          <button type="submit"  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600">
+          {"Login"}{" "} <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" />{" "}
+          </button>
         </form>
-      </signinForm.Provider>
-    </div>
+     </div>
   );
 };
