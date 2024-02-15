@@ -7,6 +7,7 @@ import { useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import {useNavigate} from '@tanstack/react-router'
 import { validateUsernameInput,validatePasswordInput } from "../utils/validationUtils";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 export const Login = () => {
   const [username,setUsername] = useState("") ;
@@ -78,7 +79,7 @@ export const Login = () => {
           <ErrorMessage message={passwordErrorMessage} show={isSubmitted && !passwordValidState.success}/>
 
           <button type="submit"  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600">
-          {"Login"}{" "} <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" />{" "}
+          {"Login"}{" "} <FontAwesomeIcon icon={faRightToBracket} />{" "}
           </button>
         </form>
      </div>

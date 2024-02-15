@@ -18,8 +18,9 @@ const createUserRequestSchema = z.object({
 export const SignInResponseSchema = z.object({
   token: z.string(),
   userInfo: z.object({
-    email: z.string().optional(), // Make it optional if it might not always be present
-    // Add other user info fields as needed
+    email: z.string(), 
+    username: z.string(),
+    lastLogin: z.date()
   }),
   message: z.string().optional(), // Assuming the message might be included in the response
 });

@@ -1,4 +1,4 @@
-import { ZodError, z } from "zod";
+import {  z } from "zod";
 
 // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordValidation = new RegExp(
