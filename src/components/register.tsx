@@ -1,0 +1,107 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {  UserCreateRequest, createUser,  } from "../api/auth";
+import { useMutation} from "@tanstack/react-query";
+import { TextInput } from "./TextInput";
+import { useState } from "react";
+import { ErrorMessage } from "./ErrorMessage";
+import {useNavigate} from '@tanstack/react-router'
+import { validateUsernameInput, validatePasswordInput, validateEmailInput } from "../utils/validationUtils";
+
+export const RegisterUser = () => {
+    const [username,setUsername] = useState("") ;
+  const [password,setPassword] = useState(""); 
+  const [confirmPassword,setConfirmPassword] =useState("")
+  const [email,setEmail]=useState("")
+  const [isSubmitted,setIsSubmitted] = useState(false);
+  const [serverMessage, setServerMessage] = useState(""); // Use this state to hold server messages
+  const usernameValidState = validateUsernameInput(username) 
+  const passwordValidState = validatePasswordInput(password)
+  const confirmedPassword = password === confirmPassword
+  const emailValidState = validateEmailInput(email)
+  const navigate = useNavigate();
+
+ 
+  const usernameErrorMessage = usernameValidState.error?.flatten().formErrors[0];
+  const passwordErrorMessage = passwordValidState.error?.flatten().formErrors[0];
+  const emailErrorMessage = emailValidState.error?.flatten().formErrors[0];
+
+
+  const mutation = useMutation({
+    mutationKey: ["createUser"],
+    mutationFn: (body:UserCreateRequest) => createUser(body),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onSuccess: (_data) => {
+        setIsSubmitted(false)
+      navigate({to:'/login',})
+    },
+    onError: (error) => {
+      // Handle error state, e.g., show error message from server
+      setServerMessage(error.message || "An error occurred");
+    },
+  });
+
+  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitted(true)
+    setServerMessage(""); // Clear previous messages
+    
+    const requestBody:UserCreateRequest = {username,password,email}
+    if(emailValidState.success && usernameValidState.success && passwordValidState.success && confirmedPassword ){
+        mutation.mutate(requestBody);
+    }
+  };
+
+    return (
+        <div className=" flex flex-col content-center">
+      <img
+        src="/ReframeMe_logo.svg"
+        className="w-128 my-5 self-center"
+        alt="Reframe Me Logo"
+      />
+        {serverMessage && <div>{serverMessage}</div>}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center"
+        >
+          <TextInput labelText={"Username"} inputAttr={{
+            name:"username",
+            placeholder:"username",
+            value:username,
+            onChange: (e) => setUsername(e.target.value),
+          }}/>
+          <ErrorMessage message={usernameErrorMessage} show={isSubmitted && !usernameValidState.success}/>
+          
+          <TextInput labelText={"Email"} inputAttr={{
+            name:"email",
+            placeholder:"email",
+            type:"email",
+            value:email,
+            onChange: (e) => setEmail(e.target.value),
+          }}/>
+          <ErrorMessage message={emailErrorMessage} show={isSubmitted && !emailValidState.success}/>
+
+          <TextInput labelText={"Password"} inputAttr={{
+            name:"password",
+            placeholder:"password",
+            type:"password",
+            value:password,
+            onChange: (e) => setPassword(e.target.value),
+          }}/>
+          <ErrorMessage message={passwordErrorMessage} show={isSubmitted && !passwordValidState.success}/>
+
+          <TextInput labelText={"Confirm Password"} inputAttr={{
+            name:"confirmPassword",
+            placeholder:"confirmPassword",
+            type:"password",
+            value:confirmPassword,
+            onChange: (e) => setConfirmPassword(e.target.value),
+          }}/>
+          <ErrorMessage message={"Passwords must match exactly"} show={isSubmitted && !confirmedPassword}/>
+
+          <button type="submit"  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600">
+          {"Register"}{" "} <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" />{" "}
+          </button>
+        </form>
+     </div>
+  );
+        };

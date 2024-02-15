@@ -6,6 +6,13 @@ const SignInRequestSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
+const createUserRequestSchema = z.object({
+  username: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+})
+.strict()
+
 
 // Assuming the response includes a token and userInfo, define a schema for that
 export const SignInResponseSchema = z.object({
@@ -20,8 +27,9 @@ export const SignInResponseSchema = z.object({
 // Type aliases for TypeScript
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
+type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 
-export type {SignInRequest,SignInResponse}
+export type {SignInRequest,SignInResponse,UserCreateRequest}
 
 
 const BASE_URL = "http://localhost:4000/user"
@@ -41,13 +49,30 @@ export const signInUser = async (
       "Content-Type": "application/json",
     },
   });
-
   const responseData = await response.json();
   // Optionally, validate the response format here if needed
   const responseValidation = SignInResponseSchema.safeParse(responseData);
   if (!responseValidation.success) {
-    throw new Error("Invalid response data");
+    throw new Error(responseData.message);
   }
 
   return responseValidation.data;
 };
+
+export const createUser = async (
+  body:UserCreateRequest
+):Promise<unknown> =>
+{
+  const result = createUserRequestSchema.safeParse(body);
+  if(!result.success) throw new Error("invalid request data")
+
+  const response = await fetch(`${BASE_URL}/register`,{
+    method:"POST",
+    body:JSON.stringify(result.data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+ return await response.json()
+  
+}
