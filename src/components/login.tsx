@@ -3,12 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SignInRequest, signInUser } from "../api/auth";
 import { useMutation} from "@tanstack/react-query";
 import { TextInput } from "./TextInput";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import {useNavigate} from '@tanstack/react-router'
 import { validateUsernameInput,validatePasswordInput } from "../utils/validationUtils";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import { AuthContext } from "../providers/auth.provider";
+import { useAuth } from "../providers/auth.provider";
+import { flushSync } from "react-dom";
 
 export const Login = () => {
   const [username,setUsername] = useState("") ;
@@ -18,7 +19,7 @@ export const Login = () => {
   const usernameValidState = validateUsernameInput(username) 
   const passwordValidState = validatePasswordInput(password)
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
+  const authContext = useAuth();
  
   const usernameErrorMessage = usernameValidState.error?.flatten().formErrors[0];
   const passwordErrorMessage = passwordValidState.error?.flatten().formErrors[0];
@@ -29,7 +30,10 @@ export const Login = () => {
     mutationFn: (body:SignInRequest) => signInUser(body),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSuccess: (data) => {
-      authContext.setUser(data)
+      flushSync(()=>{
+        authContext.setUser(data)
+      })
+      
       setIsSubmitted(false)
       navigate({to:'/dashboard'})
     },

@@ -52,15 +52,12 @@ export const signInUser = async (
     },
   });
   const responseData = await response.json();
-  console.log(responseData)
   // Optionally, validate the response format here if needed
   const responseValidation = SignInResponseSchema.safeParse(responseData);
   
   if (!responseValidation.success) {
-    console.log(responseValidation.error)
-    throw new Error(responseData.message);
+    throw new Error(responseValidation.error.message);
   }
-
   return responseValidation.data;
 };
 

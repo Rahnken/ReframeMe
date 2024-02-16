@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<null| User>(null);
   const token = user?.token
   const isAuthenticated = !!user
- 
   return (
     <AuthContext.Provider
       value={{
