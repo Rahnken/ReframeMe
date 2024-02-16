@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -8,11 +9,11 @@ import { routeTree } from "./routeTree.gen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFontAwesome } from "@fortawesome/free-brands-svg-icons";
-import { AuthProvider } from "./providers/auth.provider";
+import { AuthProvider, useAuth } from "./providers/auth.provider";
 
 library.add(fas, faTwitter, faFontAwesome);
 
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree,defaultPreload:'intent',context:{auth:undefined!} });
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -21,13 +22,19 @@ declare module "@tanstack/react-router" {
 
 const queryClient = new QueryClient();
 
-// eslint-disable-next-line react-refresh/only-export-components
+function InnerApp() {
+  const auth = useAuth()
+  return <RouterProvider router={router} context={{auth}}/>
+}
+
+
 function App() {
+  
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <InnerApp/>
         </AuthProvider>
       </QueryClientProvider>
     </>

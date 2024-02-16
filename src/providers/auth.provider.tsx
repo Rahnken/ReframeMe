@@ -1,40 +1,25 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { User } from "../api/auth";
 
-type TAuthState = "loading"|"authenticated"|"unauthenticated";
 
-type TAuthContext = {
-    authState:TAuthState;
+export interface AuthContext {
+    isAuthenticated:boolean;
     user:User|null;
-    token:string|null;
-    setUser: (user:User) => void
-};
+    token?:string;
+    setUser: (user:User | null) => void
+}
 
-export const AuthContext = createContext({} as TAuthContext);
+export const AuthContext = createContext<AuthContext|null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-
-
   const [user, setUser] = useState<null| User>(null);
-  const [isLoading,setIsLoading] = useState(true);
   const token = user?.token
-
-  const calcAuthState = () => {
-      if(isLoading) return "loading"
-      return user ? "authenticated": "unauthenticated"
-    } 
-    const authState:TAuthState = calcAuthState()
-  useEffect(()=>{
-   
-    if(!token) {
-        setUser(null)
-        setIsLoading(false)
-    }
-  },[])
+  const isAuthenticated = !!user
+ 
   return (
     <AuthContext.Provider
       value={{
-       authState,
+       isAuthenticated,
        user,
        setUser,
        token
@@ -44,3 +29,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+
+  if(!context) {
+    throw new Error("useAuth must be used with an AuthProvider")
+  }
+  return context
+}
