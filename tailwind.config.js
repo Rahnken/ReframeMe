@@ -6,6 +6,11 @@ export default {
       width: {
         "128": "32rem",
       },
+      fontFamily: {
+        headers: ["Atocha", "serif"],
+        subHeaders: ["Mission\\ Script", "serif"],
+        body: ["Lato", "Inter", "sans-serif"],
+      },
       colors: {
         primary: {
           "50": "#fff8ec",
