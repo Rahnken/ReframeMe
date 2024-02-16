@@ -20,7 +20,7 @@ export const SignInResponseSchema = z.object({
   userInfo: z.object({
     email: z.string(), 
     username: z.string(),
-    lastLogin: z.date()
+    lastLogin: z.string().datetime()
   }),
   message: z.string().optional(), // Assuming the message might be included in the response
 });
@@ -29,8 +29,9 @@ export const SignInResponseSchema = z.object({
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
+type User = z.infer<typeof SignInResponseSchema>
 
-export type {SignInRequest,SignInResponse,UserCreateRequest}
+export type {SignInRequest,SignInResponse,UserCreateRequest,User}
 
 
 const BASE_URL = "http://localhost:4000/user"
@@ -51,9 +52,12 @@ export const signInUser = async (
     },
   });
   const responseData = await response.json();
+  console.log(responseData)
   // Optionally, validate the response format here if needed
   const responseValidation = SignInResponseSchema.safeParse(responseData);
+  
   if (!responseValidation.success) {
+    console.log(responseValidation.error)
     throw new Error(responseData.message);
   }
 

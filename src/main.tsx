@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFontAwesome } from "@fortawesome/free-brands-svg-icons";
+import { AuthProvider } from "./providers/auth.provider";
 
 library.add(fas, faTwitter, faFontAwesome);
 
@@ -25,7 +26,9 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </QueryClientProvider>
     </>
   );
