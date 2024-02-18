@@ -1,4 +1,4 @@
-import {  createRootRouteWithContext, Link, Outlet } from "@tanstack/react-router";
+import {  createRootRouteWithContext, Link, Outlet,useNavigate } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { type AuthContext, useAuth } from "../providers/auth.provider";
 
@@ -13,6 +13,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function Root() {
 const auth = useAuth();
+const navigate = useNavigate()
+
+const handleLogout = () =>{
+  auth.setUser(null)
+  navigate({to:'/'
+  })
+}
 
   return(
   <>
@@ -24,7 +31,19 @@ const auth = useAuth();
             alt="Reframe Me Logo"
           />
         </Link>
-        { auth.isAuthenticated ? (<div className="ml-auto mr-10 flex gap-4 text-primary-500 " > Welcome <Link to="/dashboard"className=" text-primary-500 [&.active]:font-bold "> {auth.user?.userInfo.username}</Link></div>)
+        { auth.isAuthenticated ? (
+          <div className="ml-auto mr-10 flex gap-4 items-center">
+        <div className=" text-primary-500 "> Welcome <Link to="/dashboard"className=" text-primary-500 [&.active]:font-bold ">
+           {auth.user?.userInfo.username}</Link></div>
+            <button
+            type="button"
+            onClick={handleLogout}
+            className="bg-slate-500 text-white py-2 px-4 rounded-md"
+          >
+            Logout
+          </button>
+          </div>
+           )
         : (
         <div className="ml-auto mr-10 flex gap-4">
           <Link to="/login" className=" text-2xl rounded-md  p-3 hover:bg-secondary-600 hover:text-slate-100 text-primary-500 [&.active]:font-bold ">
