@@ -14,6 +14,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardImport } from './routes/dashboard'
+import { Route as GoalsIndexImport } from './routes/goals.index'
+import { Route as GoalsGoalIdImport } from './routes/goals.$goalId'
 
 // Create Virtual Routes
 
@@ -49,6 +51,16 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const GoalsIndexRoute = GoalsIndexImport.update({
+  path: '/goals/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GoalsGoalIdRoute = GoalsGoalIdImport.update({
+  path: '/goals/$goalId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -73,6 +85,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
     }
+    '/goals/$goalId': {
+      preLoaderRoute: typeof GoalsGoalIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/goals/': {
+      preLoaderRoute: typeof GoalsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +104,8 @@ export const routeTree = rootRoute.addChildren([
   AboutLazyRoute,
   LoginLazyRoute,
   RegisterLazyRoute,
+  GoalsGoalIdRoute,
+  GoalsIndexRoute,
 ])
 
 /* prettier-ignore-end */

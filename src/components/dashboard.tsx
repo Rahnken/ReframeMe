@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link} from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { useQuery } from "@tanstack/react-query";
 import { goalQuery } from "../api/goals";
@@ -7,46 +7,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faFaceFrown } from "@fortawesome/free-solid-svg-icons";
 
 export function Dashboard()  {
-    const navigate = useNavigate({from:'/dashboard'})
     const auth = useAuth();
     const user = auth.user
   
-    const {isSuccess,isError,data,error} = useQuery({
+    const {isSuccess,data} = useQuery({
       queryKey:['userGoals'],
       queryFn: () => goalQuery(user!.token)
     })
-    
-    console.log(isSuccess,data)
     
   return(
   <>
     <h3> Welcome to your Dashboard</h3> 
     <h4>{user?.userInfo.username}</h4>
+    <Link to="/goals" className="text-2xl rounded-md  p-3 hover:bg-secondary-600 hover:text-slate-100 text-primary-500 [&.active]:font-bold"> Goals</Link>
     <div className="md:container mx-auto">
-       
-     
     {isSuccess && data
-    .map((goal:TGoal) => {
-      console.log(goal)
-      return <Goal key={goal.id} goal={goal}/>
-    })}
+    .map((goal:TGoal) => <Goal key={goal.id} goal={goal}/>
+    )}
       </div>
-    
   </>
   )
     }
-
-    // TODO: Restyle Goals 
     
     function Goal({goal}:{goal:TGoal}){
-
-
-        console.log(goal.goalWeeks)
-
         return (
         <div className="p-4 rounded-xl flex flex-col mx-auto w-128 bg-slate-700 m-2 gap-3" >
           <div className="flex w-full items-center justify-between">
-            <h1 className="text-primary-700 text-3xl font-subHeaders"> {goal.title}</h1>
+            <h1 className="text-primary-700 text-3xl font-subHeaders"> <Link to="/goals/$goalId" params={{goalId:goal.id}}>{goal.title}</Link></h1>
             {goal.isPrivate 
             ? <button className={buttonStyles}> Share</button> 
             : <button className={buttonStyles} >Unshare</button>}
