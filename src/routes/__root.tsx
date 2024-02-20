@@ -11,6 +11,7 @@ interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component:  Root,
   
+  
 });
 
 function Root() {

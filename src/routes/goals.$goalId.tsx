@@ -1,8 +1,23 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { goalQueryIdOptions } from '../api/goalQueryOptions'
+import { Goal } from '../components/goal'
+import { useSuspenseQuery } from '@tanstack/react-query'
+
+
+
+
+const SpecificGoal = () => {
+  const {auth:{token}} = Route.useRouteContext();
+  const {goalId} = Route.useParams();
+  const sq = useSuspenseQuery(goalQueryIdOptions(token!,goalId))
+  return (
+    <Goal goal={sq.data}/>
+  )  
+  
+}
 
 export const Route = createFileRoute('/goals/$goalId')({
-    beforeLoad: ({context,location}) =>{
+  beforeLoad: ({context,location}) =>{
         if(!context.auth.isAuthenticated) {
           throw redirect({
             to:"/login",
@@ -12,8 +27,7 @@ export const Route = createFileRoute('/goals/$goalId')({
           })  
         }
       },
-    loader:({context:{auth,queryClient},params:{goalId}})=> {
-        return queryClient.ensureQueryData(goalQueryIdOptions(auth.user!,goalId))
-    },
-  component: () => <div>Hello /goals/$goalId!</div>
+  loader:({context:{auth,queryClient},params:{goalId}})=>  queryClient.ensureQueryData(goalQueryIdOptions(auth.token!,goalId)),
+  component:  SpecificGoal
 })
+

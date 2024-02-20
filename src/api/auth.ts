@@ -34,7 +34,8 @@ type User = z.infer<typeof SignInResponseSchema>
 export type {SignInRequest,SignInResponse,UserCreateRequest,User}
 
 
-const BASE_URL = "http://localhost:4000/user"
+const BASE_URL = import.meta.env.VITE_API_BASE_URL+"/user"
+console.log(BASE_URL)
 export const signInUser = async (
   body: SignInRequest
 ): Promise<SignInResponse> => {

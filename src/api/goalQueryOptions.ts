@@ -1,12 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getGoalById, goalQuery } from "./goals";
-import { User } from "./auth";
+import { getGoalById, getAllGoalsQuery } from "./goals";
+
 
 export const goalsQueryOptions = (token:string) => queryOptions({
     queryKey:['goals',token],
-    queryFn:()=>goalQuery(token)
+    queryFn:()=>getAllGoalsQuery(token)
 })
-export const goalQueryIdOptions = (user:User,goalId:string) => queryOptions({
-    queryKey:['goals',user,goalId],
-    queryFn:()=>getGoalById(user,goalId)
+export const goalQueryIdOptions = (userToken:string,goalId:string) => queryOptions({
+    queryKey:['goals',userToken,goalId],
+    queryFn:()=>getGoalById(userToken,goalId)
 })
