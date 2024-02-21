@@ -4,11 +4,25 @@ Reframe Me is a comprehensive personal development application designed to foste
 
 ## Features :
 
-- [ ] User Onboarding / Personalization - [ ] user creation - [ ] set up user profile - [ ] set up user preferences - [ ] update user - [ ] profile - [ ] preferences - [ ] Remove user and all data ( DESTRUCTIVE)
-- [ ] Goal Suggestions (Starting points) - [ ] Generate Goal Suggestions - [ ] Year over Year improvements/modifications
-- [ ] Dynamic Goal Tracking - [ ] Create Personal Goals - [ ] Track Weekly Goal Progress - [ ] Dynamically Modify Goals as needed - [ ] See progression over time
+- [ ] User Onboarding / Personalization
+  - [ ] user creation
+    - [ ] set up user profile
+    - [ ] set up user preferences
+  - [ ] update user
+    - [ ] profile
+    - [ ] preferences
+  - [ ] Remove user and all data ( DESTRUCTIVE)
+- [ ] Goal Suggestions (Starting points)
+  - [ ] Generate Goal Suggestions
+  - [ ] Year over Year improvements/modifications
+- [ ] Dynamic Goal Tracking
+  - [ ] Create Personal Goals
+  - [ ] Track Weekly Goal Progress
+  - [ ] Dynamically Modify Goals as needed
+  
 
 - [ ] Progress Tracking & Visualization
+  - [ ] See progression over time
 
 - [ ] Group Creation
 
