@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { goalsQueryOptions } from '../api/goalQueryOptions';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Goal } from '../components/goal';
+import { Goal } from '../components/component-parts/goal';
 import { TGoal } from '../types';
 
 export const Route = createFileRoute('/goals/')({

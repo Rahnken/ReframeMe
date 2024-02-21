@@ -1,7 +1,7 @@
 import { faCheck, faFaceFrown } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link} from "@tanstack/react-router"
-import { TGoal, buttonStyles } from "../types"
+import { TGoal, buttonStyles } from "../../types"
 import { ProgressBar } from "./progress-bar"
 
 export function Goal({goal}:{goal:TGoal}){

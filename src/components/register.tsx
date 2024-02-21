@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  UserCreateRequest, createUser,  } from "../api/auth";
 import { useMutation} from "@tanstack/react-query";
-import { TextInput } from "./TextInput";
+import { TextInput } from "./component-parts/TextInput";
 import { useState } from "react";
-import { ErrorMessage } from "./ErrorMessage";
+import { ErrorMessage } from "./component-parts/ErrorMessage";
 import {useNavigate} from '@tanstack/react-router'
 import { validateUsernameInput, validatePasswordInput, validateEmailInput } from "../utils/validationUtils";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 export const RegisterUser = () => {
     const [username,setUsername] = useState("") ;
@@ -99,7 +100,7 @@ export const RegisterUser = () => {
           <ErrorMessage message={"Passwords must match exactly"} show={isSubmitted && !confirmedPassword}/>
 
           <button type="submit"  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600">
-          {"Register"}{" "} <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" />{" "}
+          {"Register"}{" "} <FontAwesomeIcon icon={faRightToBracket}/>{" "}
           </button>
         </form>
      </div>

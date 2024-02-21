@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllGoalsQuery } from "../api/goals";
 import { TGoal } from "../types";
 
-import { Goal } from "./goal";
+import { Goal } from "./component-parts/goal";
 import { useState } from "react";
 
 export function Dashboard()  {
