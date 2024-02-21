@@ -17,7 +17,7 @@ return (
             <AccordianItem 
             key={index}
             header={`Week ${item.weekNumber + 1}`}
-            content={item.feedback}
+            feedback={item.feedback}
             completedAmount={item.completedAmount}
             targetAmount={item.targetAmount}
             isOpen = {activeIndex === index}
@@ -30,9 +30,9 @@ return (
 
 
 
-const AccordianItem = ({header,content,isOpen,completedAmount,targetAmount, onClick}:{header:string,content:string,isOpen:boolean,completedAmount:number,targetAmount:number,onClick:()=>void}) => {
+const AccordianItem = ({header,feedback,isOpen,completedAmount,targetAmount, onClick}:{header:string,feedback:string,isOpen:boolean,completedAmount:number,targetAmount:number,onClick:()=>void}) => {
     const contentHeight = useRef()
-    const [progressInput,setProgressInput] = useState(content)
+    const [progressInput,setProgressInput] = useState(feedback)
     const [feedbackInput,setFeedbackInput]= useState("")
     
 
@@ -74,7 +74,7 @@ const AccordianItem = ({header,content,isOpen,completedAmount,targetAmount, onCl
           {"Submit "} <FontAwesomeIcon icon={faRightToBracket}/></button>
             </form>
            
-      <p className="answer-content py-4 px-0 text-xl italic">{content}</p>
+      <p className="answer-content py-4 px-0 text-xl italic">{feedback}</p>
      </div>
    </div>
   )

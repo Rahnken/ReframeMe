@@ -3,7 +3,7 @@ import { goalQueryIdOptions } from '../api/goalQueryOptions'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
 import { buttonStyles,TGoal } from '../types'
-import { GoalAccordion } from '../components/component-parts/Accordian'
+import { GoalAccordion } from '../components/component-parts/GoalAccordian'
 
 const SpecificGoal = () => {
   const {auth:{token}} = Route.useRouteContext();
