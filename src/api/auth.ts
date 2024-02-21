@@ -35,19 +35,18 @@ export type {SignInRequest,SignInResponse,UserCreateRequest,User}
 
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL+"/user"
-console.log(BASE_URL)
 export const signInUser = async (
   body: SignInRequest
 ): Promise<SignInResponse> => {
   // Validate request body against SignInRequestSchema
-  const result = SignInRequestSchema.safeParse(body);
-  if (!result.success) {
+  const requestBody = SignInRequestSchema.safeParse(body);
+  if (!requestBody.success) {
     throw new Error("Invalid request data");
   }
 
   const response = await fetch(`${BASE_URL}/login`, {
     method: "POST",
-    body: JSON.stringify(result.data), // Use validated data
+    body: JSON.stringify(requestBody.data), // Use validated data
     headers: {
       "Content-Type": "application/json",
     },

@@ -5,9 +5,6 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { buttonStyles,TGoal } from '../types'
 import { GoalAccordion } from '../components/component-parts/Accordian'
 
-
-
-
 const SpecificGoal = () => {
   const {auth:{token}} = Route.useRouteContext();
   const {goalId} = Route.useParams();
@@ -31,7 +28,6 @@ const SpecificGoal = () => {
       </div>
     </div>
   )  
-  
 }
 
 export const Route = createFileRoute('/goals/$goalId')({
