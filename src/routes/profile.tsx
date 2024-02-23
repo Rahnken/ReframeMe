@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { userInfoQueryOptions } from '../api/userQueryOptions'
+import { userInfoQueryOptions } from '../api/users/userQueryOptions'
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 

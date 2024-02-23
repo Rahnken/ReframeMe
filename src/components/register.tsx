@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  UserCreateRequest, createUser,  } from "../api/auth";
+import {  UserCreateRequest, createUser,  } from "../api/users/auth";
 import { useMutation} from "@tanstack/react-query";
 import { TextInput } from "./component-parts/TextInput";
 import { useState } from "react";

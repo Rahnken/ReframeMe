@@ -1,6 +1,6 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SignInRequest, signInUser } from "../api/auth";
+import { SignInRequest, signInUser } from "../api/users/auth";
 import { useMutation} from "@tanstack/react-query";
 import { TextInput } from "./component-parts/TextInput";
 import { useState } from "react";
@@ -28,12 +28,10 @@ export const Login = () => {
   const mutation = useMutation({
     mutationKey: ["signInUser"],
     mutationFn: (body:SignInRequest) => signInUser(body),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSuccess: (data) => {
       flushSync(()=>{
         authContext.setUser(data)
       })
-      
       setIsSubmitted(false)
       navigate({to:'/dashboard'})
     },
