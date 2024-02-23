@@ -1,4 +1,16 @@
-import {  z } from "zod";
+import {  ZodError, ZodSchema, z } from "zod";
+
+type ValidationResult<T> = { success: boolean; data?: T; error?: ZodError<T> };
+
+// Generic validation function
+const validateInput = <T>(schema: ZodSchema<T>, input: T): ValidationResult<T> => {
+  const result = schema.safeParse(input);
+  if (!result.success) {
+    return { success: false, error: result.error };
+  } else {
+    return { success: true, data: input };
+  }
+};
 
 // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordValidation = new RegExp(
@@ -28,10 +40,11 @@ const validatePasswordSchema = z
 .regex(passwordValidation, {
   message: "Your password must contain at least 1 Capital, 1 lowercase ,1 number and 1 special character",
 })
-const validateEmailSchema = z.string().email()
+const validateEmailSchema = z.string().email("invalid email")
 
-export const validateUsernameInput = (username:string) => validateUsernameSchema.safeParse(username)
-export const validatePasswordInput = (password:string) => validatePasswordSchema.safeParse(password)
-export const validateEmailInput = (email:string) => validateEmailSchema.safeParse(email)
+
+export const validateUsernameInput = (username: string) => validateInput(validateUsernameSchema, username);
+export const validatePasswordInput = (password: string) => validateInput(validatePasswordSchema, password);
+export const validateEmailInput = (email: string) => validateInput(validateEmailSchema, email);
 
   

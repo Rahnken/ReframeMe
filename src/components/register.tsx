@@ -21,7 +21,7 @@ export const RegisterUser = () => {
   const emailValidState = validateEmailInput(email)
   const navigate = useNavigate();
 
- 
+
   const usernameErrorMessage = usernameValidState.error?.flatten().formErrors[0];
   const passwordErrorMessage = passwordValidState.error?.flatten().formErrors[0];
   const emailErrorMessage = emailValidState.error?.flatten().formErrors[0];
@@ -70,7 +70,7 @@ export const RegisterUser = () => {
             value:username,
             onChange: (e) => setUsername(e.target.value),
           }}/>
-          <ErrorMessage message={usernameErrorMessage} show={isSubmitted && !usernameValidState.success}/>
+          <ErrorMessage message={usernameErrorMessage || ""} show={isSubmitted && !usernameValidState.success}/>
           
           <TextInput labelText={"Email"} inputAttr={{
             name:"email",
@@ -79,7 +79,7 @@ export const RegisterUser = () => {
             value:email,
             onChange: (e) => setEmail(e.target.value),
           }}/>
-          <ErrorMessage message={emailErrorMessage} show={isSubmitted && !emailValidState.success}/>
+          <ErrorMessage message={emailErrorMessage || ""} show={isSubmitted && !emailValidState.success}/>
 
           <TextInput labelText={"Password"} inputAttr={{
             name:"password",
@@ -88,7 +88,7 @@ export const RegisterUser = () => {
             value:password,
             onChange: (e) => setPassword(e.target.value),
           }}/>
-          <ErrorMessage message={passwordErrorMessage} show={isSubmitted && !passwordValidState.success}/>
+          <ErrorMessage message={passwordErrorMessage || ""} show={isSubmitted && !passwordValidState.success}/>
 
           <TextInput labelText={"Confirm Password"} inputAttr={{
             name:"confirmPassword",
