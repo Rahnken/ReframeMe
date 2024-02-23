@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { TGoal } from "../../types";
+
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL!+"/goals"
 
@@ -21,7 +21,6 @@ const goalRequestSchema = z.object({
     const createGoalRequestSchema = z.object({
         title:z.string(),
         description:z.string(),
-        user_id:z.string(),
         isPrivate:z.boolean(),
         weeklyTrackingTotal:z.number()
     })

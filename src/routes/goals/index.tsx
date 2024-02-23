@@ -26,10 +26,11 @@ function GoalsPage() {
   return (
     <>
     <Link to="/goals/create" className="text-2xl rounded-md  p-3 hover:bg-secondary-600 hover:text-slate-100 text-primary-500 [&.active]:font-bold m-4"> Create New Goal</Link>
-    
+    <div className='flex flex-wrap'>
     {goals
     .map((goal:TGoal) => <Goal key={goal.id} goal={goal}/>
     )}
+    </div>
     </>
   )  
 }

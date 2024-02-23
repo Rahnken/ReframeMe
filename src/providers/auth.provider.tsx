@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { ReactNode, createContext, useContext, useState } from "react";
-import { User } from "../api/users/auth";
+import { User } from "../api/auth";
 
 
 export interface AuthContext {

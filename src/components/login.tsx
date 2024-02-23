@@ -70,7 +70,7 @@ export const Login = () => {
             value:username,
             onChange: (e) => setUsername(e.target.value),
           }}/>
-          <ErrorMessage message={usernameErrorMessage} show={isSubmitted &&!usernameValidState.success}/>
+          <ErrorMessage message={usernameErrorMessage || ""} show={isSubmitted &&!usernameValidState.success}/>
        
           <TextInput labelText={"Password"} inputAttr={{
             name:"password",
@@ -79,7 +79,7 @@ export const Login = () => {
             value:password,
             onChange: (e) => setPassword(e.target.value),
           }}/>
-          <ErrorMessage message={passwordErrorMessage} show={isSubmitted && !passwordValidState.success}/>
+          <ErrorMessage message={passwordErrorMessage || ""} show={isSubmitted && !passwordValidState.success}/>
 
           <button type="submit"  className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600">
           {"Login"}{" "} <FontAwesomeIcon icon={faRightToBracket} />{" "}
