@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 
 export const GoalAccordion = ({values}:{values:TGoalProgress[]}) => {
-    const [activeIndex,setActiveIndex] = useState(null);
+    const [activeIndex,setActiveIndex] = useState<number|null>(null);
     const handleItemClick = (index:number) =>{ setActiveIndex((prevIndex)=>(prevIndex === index)? null:index)}
     
 return (
@@ -31,7 +31,7 @@ return (
 
 
 const AccordianItem = ({header,feedback,isOpen,completedAmount,targetAmount, onClick}:{header:string,feedback:string,isOpen:boolean,completedAmount:number,targetAmount:number,onClick:()=>void}) => {
-    const contentHeight = useRef()
+    const contentHeight = useRef<HTMLDivElement>(null)
     const [progressInput,setProgressInput] = useState(feedback)
     const [feedbackInput,setFeedbackInput]= useState("")
     
@@ -50,7 +50,7 @@ const AccordianItem = ({header,feedback,isOpen,completedAmount,targetAmount, onC
     </button>
      <div ref={contentHeight} className="goal-container bg-slate-600 rounded-b-xl py-0 px-4" style={
           isOpen
-          ? { height: contentHeight.current.scrollHeight,
+          ? { height: contentHeight.current?.scrollHeight,
                 transition:"height .7s ease-in-out" }
           : { height: "0px" }
          }>

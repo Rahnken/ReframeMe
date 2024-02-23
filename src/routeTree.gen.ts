@@ -15,14 +15,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as ProfileImport } from './routes/profile'
 import { Route as DashboardImport } from './routes/dashboard'
-import { Route as GoalsIndexImport } from './routes/goals.index'
-import { Route as GoalsGoalIdImport } from './routes/goals.$goalId'
+import { Route as GoalsIndexImport } from './routes/goals/index'
+import { Route as GoalsCreateImport } from './routes/goals/create'
+import { Route as GoalsGoalIdImport } from './routes/goals/$goalId'
+import { Route as GoalsGoalIdEditImport } from './routes/goals_/$goalId/edit'
 
 // Create Virtual Routes
 
 const RegisterLazyImport = createFileRoute('/register')()
 const LoginLazyImport = createFileRoute('/login')()
-const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -36,11 +37,6 @@ const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
-
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const ProfileRoute = ProfileImport.update({
   path: '/profile',
@@ -62,8 +58,18 @@ const GoalsIndexRoute = GoalsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const GoalsCreateRoute = GoalsCreateImport.update({
+  path: '/goals/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const GoalsGoalIdRoute = GoalsGoalIdImport.update({
   path: '/goals/$goalId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GoalsGoalIdEditRoute = GoalsGoalIdEditImport.update({
+  path: '/goals/$goalId/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -83,10 +89,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
@@ -99,8 +101,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GoalsGoalIdImport
       parentRoute: typeof rootRoute
     }
+    '/goals/create': {
+      preLoaderRoute: typeof GoalsCreateImport
+      parentRoute: typeof rootRoute
+    }
     '/goals/': {
       preLoaderRoute: typeof GoalsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/goals/$goalId/edit': {
+      preLoaderRoute: typeof GoalsGoalIdEditImport
       parentRoute: typeof rootRoute
     }
   }
@@ -112,11 +122,12 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   DashboardRoute,
   ProfileRoute,
-  AboutLazyRoute,
   LoginLazyRoute,
   RegisterLazyRoute,
   GoalsGoalIdRoute,
+  GoalsCreateRoute,
   GoalsIndexRoute,
+  GoalsGoalIdEditRoute,
 ])
 
 /* prettier-ignore-end */

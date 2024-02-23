@@ -1,9 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { goalQueryIdOptions } from '../api/goalQueryOptions'
+import { goalQueryIdOptions } from '../../api/goals/goalQueryOptions'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
-import { buttonStyles,TGoal } from '../types'
-import { GoalAccordion } from '../components/component-parts/GoalAccordian'
+import { buttonStyles,TGoal } from '../../types'
+import { GoalAccordion } from '../../components/component-parts/GoalAccordian'
 
 const SpecificGoal = () => {
   const {auth:{token}} = Route.useRouteContext();

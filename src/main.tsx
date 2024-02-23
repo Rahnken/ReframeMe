@@ -12,7 +12,7 @@ import { faTwitter, faFontAwesome } from "@fortawesome/free-brands-svg-icons";
 import { AuthProvider, useAuth } from "./providers/auth.provider";
 
 library.add(fas, faTwitter, faFontAwesome);
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const router = createRouter({ routeTree,defaultPreload:'intent',context:{auth:undefined!,queryClient} });
 declare module "@tanstack/react-router" {

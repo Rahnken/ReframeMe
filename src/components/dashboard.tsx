@@ -1,7 +1,7 @@
 import { Link} from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { useQuery } from "@tanstack/react-query";
-import { getAllGoalsQuery } from "../api/goals";
+import { getAllGoalsQuery } from "../api/goals/goals";
 import { TGoal } from "../types";
 
 import { Goal } from "./component-parts/goal";
