@@ -18,11 +18,11 @@ const SpecificGoal = () => {
         ? <button className={buttonStyles}> Share</button> 
         : <button className={buttonStyles} >Unshare</button>}
       </div>
-      <div className="mx-auto p-5 bg-secondary-300 w-3/4 " >
-      <p className="text-slate-700 font-subHeaders text-xl">
+      <div className="mx-auto p-5 bg-secondary-700 w-3/4  " >
+      <p className="text-slate-300 font-subHeaders text-3xl">
         {goal.description}
       </p>
-        <div className="flex flex-wrap"> 
+        <div className=""> 
           <GoalAccordion values={goal.goalWeeks.sort((a,b) => a.weekNumber - b.weekNumber)}/>
         </div>
       </div>

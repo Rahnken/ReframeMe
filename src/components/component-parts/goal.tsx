@@ -13,15 +13,15 @@ export function Goal({goal}:{goal:TGoal}){
         ? <button className={buttonStyles}> Share</button> 
         : <button className={buttonStyles} >Unshare</button>}
       </div>
-      <div className="mx-auto p-5 bg-secondary-300">
-      <p className="text-slate-700 font-subHeaders text-xl">
+      <div className="mx-auto p-5 bg-secondary-800 rounded-lg">
+      <p className="text-slate-300 font-subHeaders border-b-2 border-b-slate-300 text-3xl">
         {goal.description}
       </p>
           <div className="flex flex-wrap">
 
         {goal.goalWeeks.sort((a,b)=> a.weekNumber - b.weekNumber)
         .map(weekProgress => 
-        <div className="text-slate-900 text-center" key={weekProgress.id}> 
+        <div className="text-slate-300 text-center" key={weekProgress.id}> 
         Week {weekProgress.weekNumber+1}  
         {weekProgress.targetAmount > 1 
         ? <ProgressBar key ={weekProgress.id} completedAmount={weekProgress.completedAmount} totalAmount={weekProgress.targetAmount} /> 

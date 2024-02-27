@@ -3,8 +3,6 @@ import { getGoalById, getAllGoalsQuery, createGoal, GoalCreateBody } from "./goa
 
 import {queryClient} from "../../main"
 
-
-
 export const goalsQueryOptions = (token:string) => queryOptions({
     queryKey:['goals',token],
     queryFn:()=>getAllGoalsQuery(token)

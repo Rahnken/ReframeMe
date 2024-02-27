@@ -5,7 +5,7 @@ export function ProgressBar({totalAmount,completedAmount}:{totalAmount:number,co
 
   return (
     <div className="border-primary-500 border-2 rounded-md h-10 bg-slate-400 my-5 mx-3 min-w-20  "  >
-        <div className="bg-secondary-900 h-9 rounded-md text-center text-white" style={{width:`${progressPercent}%`}} ></div>
+        <div className="bg-secondary-500 h-9 rounded-md text-center text-white" style={{width:`${progressPercent}%`}} ></div>
         <p className="mb-2 text-lg mx-auto text-center" >{displayPercent}%</p>
 
     </div>
