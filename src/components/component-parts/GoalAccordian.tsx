@@ -16,6 +16,7 @@ import {
 } from "../../api/goals/goals";
 import { useAuth } from "../../providers/auth.provider";
 import { queryClient } from "../../main";
+import { useUpdateGoalProgressMutation } from "../../api/goals/goalQueries";
 
 export const GoalAccordion = ({ values }: { values: TGoalProgress[] }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -66,17 +67,21 @@ const AccordionItem = ({
   const [progressInput, setProgressInput] = useState(0);
   const [feedbackInput, setFeedbackInput] = useState("");
   const [wantToUpdate, setWantToUpdate] = useState(false);
-  const updateProgress = useMutation({
-    mutationKey: ["updateGoalProgress"],
-    mutationFn: (updateRequestBody: GoalProgressUpdateBody) =>
-      updateGoalProgressById(user.token, updateRequestBody),
-    onSuccess: () => {
-      setWantToUpdate(false);
-      resetInputs();
-      queryClient.invalidateQueries({ queryKey: ["goals"] });
-    },
-    onError: (e) => console.error("Mutation", e.message),
-  });
+
+  const onSuccess = () => {
+    setWantToUpdate(false);
+    resetInputs();
+  };
+
+  const onError = (e: Error) => {
+    console.error("Mutation error:", e.message);
+  };
+
+  const updateProgress = useUpdateGoalProgressMutation(
+    user!.token,
+    onSuccess,
+    onError
+  );
   const resetInputs = () => {
     setFeedbackInput("");
     setProgressInput(0);

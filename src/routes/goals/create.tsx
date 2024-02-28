@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate} from "@tanstack/react-router";
 import { TextInput } from "../../components/component-parts/TextInput";
 import { ErrorMessage } from "../../components/component-parts/ErrorMessage";
 import { FormEvent, useState } from "react";
@@ -7,15 +7,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GoalCreateBody, createGoal } from "../../api/goals/goals";
 import { useAuth } from "../../providers/auth.provider";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../main";
 
 const CreateGoal = () => {
   const { user } = useAuth();
+  
   const navigate = useNavigate({ from: Route.fullPath });
   const mutation = useMutation({
     mutationKey: ["createGoalForUser"],
     mutationFn: (body: GoalCreateBody) => createGoal(user!.token, body),
     onSuccess: () => {
       resetFormInputs();
+      queryClient.invalidateQueries({queryKey:['goals']})
       navigate({ to: "/goals" });
     },
     onError: (e) => {
