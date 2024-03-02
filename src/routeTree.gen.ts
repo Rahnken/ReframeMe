@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as PublicImport } from './routes/_public'
 import { Route as AuthImport } from './routes/_auth'
+import { Route as IndexImport } from './routes/index'
 import { Route as PublicIndexImport } from './routes/_public/index'
 import { Route as PublicRegisterImport } from './routes/_public/register'
 import { Route as PublicLoginImport } from './routes/_public/login'
@@ -21,7 +22,7 @@ import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
 import { Route as AuthGoalsIndexImport } from './routes/_auth/goals/index'
 import { Route as AuthGoalsCreateImport } from './routes/_auth/goals/create'
 import { Route as AuthGoalsGoalIdImport } from './routes/_auth/goals/$goalId'
-import { Route as AuthGoalIdEditImport } from './routes/_auth/$goalId/edit'
+import { Route as AuthGoalsGoalIdEditImport } from './routes/_auth/goals/$goalId/edit'
 
 // Create/Update Routes
 
@@ -32,6 +33,11 @@ const PublicRoute = PublicImport.update({
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -75,15 +81,19 @@ const AuthGoalsGoalIdRoute = AuthGoalsGoalIdImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthGoalIdEditRoute = AuthGoalIdEditImport.update({
-  path: '/$goalId/edit',
-  getParentRoute: () => AuthRoute,
+const AuthGoalsGoalIdEditRoute = AuthGoalsGoalIdEditImport.update({
+  path: '/edit',
+  getParentRoute: () => AuthGoalsGoalIdRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/_auth': {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
@@ -112,10 +122,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexImport
       parentRoute: typeof PublicImport
     }
-    '/_auth/$goalId/edit': {
-      preLoaderRoute: typeof AuthGoalIdEditImport
-      parentRoute: typeof AuthImport
-    }
     '/_auth/goals/$goalId': {
       preLoaderRoute: typeof AuthGoalsGoalIdImport
       parentRoute: typeof AuthImport
@@ -128,17 +134,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthGoalsIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/goals/$goalId/edit': {
+      preLoaderRoute: typeof AuthGoalsGoalIdEditImport
+      parentRoute: typeof AuthGoalsGoalIdImport
+    }
   }
 }
 
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
+  IndexRoute,
   AuthRoute.addChildren([
     AuthDashboardRoute,
     AuthProfileRoute,
-    AuthGoalIdEditRoute,
-    AuthGoalsGoalIdRoute,
+    AuthGoalsGoalIdRoute.addChildren([AuthGoalsGoalIdEditRoute]),
     AuthGoalsCreateRoute,
     AuthGoalsIndexRoute,
   ]),

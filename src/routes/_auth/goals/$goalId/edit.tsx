@@ -1,13 +1,13 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, FormEvent } from "react";
-import { GoalUpdateBody } from "../../../api/goals/goals";
-import { ErrorMessage } from "../../../components/component-parts/ErrorMessage";
-import { TextInput } from "../../../components/component-parts/TextInput";
+import { GoalUpdateBody } from "../../../../api/goals/goals";
+import { ErrorMessage } from "../../../../components/component-parts/ErrorMessage";
+import { TextInput } from "../../../../components/component-parts/TextInput";
 import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
-} from "../../../api/goals/goalQueries";
-import { TGoal, inputStyleClasses } from "../../../types";
+} from "../../../../api/goals/goalQueries";
+import { TGoal, inputStyleClasses } from "../../../../types";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -136,7 +136,7 @@ const EditGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/_auth/$goalId/edit")({
+export const Route = createFileRoute("/_auth/goals/$goalId/edit")({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
