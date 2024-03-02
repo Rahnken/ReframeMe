@@ -38,10 +38,7 @@ const SpecificGoal = () => {
             type="button"
             className={goal.isPrivate ? buttonStyles : invertedButtonStyles}
             onClick={() => {
-              console.log("Button pressed", {
-                id: goal.id,
-                isPrivate: !goal.isPrivate,
-              });
+            
               mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
             }}
           >
