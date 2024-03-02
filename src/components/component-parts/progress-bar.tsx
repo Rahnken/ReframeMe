@@ -9,12 +9,14 @@ export function ProgressBar({
   const displayPercent = progressPercent.toFixed(0);
 
   return (
-    <div className="border-primary-500 border-2 rounded-md h-10 bg-slate-400 mb-6 mx-3 min-w-20  ">
-      <div
-        className="bg-secondary-500 h-9 rounded-md text-center text-white"
-        style={{ width: `${progressPercent}%` }}
-      ></div>
-      <p className="mb-2 text-lg mx-auto text-center">{displayPercent}%</p>
+    <div className="flex flex-col gap-1 mb-2 mx-3">
+      <div className="border-primary-500 border-2 flex rounded-md h-10 bg-slate-200 w-full min-w-20 flex-grow-1 ">
+        <div
+          className="bg-secondary-500 h-9 rounded-md  "
+          style={{ width: `${progressPercent}%` }}
+        ></div>
+      </div>
+      <p className="text-lg text-slate-100 mx-auto ">{displayPercent}%</p>
     </div>
   );
 }

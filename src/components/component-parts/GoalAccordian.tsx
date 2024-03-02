@@ -9,13 +9,9 @@ import {
   faRightToBracket,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { useMutation } from "@tanstack/react-query";
-import {
-  GoalProgressUpdateBody,
-  updateGoalProgressById,
-} from "../../api/goals/goals";
+
+import { GoalProgressUpdateBody } from "../../api/goals/goals";
 import { useAuth } from "../../providers/auth.provider";
-import { queryClient } from "../../main";
 import { useUpdateGoalProgressMutation } from "../../api/goals/goalQueries";
 
 export const GoalAccordion = ({ values }: { values: TGoalProgress[] }) => {
@@ -25,7 +21,7 @@ export const GoalAccordion = ({ values }: { values: TGoalProgress[] }) => {
   };
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col lg:w-3/4 lg:mx-auto ">
       {values.map((item, index) => (
         <AccordionItem
           key={item.id}
@@ -64,8 +60,8 @@ const AccordionItem = ({
 }) => {
   const contentHeight = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
-  const [progressInput, setProgressInput] = useState(0);
-  const [feedbackInput, setFeedbackInput] = useState("");
+  const [progressInput, setProgressInput] = useState(completedAmount);
+  const [feedbackInput, setFeedbackInput] = useState(feedback);
   const [wantToUpdate, setWantToUpdate] = useState(false);
 
   const onSuccess = () => {
@@ -83,8 +79,8 @@ const AccordionItem = ({
     onError
   );
   const resetInputs = () => {
-    setFeedbackInput("");
-    setProgressInput(0);
+    setFeedbackInput(feedback);
+    setProgressInput(completedAmount);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -111,23 +107,25 @@ const AccordionItem = ({
         content.style.transition = "height .7s ease-in-out";
       }
     };
-
-    // Instantly adjust height to ensure layout is correct before observing
     adjustHeight();
   }, [isOpen, wantToUpdate]); // Dependency array might be adjusted based on your needs
 
   return (
     <div className=" border-2 border-black border-solid bg-slate-700 overflow-hidden ">
       <button
-        className={`w-full text-left px-2 py-5 flex items-center justify-between font-medium text-xl bg-transparent border-none cursor-pointer ${isOpen ? "active" : ""}`}
+        className={`w-full text-left px-2 py-5 flex justify-evenly items-center font-medium text-xl bg-transparent border-none cursor-pointer ${isOpen ? "active" : ""}`}
         onClick={onClick}
       >
-        <p className="header-content">{`Week ${weekNumber + 1} `}</p>
-        <ProgressBar
-          completedAmount={completedAmount}
-          totalAmount={targetAmount}
+        <div className="flex-shrink-0 w-4/5 self-center">
+          <p className="header-content text-center">{`Week ${weekNumber + 1} `}</p>
+          <ProgressBar
+            completedAmount={completedAmount}
+            totalAmount={targetAmount}
+          />
+        </div>
+        <RiArrowDropDownLine
+          className={`text-3xl ${isOpen ? "active" : ""} flex-grow-1`}
         />
-        <RiArrowDropDownLine className={`text-3xl ${isOpen ? "active" : ""}`} />
       </button>
 
       <div
@@ -136,48 +134,55 @@ const AccordionItem = ({
       >
         {wantToUpdate ? (
           <form
-            className="flex flex-col items-center  gap-3 "
+            className="flex flex-col items-center gap-3 "
             onSubmit={handleSubmit}
           >
-            <TextInput
-              labelText="Update Goal Progress"
-              inputAttr={{
-                name: "updateProgressInput",
-                placeholder: "1",
-                value: progressInput,
-                type: "number",
-                min: 0,
-                max: targetAmount,
-                onChange: (e) => setProgressInput(parseInt(e.target.value)),
-              }}
-            />
-            <TextInput
-              labelText="Add Feedback"
-              inputAttr={{
-                name: "updateFeedbackInput",
-                placeholder: "Add your weekly feedback here",
-                value: feedbackInput,
-                onChange: (e) => setFeedbackInput(e.target.value),
-              }}
-            />
-            <button
-              type="submit"
-              disabled={false}
-              className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40  hover:bg-slate-800 disabled:bg-gray-600"
-            >
-              {"Submit "} <FontAwesomeIcon icon={faRightToBracket} />
-            </button>
+            <div className="flex sm:flex-col gap-4">
+              <div className="flex justify-center items-end">
+                <TextInput
+                  labelText="Update Goal Progress"
+                  inputAttr={{
+                    name: "updateProgressInput",
+                    placeholder: "1",
+                    value: progressInput,
+                    type: "number",
+                    min: 0,
+                    max: targetAmount,
+                    onChange: (e) => setProgressInput(parseInt(e.target.value)),
+                  }}
+                />
+                <small className="mb-4"> /{targetAmount}</small>
+              </div>
+              <TextInput
+                labelText="Add Feedback"
+                inputAttr={{
+                  name: "updateFeedbackInput",
+                  placeholder: "Add your weekly feedback here",
+                  value: feedbackInput,
+                  onChange: (e) => setFeedbackInput(e.target.value),
+                }}
+              />
+            </div>
+            <div className="flex gap-4  sm:flex-col mb-3">
+              <button
+                type="submit"
+                disabled={false}
+                className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40  hover:bg-slate-800 disabled:bg-gray-600"
+              >
+                {"Submit "} <FontAwesomeIcon icon={faRightToBracket} />
+              </button>
 
-            <button
-              type="button" // This prevents the form from being submitted
-              className="bg-red-600 text-slate-100 font-semibold rounded-md px-4 py-2 w-40 hover:bg-red-700"
-              onClick={() => {
-                onClick();
-                setWantToUpdate(false);
-              }} // This changes wantToUpdate back to false
-            >
-              {"Cancel "} <FontAwesomeIcon icon={faTimes} />
-            </button>
+              <button
+                type="button" // This prevents the form from being submitted
+                className="bg-red-600 text-slate-100 font-semibold rounded-md px-4 py-2 w-40  hover:bg-red-700"
+                onClick={() => {
+                  onClick();
+                  setWantToUpdate(false);
+                }} // This changes wantToUpdate back to false
+              >
+                {"Cancel "} <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
           </form>
         ) : (
           <div className="flex flex-col items-center  p-4">

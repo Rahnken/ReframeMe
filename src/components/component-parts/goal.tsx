@@ -9,7 +9,14 @@ import { useUpdateGoalMutation } from "../../api/goals/goalQueries";
 export function Goal({ goal }: { goal: TGoal }) {
   const { user } = useAuth();
 
-  const mutation = useUpdateGoalMutation(user!.token, goal.id);
+  const mutation = useUpdateGoalMutation(
+    user!.token,
+    goal.id,
+    () => {},
+    (e) => {
+      e;
+    }
+  );
 
   return (
     <div className="p-4 rounded-xl flex flex-col mx-auto w-128 bg-slate-700 m-2 gap-3">
@@ -41,7 +48,7 @@ export function Goal({ goal }: { goal: TGoal }) {
         <p className="text-slate-300 font-subHeaders border-b-2 text-center border-b-slate-300 text-3xl">
           {goal.description}
         </p>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap ">
           {goal.goalWeeks
             .sort((a, b) => a.weekNumber - b.weekNumber)
             .map((weekProgress) => (

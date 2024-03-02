@@ -12,10 +12,11 @@ const goalProgressRequestSchema = z.object({
 });
 
 const goalRequestSchema = z.object({
-  title: z.string().optional(),
   id: z.string(),
+  title: z.string().optional(),
   description: z.string().optional(),
   isPrivate: z.boolean().optional(),
+  weeklyTrackingTotal:z.number().optional()
 });
 
 const createGoalRequestSchema = z.object({
@@ -68,7 +69,7 @@ export const updateGoalProgressById = async (
   }).then((response) => response.json());
 };
 export const updateGoalById = async (token: string, body: GoalUpdateBody) => {
-  return await fetch(`${BASE_URL}/${body.id}`, {
+  return await fetch(`${BASE_URL}/${body.id}/edit`, {
     method: "PATCH",
     body: JSON.stringify(body),
     headers: {

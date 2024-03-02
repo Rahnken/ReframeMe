@@ -1,30 +1,16 @@
-import { createFileRoute, redirect, useNavigate} from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { TextInput } from "../../components/component-parts/TextInput";
 import { ErrorMessage } from "../../components/component-parts/ErrorMessage";
 import { FormEvent, useState } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GoalCreateBody, createGoal } from "../../api/goals/goals";
+import { GoalCreateBody } from "../../api/goals/goals";
 import { useAuth } from "../../providers/auth.provider";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../../main";
+
+import { useCreateGoalMutation } from "../../api/goals/goalQueries";
 
 const CreateGoal = () => {
   const { user } = useAuth();
-  
-  const navigate = useNavigate({ from: Route.fullPath });
-  const mutation = useMutation({
-    mutationKey: ["createGoalForUser"],
-    mutationFn: (body: GoalCreateBody) => createGoal(user!.token, body),
-    onSuccess: () => {
-      resetFormInputs();
-      queryClient.invalidateQueries({queryKey:['goals']})
-      navigate({ to: "/goals" });
-    },
-    onError: (e) => {
-      setServerError(e.message);
-    },
-  });
 
   const resetFormInputs = () => {
     setTitleInput("");
@@ -32,6 +18,18 @@ const CreateGoal = () => {
     setIsPrivateInput(false);
     setWeeklyTrackingTotalInput(0);
   };
+
+  const onSuccess = () => {
+    resetFormInputs();
+    navigate({ to: "/goals" });
+  };
+  const onError = (e: Error) => {
+    setServerError(e.message);
+  };
+
+  const navigate = useNavigate({ from: Route.fullPath });
+  const mutation = useCreateGoalMutation(user!.token, onSuccess, onError);
+
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
   const [isPrivateInput, setIsPrivateInput] = useState(false);

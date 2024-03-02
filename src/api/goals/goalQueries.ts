@@ -1,5 +1,5 @@
 import { queryOptions,useMutation} from "@tanstack/react-query";
-import { getGoalById, getAllGoalsQuery,updateGoalById, GoalUpdateBody, updateGoalProgressById, GoalProgressUpdateBody } from "./goals";
+import { getGoalById, getAllGoalsQuery,updateGoalById, GoalUpdateBody, updateGoalProgressById, GoalProgressUpdateBody, GoalCreateBody, createGoal } from "./goals";
 import { queryClient } from "../../main";
 
 export const goalsQueryOptions = (token:string) => queryOptions({
@@ -11,24 +11,42 @@ export const goalQueryIdOptions = (userToken:string,goalId:string) => queryOptio
     queryFn:()=>getGoalById(userToken,goalId)
 })
 
-export const useUpdateGoalMutation = (userToken:string, goalId:string) => {
+export const useCreateGoalMutation = (token:string,onSuccessCallback:()=>void,onErrorCallback:(error:Error)=>void) => {
+  return useMutation({
+    mutationKey: ["createGoalForUser"],
+    mutationFn: (body: GoalCreateBody) => createGoal(token, body),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ["goals", "userGoals"] });
+      queryClient.invalidateQueries({ queryKey: ["goals", token] });
+      onSuccessCallback()
+    },
+    onError:(e:Error)=>{
+      onErrorCallback(e)
+    }
+  })
+}
+
+export const useUpdateGoalMutation = (token:string, goalId:string,onSuccessCallback:()=>void,onErrorCallback:(error:Error)=>void) => {
   return useMutation({
     mutationKey: ["goals", "updateGoal"],
-    mutationFn: (body:GoalUpdateBody) => updateGoalById(userToken, body),
+    mutationFn: (body:GoalUpdateBody) => updateGoalById(token, body),
     onSuccess: () => {
-      console.log("Success");
       queryClient.invalidateQueries({ queryKey: ["goals", "userGoals"] });
-      queryClient.invalidateQueries({ queryKey: ["goals", userToken] });
-      queryClient.invalidateQueries({ queryKey: ["goals", userToken, goalId] });
+      queryClient.invalidateQueries({ queryKey: ["goals", token] });
+      queryClient.invalidateQueries({ queryKey: ["goals", token, goalId] });
+      onSuccessCallback()
+
     },
     onError: (error) => {
       console.error("Mutation error:", error);
+      onErrorCallback(error)
     },
-    onSettled: () => {
-      console.log("Mutation settled (either success or error)");
-    },
+
   });
 };
+
+
+
 export const useUpdateGoalProgressMutation = (token:string, onSuccessCallback:()=>void, onErrorCallback:(error:Error)=>void) => {
   return useMutation({
     mutationKey: ['updateGoalProgress'],

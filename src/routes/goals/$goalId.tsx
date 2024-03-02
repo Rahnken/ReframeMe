@@ -1,11 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
 } from "../../api/goals/goalQueries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { buttonStyles, TGoal } from "../../types";
+import { buttonStyles, invertedButtonStyles, TGoal } from "../../types";
 import { GoalAccordion } from "../../components/component-parts/GoalAccordian";
 
 const SpecificGoal = () => {
@@ -16,29 +16,47 @@ const SpecificGoal = () => {
   const sq = useSuspenseQuery(goalQueryIdOptions(token!, goalId));
   const goal: TGoal = sq.data;
 
-  const mutation = useUpdateGoalMutation(user!.token, goal.id);
+  const onError = (e: Error) => {
+    console.error(e.message);
+  };
+
+  const mutation = useUpdateGoalMutation(
+    user!.token,
+    goal.id,
+    () => {},
+    onError
+  );
   return (
-    <div className="p-4 rounded-xl flex flex-col mx-auto w-3/4 bg-slate-700 m-2 gap-3">
+    <div className="p-4 rounded-xl flex flex-col mx-auto md:w-3/4 sm:w-1/2 bg-slate-700 m-2 gap-3">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-primary-700 text-3xl font-subHeaders">
           {" "}
           {goal.title}
         </h1>
-        <button
-          type="button"
-          className={buttonStyles}
-          onClick={() => {
-            console.log("Button pressed", {
-              id: goal.id,
-              isPrivate: !goal.isPrivate,
-            });
-            mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
-          }}
-        >
-          {goal.isPrivate ? "Share" : "Unshare"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className={goal.isPrivate ? buttonStyles : invertedButtonStyles}
+            onClick={() => {
+              console.log("Button pressed", {
+                id: goal.id,
+                isPrivate: !goal.isPrivate,
+              });
+              mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
+            }}
+          >
+            {goal.isPrivate ? "Share" : "Unshare"}
+          </button>
+          <Link
+            className={buttonStyles}
+            to="/goals/$goalId/edit"
+            params={{ goalId: goal.id }}
+          >
+            Edit Goal
+          </Link>
+        </div>
       </div>
-      <div className="mx-auto p-5 bg-secondary-700 w-3/4  ">
+      <div className="mx-auto p-5 bg-secondary-700 w-4/5 rounded-xl ">
         <p className="text-slate-300 font-subHeaders text-3xl">
           {goal.description}
         </p>
