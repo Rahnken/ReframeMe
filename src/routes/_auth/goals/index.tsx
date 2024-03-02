@@ -1,12 +1,12 @@
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
-import { goalsQueryOptions } from "../../api/goals/goalQueries";
+import { Goal } from "../../../components/component-parts/goal";
+import { LinkStyles, TGoal } from "../../../types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Goal } from "../../components/component-parts/goal";
-import { LinkStyles, TGoal } from "../../types";
+import { goalsQueryOptions } from "../../../api/goals/goalQueries";
 
-export const Route = createFileRoute("/goals/")({
+export const Route = createFileRoute("/_auth/goals/")({
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
+    if (context.auth.authState !== "authenticated") {
       throw redirect({
         to: "/login",
         search: {
@@ -16,15 +16,15 @@ export const Route = createFileRoute("/goals/")({
     }
   },
   loader: ({ context: { auth, queryClient } }) =>
-    queryClient.ensureQueryData(goalsQueryOptions(auth.token!)),
+    queryClient.ensureQueryData(goalsQueryOptions(auth.user?.token)),
   component: GoalsPage,
 });
 
 function GoalsPage() {
   const {
-    auth: { token },
+    auth: { user },
   } = Route.useRouteContext();
-  const sq = useSuspenseQuery(goalsQueryOptions(token!));
+  const sq = useSuspenseQuery(goalsQueryOptions(user?.token));
   const goals = sq.data;
   return (
     <>
