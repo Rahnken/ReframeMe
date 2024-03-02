@@ -1,19 +1,18 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { buttonStyles, invertedButtonStyles, TGoal } from "../../../types";
+import { GoalAccordion } from "../../../components/component-parts/GoalAccordian";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
-} from "../../api/goals/goalQueries";
-import { useSuspenseQuery } from "@tanstack/react-query";
-
-import { buttonStyles, invertedButtonStyles, TGoal } from "../../types";
-import { GoalAccordion } from "../../components/component-parts/GoalAccordian";
+} from "../../../api/goals/goalQueries";
 
 const SpecificGoal = () => {
   const {
-    auth: { user, token },
+    auth: { user },
   } = Route.useRouteContext();
   const { goalId } = Route.useParams();
-  const sq = useSuspenseQuery(goalQueryIdOptions(token!, goalId));
+  const sq = useSuspenseQuery(goalQueryIdOptions(user?.token, goalId));
   const goal: TGoal = sq.data;
 
   const onError = (e: Error) => {
@@ -38,7 +37,6 @@ const SpecificGoal = () => {
             type="button"
             className={goal.isPrivate ? buttonStyles : invertedButtonStyles}
             onClick={() => {
-            
               mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
             }}
           >
@@ -67,9 +65,9 @@ const SpecificGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/goals/$goalId")({
+export const Route = createFileRoute("/_auth/goals/$goalId")({
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
+    if (context.auth.authState !== "authenticated") {
       throw redirect({
         to: "/login",
         search: {
@@ -79,6 +77,6 @@ export const Route = createFileRoute("/goals/$goalId")({
     }
   },
   loader: ({ context: { auth, queryClient }, params: { goalId } }) =>
-    queryClient.ensureQueryData(goalQueryIdOptions(auth.token!, goalId)),
+    queryClient.ensureQueryData(goalQueryIdOptions(auth.user?.token, goalId)),
   component: SpecificGoal,
 });
