@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, FormEvent } from "react";
 import { GoalUpdateBody } from "../../../../api/goals/goals";
 import { ErrorMessage } from "../../../../components/component-parts/ErrorMessage";
@@ -17,7 +17,7 @@ const EditGoal = () => {
     auth: { user },
   } = Route.useRouteContext();
   const { goalId } = Route.useParams();
-  const sq = useSuspenseQuery(goalQueryIdOptions(user.token!, goalId));
+  const sq = useSuspenseQuery(goalQueryIdOptions(user!.token, goalId));
   const goal: TGoal = sq.data;
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -137,15 +137,5 @@ const EditGoal = () => {
 };
 
 export const Route = createFileRoute("/_auth/goals/$goalId/edit")({
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
   component: EditGoal,
 });

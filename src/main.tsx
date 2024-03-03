@@ -14,28 +14,28 @@ import { AuthProvider, useAuth } from "./providers/auth.provider";
 library.add(fas, faTwitter, faFontAwesome);
 export const queryClient = new QueryClient();
 
-const router = createRouter({ routeTree,defaultPreload:'intent',context:{auth:undefined!,queryClient} });
+const router = createRouter({
+  routeTree,
+  defaultPreload: "intent",
+  context: { auth: undefined!, queryClient },
+});
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
 
-
-
 function InnerApp() {
-  const auth = useAuth()
-  return <RouterProvider router={router} context={{auth}}/>
+  const auth = useAuth();
+  return <RouterProvider router={router} context={{ auth }} />;
 }
 
-
 function App() {
-  
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <InnerApp/>
+          <InnerApp />
         </AuthProvider>
       </QueryClientProvider>
     </>

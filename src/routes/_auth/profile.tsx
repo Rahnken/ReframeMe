@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { userInfoQueryOptions } from "../../api/users/userQueryOptions";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -6,7 +6,7 @@ const UserProfile = () => {
   const {
     auth: { user },
   } = Route.useRouteContext();
-  const sq = useSuspenseQuery(userInfoQueryOptions(user.token));
+  const sq = useSuspenseQuery(userInfoQueryOptions(user!.token));
   const profile = sq.data;
   return (
     <>
@@ -22,7 +22,7 @@ const UserProfile = () => {
 
 export const Route = createFileRoute("/_auth/profile")({
   loader: ({ context: { auth, queryClient } }) => {
-    queryClient.ensureQueryData(userInfoQueryOptions(auth.user?.token || ""));
+    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token || ""));
   },
   component: UserProfile,
 });

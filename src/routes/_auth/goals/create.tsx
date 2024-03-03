@@ -5,7 +5,7 @@ import { GoalCreateBody } from "../../../api/goals/goals";
 import { useAuth } from "../../../providers/auth.provider";
 
 import { useCreateGoalMutation } from "../../../api/goals/goalQueries";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ErrorMessage } from "../../../components/component-parts/ErrorMessage";
 import { TextInput } from "../../../components/component-parts/TextInput";
 
@@ -114,16 +114,5 @@ const CreateGoal = () => {
 };
 
 export const Route = createFileRoute("/_auth/goals/create")({
-  beforeLoad: ({ context, location }) => {
-    if (context.auth.authState !== "authenticated") {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
-
   component: CreateGoal,
 });

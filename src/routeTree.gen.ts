@@ -21,7 +21,7 @@ import { Route as AuthProfileImport } from './routes/_auth/profile'
 import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
 import { Route as AuthGoalsIndexImport } from './routes/_auth/goals/index'
 import { Route as AuthGoalsCreateImport } from './routes/_auth/goals/create'
-import { Route as AuthGoalsGoalIdImport } from './routes/_auth/goals/$goalId'
+import { Route as AuthGoalsGoalIdIndexImport } from './routes/_auth/goals/$goalId/index'
 import { Route as AuthGoalsGoalIdEditImport } from './routes/_auth/goals/$goalId/edit'
 
 // Create/Update Routes
@@ -76,14 +76,14 @@ const AuthGoalsCreateRoute = AuthGoalsCreateImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthGoalsGoalIdRoute = AuthGoalsGoalIdImport.update({
-  path: '/goals/$goalId',
+const AuthGoalsGoalIdIndexRoute = AuthGoalsGoalIdIndexImport.update({
+  path: '/goals/$goalId/',
   getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthGoalsGoalIdEditRoute = AuthGoalsGoalIdEditImport.update({
-  path: '/edit',
-  getParentRoute: () => AuthGoalsGoalIdRoute,
+  path: '/goals/$goalId/edit',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -122,10 +122,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexImport
       parentRoute: typeof PublicImport
     }
-    '/_auth/goals/$goalId': {
-      preLoaderRoute: typeof AuthGoalsGoalIdImport
-      parentRoute: typeof AuthImport
-    }
     '/_auth/goals/create': {
       preLoaderRoute: typeof AuthGoalsCreateImport
       parentRoute: typeof AuthImport
@@ -136,7 +132,11 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/goals/$goalId/edit': {
       preLoaderRoute: typeof AuthGoalsGoalIdEditImport
-      parentRoute: typeof AuthGoalsGoalIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/goals/$goalId/': {
+      preLoaderRoute: typeof AuthGoalsGoalIdIndexImport
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -148,9 +148,10 @@ export const routeTree = rootRoute.addChildren([
   AuthRoute.addChildren([
     AuthDashboardRoute,
     AuthProfileRoute,
-    AuthGoalsGoalIdRoute.addChildren([AuthGoalsGoalIdEditRoute]),
     AuthGoalsCreateRoute,
     AuthGoalsIndexRoute,
+    AuthGoalsGoalIdEditRoute,
+    AuthGoalsGoalIdIndexRoute,
   ]),
   PublicRoute.addChildren([
     PublicLoginRoute,

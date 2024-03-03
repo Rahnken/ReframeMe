@@ -1,18 +1,18 @@
-import { buttonStyles, invertedButtonStyles, TGoal } from "../../../types";
-import { GoalAccordion } from "../../../components/component-parts/GoalAccordian";
+import { buttonStyles, invertedButtonStyles, TGoal } from "../../../../types";
+import { GoalAccordion } from "../../../../components/component-parts/GoalAccordian";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute, redirect } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
-} from "../../../api/goals/goalQueries";
+} from "../../../../api/goals/goalQueries";
 
 const SpecificGoal = () => {
   const {
     auth: { user },
   } = Route.useRouteContext();
   const { goalId } = Route.useParams();
-  const sq = useSuspenseQuery(goalQueryIdOptions(user?.token, goalId));
+  const sq = useSuspenseQuery(goalQueryIdOptions(user!.token, goalId));
   const goal: TGoal = sq.data;
 
   const onError = (e: Error) => {
@@ -65,18 +65,8 @@ const SpecificGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/_auth/goals/$goalId")({
-  beforeLoad: ({ context, location }) => {
-    if (context.auth.authState !== "authenticated") {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
+export const Route = createFileRoute("/_auth/goals/$goalId/")({
   loader: ({ context: { auth, queryClient }, params: { goalId } }) =>
-    queryClient.ensureQueryData(goalQueryIdOptions(auth.user?.token, goalId)),
+    queryClient.ensureQueryData(goalQueryIdOptions(auth.user!.token, goalId)),
   component: SpecificGoal,
 });
