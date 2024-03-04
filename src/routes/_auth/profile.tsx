@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { userInfoQueryOptions } from "../../api/users/userQueryOptions";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 const UserProfile = () => {
   const {
@@ -10,12 +12,31 @@ const UserProfile = () => {
   const profile = sq.data;
   return (
     <>
-      <p>{profile.firstName}</p>
-      <p>{profile.lastName}</p>
-      <p>{profile.timezone}</p>
-      <p>{profile.country}</p>
-      <p>{profile.userSettings.theme}</p>
-      <p>{profile.userSettings.profileComplete.toString()}</p>
+      <div className="card w-96 bg-secondary-300 mx-auto my-4 ">
+        <figure>
+          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+        </figure>
+        <div className="card-body">
+          <h2 className="card-title">
+            {profile.firstName} {profile.lastName}
+          </h2>
+          <p>Time Zone: {profile.timezone}</p>
+          <p>Country: {profile.country}</p>
+
+          <p>Current Theme: {profile.userSettings.theme}</p>
+          <p>
+            Completed Profile Setup :{" "}
+            {profile.userSettings.profileComplete.toString()}
+          </p>
+          <div className="card-actions justify-end">
+            <button className="btn btn-primary">
+              {" "}
+              <FontAwesomeIcon icon={faEdit} />
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

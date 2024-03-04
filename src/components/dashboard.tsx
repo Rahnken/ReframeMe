@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { useQuery } from "@tanstack/react-query";
-import { LinkStyles, TGoal } from "../types";
+import { TGoal } from "../types";
 import { Goal } from "./component-parts/goal";
 import { goalsQueryOptions } from "../api/goals/goalQueries";
 
@@ -15,11 +15,11 @@ export function Dashboard() {
     <>
       <h3> Welcome to your Dashboard</h3>
       <h4>{user?.userInfo.username}</h4>
-      <div className="flex items-center m-6">
-        <Link to="/goals" className={LinkStyles}>
+      <div className="flex items-center gap-2 m-6">
+        <Link to="/goals" className="btn btn-secondary border-secondary">
           Goals
         </Link>
-        <Link to="/profile" className={LinkStyles}>
+        <Link to="/profile" className="btn btn-secondary">
           Profile
         </Link>
       </div>

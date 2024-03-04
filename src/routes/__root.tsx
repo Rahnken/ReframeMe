@@ -28,7 +28,7 @@ function Root() {
 
   return (
     <>
-      <div className="p-6 flex gap-2 items-center">
+      <div className="p-6 flex gap-2 items-center w-full">
         <Link to="/" className="[&.active]:font-bold ">
           <img
             src="/ReframeMe_logo.svg"
@@ -38,12 +38,12 @@ function Root() {
         </Link>
         {auth.authState === "authenticated" ? (
           <div className="ml-auto mr-10 flex gap-4 items-center">
-            <div className=" text-primary-500 ">
+            <div className="text-primary ">
               {" "}
               Welcome{" "}
               <Link
                 to="/dashboard"
-                className=" text-primary-500 [&.active]:font-bold "
+                className=" text-primary [&.active]:font-bold "
               >
                 {auth.user?.userInfo.username}
               </Link>
@@ -60,13 +60,13 @@ function Root() {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/login"
-              className=" text-2xl rounded-md  p-3 hover:bg-secondary-600 hover:text-slate-100 text-primary-500 [&.active]:font-bold "
+              className=" text-2xl rounded-md  p-3 hover:bg-secondary-content hover:text-slate-100 text-primary [&.active]:font-bold "
             >
               Sign In
             </Link>
             <Link
               to="/register"
-              className="text-2xl  rounded-md p-3 hover:bg-secondary-600 hover:text-slate-50 text-primary-500 [&.active]:font-bold "
+              className="text-2xl  rounded-md p-3 hover:bg-secondary-content hover:text-slate-50 text-primary [&.active]:font-bold "
             >
               {" "}
               Sign Up

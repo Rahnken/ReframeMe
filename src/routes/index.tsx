@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center">
+    <div className=" p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center">
       <h1 className="text-3xl p-4 font-headers"> Welcome to Reframe Me </h1>
       <p className="text-xl font-body">
         Reframe Me is a comprehensive personal development application designed
@@ -25,10 +25,7 @@ function Index() {
             {" "}
             If you are ready to start!{" "}
           </h2>
-          <Link
-            to="/register"
-            className="rounded-xl bg-primary-500 p-4 mx-auto"
-          >
+          <Link to="/register" className="rounded-xl bg-primary p-4 mx-auto">
             {" "}
             Sign up here
           </Link>
@@ -38,7 +35,7 @@ function Index() {
             {" "}
             Ready to continue?{" "}
           </h2>
-          <Link to="/login" className="rounded-xl bg-secondary-300 p-4 mx-auto">
+          <Link to="/login" className="rounded-xl bg-secondary p-4 mx-auto">
             {" "}
             Sign in here
           </Link>
