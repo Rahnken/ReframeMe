@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Goal } from "../../../components/component-parts/goal";
-import { LinkStyles, TGoal } from "../../../types";
+import { TGoal } from "../../../types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { goalsQueryOptions } from "../../../api/goals/goalQueries";
 
@@ -19,7 +19,7 @@ function GoalsPage() {
   return (
     <>
       <div className="flex items-center justify-center m-6">
-        <Link to="/goals/create" className={LinkStyles}>
+        <Link to="/goals/create" className="btn btn-secondary">
           Create New Goal
         </Link>
       </div>

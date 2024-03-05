@@ -64,7 +64,7 @@ export const Login = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center"
+        className="bg-base-200 text-primary p-8 card gap-4 form-control shadow-2xl my-6 w-1/2 mx-auto flex flex-col items-center"
       >
         {serverMessage && (
           <ErrorMessage
@@ -103,7 +103,7 @@ export const Login = () => {
 
         <button
           type="submit"
-          className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
+          className="btn btn-primary text-slate-100 font-semibold  hover:bg-slate-800 disabled:bg-gray-600"
         >
           {"Login"} <FontAwesomeIcon icon={faRightToBracket} />{" "}
         </button>

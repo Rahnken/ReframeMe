@@ -12,7 +12,7 @@ const UserProfile = () => {
   const profile = sq.data;
   return (
     <>
-      <div className="card w-96 bg-secondary-300 mx-auto my-4 ">
+      <div className="card w-96 bg-primary text-primary-content mx-auto my-4 ">
         <figure>
           <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </figure>
@@ -29,7 +29,7 @@ const UserProfile = () => {
             {profile.userSettings.profileComplete.toString()}
           </p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">
+            <button className="btn btn-secondary">
               {" "}
               <FontAwesomeIcon icon={faEdit} />
               Edit Profile

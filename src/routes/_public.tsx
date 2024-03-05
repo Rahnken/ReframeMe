@@ -6,9 +6,5 @@ export const Route = createFileRoute("/_public")({
       throw redirect({ to: "/" });
     }
   },
-  component: () => (
-    <div className={`flex-1 flex`}>
-      <Outlet />
-    </div>
-  ),
+  component: () => <Outlet />,
 });

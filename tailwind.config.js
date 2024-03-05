@@ -3,7 +3,7 @@ export default {
   theme: {
     extend: {
       width: {
-        128: "32rem",
+        128: "30rem",
       },
       fontFamily: {
         headers: ["Atocha", "serif"],
@@ -55,9 +55,9 @@ export default {
 
           accent: "#eab308",
 
-          neutral: "#141423",
+          neutral: "#1d1d1d",
 
-          "base-100": "#ffffe2",
+          "base-100": "#1d1d1d",
 
           info: "#00aeef",
 

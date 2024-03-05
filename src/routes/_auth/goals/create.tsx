@@ -104,7 +104,7 @@ const CreateGoal = () => {
         />
         <button
           type="submit"
-          className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
+          className="bg-primary text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
         >
           {"Create"} <FontAwesomeIcon icon={faCirclePlus} />
         </button>

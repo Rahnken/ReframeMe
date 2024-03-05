@@ -18,11 +18,11 @@ export function Goal({ goal }: { goal: TGoal }) {
   );
 
   return (
-    <div className="p-4 rounded-xl flex flex-col mx-auto w-128  m-2 gap-3">
+    <div className="p-4 rounded-xl flex flex-col mx-auto min-w-128 max-w-128  m-2 gap-3">
       <div className="card bg-secondary  ">
         <div className="card-body">
           <div className="card-actions items-center justify-around">
-            <h3 className="text-primary text-3xl card-title font-subHeaders font-medium">
+            <h3 className="text-primary-content text-3xl card-title font-subHeaders font-medium">
               <Link
                 to="/goals/$goalId"
                 mask={{ to: `/goals/${goal.title.replaceAll(" ", "")}` }}
@@ -46,7 +46,7 @@ export function Goal({ goal }: { goal: TGoal }) {
             </button>
           </div>
           <div className="mx-auto p-5 rounded-lg">
-            <p className=" font-subHeaders text-2xl border-b-2  text-center ">
+            <p className=" text-2xl text-secondary-content border-y-2  text-center ">
               {goal.description}
             </p>
             <div className="flex flex-wrap mt-6 ">
@@ -60,7 +60,7 @@ export function Goal({ goal }: { goal: TGoal }) {
 
                   return (
                     <div
-                      className=" text-center  flex flex-col mx-2"
+                      className=" text-center text-secondary-content flex flex-col mx-auto gap-2"
                       key={weekProgress.id}
                     >
                       Week {weekProgress.weekNumber + 1}
@@ -68,13 +68,13 @@ export function Goal({ goal }: { goal: TGoal }) {
                         <div
                           key={weekProgress.id}
                           className="radial-progress bg-primary text-secondary-content border-4 border-primary"
-                          style={{ "--value": prog }}
+                          style={{ "--value": prog, "--size": "4rem" }}
                           role="progressbar"
                         >
                           {prog}%
                         </div>
                       ) : (
-                        <div className="min-w-20 h-10 text-2xl m-2">
+                        <div className="min-w-[4.5rem] h-10 text-2xl m-2">
                           {weekProgress.completedAmount === 1 ? (
                             <FontAwesomeIcon icon={faCheck} />
                           ) : (
