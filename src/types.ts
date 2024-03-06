@@ -17,6 +17,22 @@ export type TGoal = {
     user_id:string;
     goalWeeks: TGoalProgress[];
 }
+export type TUserInfo = {
+    profile_id: string;
+    user_id: string;
+    firstName: string | null;
+    lastName: string | null;
+    dateOfBirth: Date | null;
+    country: string | null;
+    timezone: string | null;
+    userSetting_id: string;
+    userSettings : {
+        userSetting_id:string;
+        theme:string;
+        profileComplete:boolean;
+    }  
+
+}
 
             
 export const buttonStyles = "rounded-md p-3 hover:bg-brandPrimary-200 hover:text-slate-800 bg-brandPrimary-600 text-slate-200 font-bold"

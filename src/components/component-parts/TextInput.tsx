@@ -14,7 +14,6 @@ export const TextInput = ({
         <input
           type="text"
           className="placeholder-secondary text-secondary"
-          placeholder="Daisy"
           {...inputAttr}
         />
       </label>

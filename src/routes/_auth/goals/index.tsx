@@ -18,15 +18,16 @@ function GoalsPage() {
   const goals = sq.data;
   return (
     <>
-      <div className="flex items-center justify-center m-6">
+      <div className="flex flex-col items-end m-3">
         <Link to="/goals/create" className="btn btn-secondary">
           Create New Goal
         </Link>
-      </div>
-      <div className="flex flex-wrap">
-        {goals.map((goal: TGoal) => (
-          <Goal key={goal.id} goal={goal} />
-        ))}
+
+        <div className="md:container mx-auto w-2/3 flex flex-wrap gap-4 mt-3">
+          {goals.map((goal: TGoal) => (
+            <Goal key={goal.id} goal={goal} />
+          ))}
+        </div>
       </div>
     </>
   );

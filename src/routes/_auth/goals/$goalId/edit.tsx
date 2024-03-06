@@ -68,7 +68,7 @@ const EditGoal = () => {
       {serverError && <div>{serverError}</div>}
       <form
         onSubmit={handleSubmit}
-        className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center"
+        className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col gap-3 items-center"
       >
         <TextInput
           labelText="Title"
@@ -81,11 +81,8 @@ const EditGoal = () => {
           }}
         />
         <ErrorMessage message="Title not set correctly" show={false} />
-        <div className="p-2 flex flex-col gap-2">
-          <label
-            htmlFor="descriptionInput "
-            className="self-start -translate-x-4  text-primary-500"
-          >
+        <div className="form-control w-full max-w-sm">
+          <label htmlFor="descriptionInput " className="label">
             {"Description"}
           </label>
           <textarea
@@ -94,7 +91,7 @@ const EditGoal = () => {
             value={descriptionInput}
             onChange={(e) => setDescriptionInput(e.target.value)}
             required
-            className={inputStyleClasses}
+            className="textarea textarea-bordered"
           ></textarea>
         </div>
 
@@ -125,10 +122,7 @@ const EditGoal = () => {
             onChange: (e) => setIsPrivateInput(e.target.checked),
           }}
         />
-        <button
-          type="submit"
-          className="bg-primary-600 text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
-        >
+        <button type="submit" className="btn btn-primary text-md w-40 ">
           {"Update"} <FontAwesomeIcon icon={faCirclePlus} />
         </button>
       </form>

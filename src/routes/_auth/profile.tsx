@@ -3,6 +3,41 @@ import { userInfoQueryOptions } from "../../api/users/userQueryOptions";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { TUserInfo } from "../../types";
+import { GroupCard } from "../../components/component-parts/group-card";
+
+const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
+  const {
+    firstName,
+    lastName,
+    timezone,
+    country,
+    userSettings: { theme, profileComplete },
+  } = profile;
+  return (
+    <div className="card w-96 bg-primary text-primary-content  my-4 ">
+      <figure>
+        <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">
+          {firstName} {lastName}
+        </h2>
+        <p>Time Zone: {timezone}</p>
+        <p>Country: {country}</p>
+
+        <p>Current Theme: {theme}</p>
+        <p>Completed Profile Setup : {profileComplete.toString()}</p>
+        <div className="card-actions justify-end">
+          <button className="btn btn-base-300 ">
+            <FontAwesomeIcon icon={faEdit} />
+            Edit Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const UserProfile = () => {
   const {
@@ -10,31 +45,19 @@ const UserProfile = () => {
   } = Route.useRouteContext();
   const sq = useSuspenseQuery(userInfoQueryOptions(user!.token));
   const profile = sq.data;
+  const groups = [
+    { groupName: "Group 1", currentWeek: "12" },
+    { groupName: "Group 2", currentWeek: "12" },
+    { groupName: "Group 3", currentWeek: "12" },
+  ];
   return (
     <>
-      <div className="card w-96 bg-primary text-primary-content mx-auto my-4 ">
-        <figure>
-          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">
-            {profile.firstName} {profile.lastName}
-          </h2>
-          <p>Time Zone: {profile.timezone}</p>
-          <p>Country: {profile.country}</p>
-
-          <p>Current Theme: {profile.userSettings.theme}</p>
-          <p>
-            Completed Profile Setup :{" "}
-            {profile.userSettings.profileComplete.toString()}
-          </p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-secondary">
-              {" "}
-              <FontAwesomeIcon icon={faEdit} />
-              Edit Profile
-            </button>
-          </div>
+      <div className="flex items-center justify-center mx-auto gap-10">
+        <ProfileCard profile={profile} />
+        <div className="flex flex-col gap-4">
+          {groups.map((group) => (
+            <GroupCard group={group} />
+          ))}
         </div>
       </div>
     </>
