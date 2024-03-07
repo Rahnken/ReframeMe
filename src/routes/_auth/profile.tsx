@@ -6,6 +6,8 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { TUserInfo } from "../../types";
 import { GroupCard } from "../../components/component-parts/group-card";
 
+import { ThemeListButtons } from "../../components/component-parts/ThemeListButtons";
+
 const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
   const {
     firstName,
@@ -14,6 +16,7 @@ const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
     country,
     userSettings: { theme, profileComplete },
   } = profile;
+
   return (
     <div className="card w-96 bg-primary text-primary-content  my-4 ">
       <figure>
@@ -29,7 +32,7 @@ const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
         <p>Current Theme: {theme}</p>
         <p>Completed Profile Setup : {profileComplete.toString()}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-base-300 ">
+          <button className="btn btn-base-300">
             <FontAwesomeIcon icon={faEdit} />
             Edit Profile
           </button>
@@ -43,12 +46,13 @@ const UserProfile = () => {
   const {
     auth: { user },
   } = Route.useRouteContext();
+
   const sq = useSuspenseQuery(userInfoQueryOptions(user!.token));
   const profile = sq.data;
   const groups = [
-    { groupName: "Group 1", currentWeek: "12" },
-    { groupName: "Group 2", currentWeek: "12" },
-    { groupName: "Group 3", currentWeek: "12" },
+    { id: "1a", groupName: "Group 1", currentWeek: "12" },
+    { id: "1e", groupName: "Group 2", currentWeek: "12" },
+    { id: "1f", groupName: "Group 3", currentWeek: "12" },
   ];
   return (
     <>
@@ -56,9 +60,10 @@ const UserProfile = () => {
         <ProfileCard profile={profile} />
         <div className="flex flex-col gap-4">
           {groups.map((group) => (
-            <GroupCard group={group} />
+            <GroupCard key={group.id} group={group} />
           ))}
         </div>
+        <ThemeListButtons />
       </div>
     </>
   );

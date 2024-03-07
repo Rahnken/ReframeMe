@@ -1,10 +1,11 @@
 import { useAuth } from "../providers/auth.provider";
 import { useQuery } from "@tanstack/react-query";
 import { TGoal } from "../types";
-import { Goal } from "./component-parts/goal";
+
 import { goalsQueryOptions } from "../api/goals/goalQueries";
 import { GroupCard } from "./component-parts/group-card";
 import { DashboardGoalCard } from "./component-parts/dashboard-goal";
+import { ThemeListButtons } from "./component-parts/ThemeListButtons";
 type Group = { groupName: string; currentWeek: string };
 
 export function Dashboard() {
@@ -21,11 +22,12 @@ export function Dashboard() {
   return (
     <>
       <div className="flex gap-3 ">
-        <div className="card card-bordered border-primary border-4 ml-4 bg-base-300 max-h-40 ">
+        <div className="card card-bordered border-primary border-4 ml-4 bg-base-300  ">
           <div className="card-body">
             <h4 className="card-title">
               Welcome Back {user?.userInfo.username}
             </h4>
+            <ThemeListButtons />
           </div>
         </div>
 

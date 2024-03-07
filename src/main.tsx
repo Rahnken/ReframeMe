@@ -10,6 +10,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFontAwesome } from "@fortawesome/free-brands-svg-icons";
 import { AuthProvider, useAuth } from "./providers/auth.provider";
+import { ThemeProvider, useThemeProvider } from "./providers/theme.provider";
 
 library.add(fas, faTwitter, faFontAwesome);
 export const queryClient = new QueryClient();
@@ -17,7 +18,7 @@ export const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
-  context: { auth: undefined!, queryClient },
+  context: { auth: undefined!, theme: undefined!, queryClient },
 });
 declare module "@tanstack/react-router" {
   interface Register {
@@ -27,7 +28,8 @@ declare module "@tanstack/react-router" {
 
 function InnerApp() {
   const auth = useAuth();
-  return <RouterProvider router={router} context={{ auth }} />;
+  const theme = useThemeProvider();
+  return <RouterProvider router={router} context={{ auth, theme }} />;
 }
 
 function App() {
@@ -35,7 +37,9 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <InnerApp />
+          <ThemeProvider>
+            <InnerApp />
+          </ThemeProvider>
         </AuthProvider>
       </QueryClientProvider>
     </>

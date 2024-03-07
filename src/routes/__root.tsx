@@ -1,16 +1,13 @@
-import {
-  createRootRouteWithContext,
-  Link,
-  Outlet,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { AuthContextType, useAuth } from "../providers/auth.provider";
+import { AuthContextType } from "../providers/auth.provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Navbar } from "../components/component-parts/navbar";
+import { ThemeContextType } from "../providers/theme.provider";
 
 interface RouterContext {
   auth: AuthContextType;
+  theme: ThemeContextType;
   queryClient: QueryClient;
 }
 
