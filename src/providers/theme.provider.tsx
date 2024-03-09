@@ -8,9 +8,9 @@ import {
 import { z } from "zod";
 
 // Define your ThemeType as a Zod schema
-const ThemeTypeSchema = z.enum(["coffee", "sunset", "reframeDark"]);
+const ThemeTypeSchema = z.enum(["coffee", "sunset", "reframeDark", "emerald"]);
 
-type ThemeType = z.infer<typeof ThemeTypeSchema>;
+export type ThemeType = z.infer<typeof ThemeTypeSchema>;
 
 export type ThemeContextType = {
   theme: ThemeType;

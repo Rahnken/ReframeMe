@@ -13,6 +13,7 @@ import {
 import { GoalProgressUpdateBody } from "../../api/goals/goals";
 import { useAuth } from "../../providers/auth.provider";
 import { useUpdateGoalProgressMutation } from "../../api/goals/goalQueries";
+import { useThemeProvider } from "../../providers/theme.provider";
 
 export const GoalAccordion = ({ values }: { values: TGoalProgress[] }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -59,6 +60,7 @@ const AccordionItem = ({
   onClick: () => void;
 }) => {
   const { user } = useAuth();
+  const { theme } = useThemeProvider();
   const [progressInput, setProgressInput] = useState(completedAmount);
   const [feedbackInput, setFeedbackInput] = useState(feedback);
   const [wantToUpdate, setWantToUpdate] = useState(false);
@@ -111,7 +113,7 @@ const AccordionItem = ({
           </p>
         </div>
         <div
-          className={`collapse-content bg-slate-600 rounded-b-xl py-0 px-4 ${isOpen ? "open" : ""}`}
+          className={`collapse-content  rounded-b-xl py-0 px-4 ${isOpen ? "open" : ""}`}
         >
           {wantToUpdate ? (
             <form
@@ -134,7 +136,16 @@ const AccordionItem = ({
                         setProgressInput(parseInt(e.target.value)),
                     }}
                   />
-                  <small className="mb-4"> /{targetAmount}</small>
+                  <small
+                    className={
+                      theme === "coffee"
+                        ? "mb-4 text-secondary-content "
+                        : "mb-4 text-secondary"
+                    }
+                  >
+                    {" "}
+                    /{targetAmount}
+                  </small>
                 </div>
                 <TextInput
                   labelText="Add Feedback"

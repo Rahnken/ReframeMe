@@ -33,11 +33,9 @@ export function Dashboard() {
 
         <div className="flex flex-wrap gap-3 rounded-md  p-2  content-start">
           {isSuccess &&
-            data
-              .slice(0, 4)
-              .map((goal: TGoal) => (
-                <DashboardGoalCard key={goal.id} goal={goal} />
-              ))}
+            data.map((goal: TGoal) => (
+              <DashboardGoalCard key={goal.id} goal={goal} />
+            ))}
         </div>
         <div className="flex flex-col gap-3 p-5">
           {isSuccess &&

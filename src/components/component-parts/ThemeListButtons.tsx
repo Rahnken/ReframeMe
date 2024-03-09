@@ -1,37 +1,24 @@
-import { useThemeProvider } from "../../providers/theme.provider";
+import { ThemeType, useThemeProvider } from "../../providers/theme.provider";
 
 export const ThemeListButtons = () => {
   const { updateTheme } = useThemeProvider();
+  const themes: ThemeType[] = ["coffee", "sunset", "reframeDark", "emerald"];
   return (
     <div className="join join-vertical bg-primary rounded-lg">
-      <h4 className="join-item text-primary-content text-center">
+      <h4 className="join-item text-primary-content p-4 text-center">
         {" "}
         Set Theme to
       </h4>
-      <button
-        className="btn btn-primary join-item"
-        onClick={() => {
-          updateTheme("sunset");
-        }}
-      >
-        Sunset
-      </button>
-      <button
-        className="btn btn-primary  join-item"
-        onClick={() => {
-          updateTheme("coffee");
-        }}
-      >
-        Coffee
-      </button>
-      <button
-        className="btn btn-primary  join-item"
-        onClick={() => {
-          updateTheme("reframeDark");
-        }}
-      >
-        Reframe Default
-      </button>
+      {themes.map((theme) => (
+        <button
+          className="btn btn-primary join-item"
+          onClick={() => {
+            updateTheme(theme);
+          }}
+        >
+          {theme}
+        </button>
+      ))}
     </div>
   );
 };

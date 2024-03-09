@@ -45,6 +45,7 @@ export default {
     themes: [
       "coffee",
       "sunset",
+      "emerald",
       {
         reframeDark: {
           primary: "#ff7f0a",

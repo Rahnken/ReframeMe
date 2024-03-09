@@ -7,7 +7,7 @@ import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
 } from "../../../../api/goals/goalQueries";
-import { TGoal, inputStyleClasses } from "../../../../types";
+import { TGoal } from "../../../../types";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSuspenseQuery } from "@tanstack/react-query";
