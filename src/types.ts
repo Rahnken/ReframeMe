@@ -8,6 +8,23 @@ export type TGoalProgress = {
     weekNumber:number;
 }
 
+export type TGroupUser = {
+    id:string;
+    group_id:string;
+    user_id:string;
+    user:{
+        username:string
+    }
+    role : "MEMBER" | "ADMIN"
+}
+
+export type TGroup = {
+    id:string;
+    name:string;
+    description:string;
+    users:TGroupUser[]
+    sharedGoals:TGoal[]
+}
 
 export type TGoal = {
     id: string;

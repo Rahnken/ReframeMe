@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { userInfoQueryOptions } from "../../api/users/userQueryOptions";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { TUserInfo } from "../../types";
+import { TGroup, TUserInfo } from "../../types";
 import { GroupCard } from "../../components/component-parts/group-card";
 
 import { ThemeListButtons } from "../../components/component-parts/ThemeListButtons";
+import { groupQueryOptions } from "../../api/groups/groupQueries";
 
 const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
   const {
@@ -47,19 +48,14 @@ const UserProfile = () => {
     auth: { user },
   } = Route.useRouteContext();
 
-  const sq = useSuspenseQuery(userInfoQueryOptions(user!.token));
-  const profile = sq.data;
-  const groups = [
-    { id: "1a", groupName: "Group 1", currentWeek: "12" },
-    { id: "1e", groupName: "Group 2", currentWeek: "12" },
-    { id: "1f", groupName: "Group 3", currentWeek: "12" },
-  ];
+  const { data: profile } = useSuspenseQuery(userInfoQueryOptions(user!.token));
+  const { data: groupData } = useSuspenseQuery(groupQueryOptions(user!.token));
   return (
     <>
       <div className="flex items-center justify-center mx-auto gap-10">
         <ProfileCard profile={profile} />
         <div className="flex flex-col gap-4">
-          {groups.map((group) => (
+          {groupData.map((group: TGroup) => (
             <GroupCard key={group.id} group={group} />
           ))}
         </div>
@@ -71,7 +67,8 @@ const UserProfile = () => {
 
 export const Route = createFileRoute("/_auth/profile")({
   loader: ({ context: { auth, queryClient } }) => {
-    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token || ""));
+    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token));
+    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token));
   },
   component: UserProfile,
 });

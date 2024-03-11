@@ -49,6 +49,11 @@ export const Navbar = () => {
                     Profile
                   </Link>
                 </li>
+                <li className="my-2">
+                  <Link to="/groups" className="">
+                    Groups
+                  </Link>
+                </li>
               </>
             ) : (
               <li> Please sign in or sign up</li>
@@ -80,6 +85,11 @@ export const Navbar = () => {
               <li className="mx-2">
                 <Link to="/profile" className="btn [&.active]:btn-primary ">
                   Profile
+                </Link>
+              </li>
+              <li className="mx-2">
+                <Link to="/groups" className="btn [&.active]:btn-primary ">
+                  Groups
                 </Link>
               </li>
             </>
