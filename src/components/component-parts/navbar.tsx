@@ -30,28 +30,29 @@ export const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3  z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-sm dropdown-content mt-3  z-[1] p-2 shadow bg-base-100 rounded-box w-52 "
           >
             {auth.authState === "authenticated" ? (
               <>
-                <li className="my-2">
-                  <Link to="/dashboard" className="">
-                    Dashboard
-                  </Link>
-                </li>
                 <li className="my-2">
                   <Link to="/goals" className="">
                     Goals
                   </Link>
                 </li>
                 <li className="my-2">
-                  <Link to="/profile" className="">
-                    Profile
+                  <Link to="/groups" className="">
+                    Groups
+                  </Link>
+                </li>
+                <div className="divider divider-primary"></div>
+                <li className="my-2">
+                  <Link to="/dashboard" className="">
+                    Dashboard
                   </Link>
                 </li>
                 <li className="my-2">
-                  <Link to="/groups" className="">
-                    Groups
+                  <Link to="/profile" className="">
+                    Profile
                   </Link>
                 </li>
               </>
@@ -73,23 +74,13 @@ export const Navbar = () => {
           {auth.authState === "authenticated" ? (
             <>
               <li className="mx-2">
-                <Link to="/dashboard" className="btn [&.active]:btn-primary ">
-                  Dashboard
+                <Link to="/groups" className="btn [&.active]:btn-primary ">
+                  Groups
                 </Link>
               </li>
               <li className="mx-2">
                 <Link to="/goals" className="btn [&.active]:btn-primary ">
                   Goals
-                </Link>
-              </li>
-              <li className="mx-2">
-                <Link to="/profile" className="btn [&.active]:btn-primary ">
-                  Profile
-                </Link>
-              </li>
-              <li className="mx-2">
-                <Link to="/groups" className="btn [&.active]:btn-primary ">
-                  Groups
                 </Link>
               </li>
             </>
@@ -100,14 +91,25 @@ export const Navbar = () => {
       </div>
       <div className="navbar-end">
         {auth.authState === "authenticated" ? (
-          <div className="ml-auto mr-10 flex gap-4 items-center">
-            <button
-              type="button"
+          <div className="flex gap-4 items-center">
+            <Link
+              to="/dashboard"
+              className="btn [&.active]:btn-primary max-md:hidden"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/profile"
+              className="btn [&.active]:btn-primary max-md:hidden"
+            >
+              Profile
+            </Link>
+            <div
               onClick={handleLogout}
-              className="bg-slate-500 text-white py-2 px-4 rounded-md"
+              className="btn btn-neutral text-white py-2 px-4 rounded-md"
             >
               Logout
-            </button>
+            </div>
           </div>
         ) : (
           <div className="ml-auto mr-10 flex gap-4">

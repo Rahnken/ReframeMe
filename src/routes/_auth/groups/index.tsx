@@ -3,6 +3,8 @@ import { groupQueryOptions } from "../../../api/groups/groupQueries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { GroupCard } from "../../../components/component-parts/group-card";
 import { TGroup } from "../../../types";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Route = createFileRoute("/_auth/groups/")({
   loader: ({ context: { auth, queryClient } }) =>
@@ -20,6 +22,7 @@ function GroupsPage() {
     <>
       <div className="flex flex-col items-end m-3">
         <Link to="/groups/create" className="btn btn-secondary">
+          <FontAwesomeIcon icon={faAdd} />
           Create New Group
         </Link>
 

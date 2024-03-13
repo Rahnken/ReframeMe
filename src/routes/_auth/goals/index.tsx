@@ -3,6 +3,8 @@ import { Goal } from "../../../components/component-parts/goal";
 import { TGoal } from "../../../types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { goalsQueryOptions } from "../../../api/goals/goalQueries";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
 
 export const Route = createFileRoute("/_auth/goals/")({
   loader: ({ context: { auth, queryClient } }) =>
@@ -20,7 +22,7 @@ function GoalsPage() {
     <>
       <div className="flex flex-col items-end m-3">
         <Link to="/goals/create" className="btn btn-secondary">
-          Create New Goal
+          <FontAwesomeIcon icon={faAdd} /> Create New Goal
         </Link>
 
         <div className="md:container mx-auto w-2/3 flex flex-wrap gap-4 mt-3">

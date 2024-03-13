@@ -1,11 +1,8 @@
-import { buttonStyles, invertedButtonStyles, TGoal } from "../../../../types";
+import { TGoal } from "../../../../types";
 import { GoalAccordion } from "../../../../components/component-parts/GoalAccordian";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import {
-  goalQueryIdOptions,
-  useUpdateGoalMutation,
-} from "../../../../api/goals/goalQueries";
+import { goalQueryIdOptions } from "../../../../api/goals/goalQueries";
 
 const SpecificGoal = () => {
   const {
@@ -15,16 +12,6 @@ const SpecificGoal = () => {
   const sq = useSuspenseQuery(goalQueryIdOptions(user!.token, goalId));
   const goal: TGoal = sq.data;
 
-  const onError = (e: Error) => {
-    console.error(e.message);
-  };
-
-  const mutation = useUpdateGoalMutation(
-    user!.token,
-    goal.id,
-    () => {},
-    onError
-  );
   return (
     <div className="p-4 rounded-xl flex flex-col mx-auto md:w-3/4 sm:w-1/2 bg-slate-700 m-2 gap-3">
       <div className="flex w-full items-center justify-between">
@@ -33,17 +20,8 @@ const SpecificGoal = () => {
           {goal.title}
         </h1>
         <div className="flex gap-2">
-          <button
-            type="button"
-            className={goal.isPrivate ? buttonStyles : invertedButtonStyles}
-            onClick={() => {
-              mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
-            }}
-          >
-            {goal.isPrivate ? "Share" : "Unshare"}
-          </button>
           <Link
-            className={buttonStyles}
+            className="btn btn-primary"
             to="/goals/$goalId/edit"
             params={{ goalId: goal.id }}
           >
