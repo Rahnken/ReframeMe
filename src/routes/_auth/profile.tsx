@@ -49,15 +49,28 @@ const UserProfile = () => {
   } = Route.useRouteContext();
 
   const { data: profile } = useSuspenseQuery(userInfoQueryOptions(user!.token));
-  const { data: groupData } = useSuspenseQuery(groupQueryOptions(user!.token));
+  const { data: groupData }: { data: TGroup[] } = useSuspenseQuery(
+    groupQueryOptions(user!.token)
+  );
+
+  const adminUser = (group: TGroup) =>
+    group.users.find((user: { role: string }) => user.role === "ADMIN")!.user;
+
   return (
     <>
       <div className="flex items-center justify-center mx-auto gap-10">
         <ProfileCard profile={profile} />
-        <div className="flex flex-col gap-4">
-          {groupData.map((group: TGroup) => (
-            <GroupCard key={group.id} group={group} />
-          ))}
+        <div className="flex flex-col gap-4 bg-primary rounded-lg p-8">
+          <h2 className="font-headers text-3xl text-center mb-5 underline text-primary-content ">
+            Groups You Own
+          </h2>
+          {groupData
+            .filter(
+              (group) => adminUser(group).username === user?.userInfo.username
+            )
+            .map((group: TGroup) => (
+              <GroupCard key={group.id} group={group} />
+            ))}
         </div>
         <ThemeListButtons />
       </div>

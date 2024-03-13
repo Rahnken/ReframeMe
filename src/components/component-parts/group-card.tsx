@@ -3,7 +3,7 @@ import { TGroup } from "../../types";
 
 export const GroupCard = ({ group }: { group: TGroup }) => {
   return (
-    <div className="card bg-secondary max-h-50 border-secondary border-4  hover:border-6 hover:border-primary text-secondary-content w-96 ">
+    <div className="card bg-secondary max-h-50 border-secondary border-4  hover:border-6 hover:border-base-300 text-secondary-content w-96 ">
       <Link to="/groups/$groupId" params={{ groupId: group.id }}>
         <div className="card-body">
           <h2 className="card-title">{group.name}</h2>

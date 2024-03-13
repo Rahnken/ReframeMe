@@ -74,12 +74,18 @@ export const Navbar = () => {
           {auth.authState === "authenticated" ? (
             <>
               <li className="mx-2">
-                <Link to="/groups" className="btn [&.active]:btn-primary ">
+                <Link
+                  to="/groups"
+                  className="btn btn-secondary [&.active]:btn-primary "
+                >
                   Groups
                 </Link>
               </li>
               <li className="mx-2">
-                <Link to="/goals" className="btn [&.active]:btn-primary ">
+                <Link
+                  to="/goals"
+                  className="btn btn-secondary [&.active]:btn-primary "
+                >
                   Goals
                 </Link>
               </li>
@@ -94,19 +100,19 @@ export const Navbar = () => {
           <div className="flex gap-4 items-center">
             <Link
               to="/dashboard"
-              className="btn [&.active]:btn-primary max-md:hidden"
+              className="btn btn-accent [&.active]:btn-primary max-md:hidden"
             >
               Dashboard
             </Link>
             <Link
               to="/profile"
-              className="btn [&.active]:btn-primary max-md:hidden"
+              className="btn btn-accent [&.active]:btn-primary max-md:hidden"
             >
               Profile
             </Link>
             <div
               onClick={handleLogout}
-              className="btn btn-neutral text-white py-2 px-4 rounded-md"
+              className="btn btn-accent  py-2 px-4 rounded-md"
             >
               Logout
             </div>
@@ -114,17 +120,17 @@ export const Navbar = () => {
         ) : (
           <div className="ml-auto mr-10 flex gap-4">
             <Link
-              to="/login"
-              className=" text-2xl rounded-md  p-3 hover:bg-secondary-content hover:text-slate-100 text-primary [&.active]:font-bold "
-            >
-              Sign In
-            </Link>
-            <Link
               to="/register"
-              className="text-2xl  rounded-md p-3 hover:bg-secondary-content hover:text-slate-50 text-primary [&.active]:font-bold "
+              className="text-2xl  btn btn-primary [&.active]:font-bold "
             >
               {" "}
               Sign Up
+            </Link>
+            <Link
+              to="/login"
+              className=" text-2xl btn btn-secondary [&.active]:font-bold "
+            >
+              Sign In
             </Link>
           </div>
         )}

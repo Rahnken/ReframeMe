@@ -67,6 +67,27 @@ export default {
           error: "#f87171",
         },
       },
+      {
+        reframeLight: {
+          primary: "#ff7f0a",
+
+          secondary: "#66cc99",
+
+          accent: "#fde047",
+
+          neutral: "#d1d5db",
+
+          "base-100": "#ffffe2",
+
+          info: "#00aeef",
+
+          success: "#00ff76",
+
+          warning: "#ca8a04",
+
+          error: "#f87171",
+        },
+      },
     ],
     darkTheme: "reframeDark", // name of one of the included themes for dark mode
     base: true, // applies background color and foreground color for root element by default
