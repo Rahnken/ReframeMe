@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { userInfoQueryOptions } from "../../api/users/userQueryOptions";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { TGroup, TUserInfo } from "../../types";

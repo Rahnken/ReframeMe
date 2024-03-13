@@ -30,19 +30,6 @@ export function Goal({ goal }: { goal: TGoal }) {
               {goal.title}
             </Link>
           </h3>{" "}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              console.log("Button pressed", {
-                id: goal.id,
-                isPrivate: !goal.isPrivate,
-              });
-              mutation.mutate({ id: goal.id, isPrivate: !goal.isPrivate });
-            }}
-          >
-            {goal.isPrivate ? "Share" : "Unshare"}
-          </button>
         </div>
         <div className="mx-auto p-5 rounded-lg">
           <p className=" text-2xl text-secondary-content border-y-2  text-center ">

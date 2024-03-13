@@ -23,7 +23,13 @@ export type TGroup = {
     name:string;
     description:string;
     users:TGroupUser[]
-    sharedGoals:TGoal[]
+    sharedGoals:TSharedGoal[]
+}
+
+export type TSharedGoal = {
+    id:string;
+    goal_id:string;
+    group_id:string;
 }
 
 export type TGoal = {

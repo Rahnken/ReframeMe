@@ -16,7 +16,8 @@ const goalRequestSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   isPrivate: z.boolean().optional(),
-  weeklyTrackingTotal:z.number().optional()
+  weeklyTrackingTotal:z.number().optional(),
+  sharedGroups:z.string().array().optional()
 });
 
 const createGoalRequestSchema = z.object({
