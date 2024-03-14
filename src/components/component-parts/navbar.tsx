@@ -112,7 +112,7 @@ export const Navbar = () => {
             </Link>
             <div
               onClick={handleLogout}
-              className="btn btn-accent  py-2 px-4 rounded-md"
+              className="btn btn-accent border-4 inset-3 border-primary py-2 px-4 rounded-md"
             >
               Logout
             </div>

@@ -17,10 +17,11 @@ import { Route as IndexImport } from './routes/index'
 import { Route as PublicIndexImport } from './routes/_public/index'
 import { Route as PublicRegisterImport } from './routes/_public/register'
 import { Route as PublicLoginImport } from './routes/_public/login'
-import { Route as AuthProfileImport } from './routes/_auth/profile'
 import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
+import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthGroupsIndexImport } from './routes/_auth/groups/index'
 import { Route as AuthGoalsIndexImport } from './routes/_auth/goals/index'
+import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
 import { Route as AuthGroupsCreateImport } from './routes/_auth/groups/create'
 import { Route as AuthGoalsCreateImport } from './routes/_auth/goals/create'
 import { Route as AuthGroupsGroupIdIndexImport } from './routes/_auth/groups/$groupId/index'
@@ -60,13 +61,13 @@ const PublicLoginRoute = PublicLoginImport.update({
   getParentRoute: () => PublicRoute,
 } as any)
 
-const AuthProfileRoute = AuthProfileImport.update({
-  path: '/profile',
+const AuthDashboardRoute = AuthDashboardImport.update({
+  path: '/dashboard',
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthDashboardRoute = AuthDashboardImport.update({
-  path: '/dashboard',
+const AuthProfileIndexRoute = AuthProfileIndexImport.update({
+  path: '/profile/',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -77,6 +78,11 @@ const AuthGroupsIndexRoute = AuthGroupsIndexImport.update({
 
 const AuthGoalsIndexRoute = AuthGoalsIndexImport.update({
   path: '/goals/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthProfileEditRoute = AuthProfileEditImport.update({
+  path: '/profile/edit',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -130,10 +136,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/profile': {
-      preLoaderRoute: typeof AuthProfileImport
-      parentRoute: typeof AuthImport
-    }
     '/_public/login': {
       preLoaderRoute: typeof PublicLoginImport
       parentRoute: typeof PublicImport
@@ -154,12 +156,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthGroupsCreateImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/profile/edit': {
+      preLoaderRoute: typeof AuthProfileEditImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/goals/': {
       preLoaderRoute: typeof AuthGoalsIndexImport
       parentRoute: typeof AuthImport
     }
     '/_auth/groups/': {
       preLoaderRoute: typeof AuthGroupsIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/profile/': {
+      preLoaderRoute: typeof AuthProfileIndexImport
       parentRoute: typeof AuthImport
     }
     '/_auth/goals/$goalId/edit': {
@@ -187,11 +197,12 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   AuthRoute.addChildren([
     AuthDashboardRoute,
-    AuthProfileRoute,
     AuthGoalsCreateRoute,
     AuthGroupsCreateRoute,
+    AuthProfileEditRoute,
     AuthGoalsIndexRoute,
     AuthGroupsIndexRoute,
+    AuthProfileIndexRoute,
     AuthGoalsGoalIdEditRoute,
     AuthGroupsGroupIdEditRoute,
     AuthGoalsGoalIdIndexRoute,

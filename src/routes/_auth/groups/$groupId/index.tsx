@@ -52,9 +52,7 @@ function SpecificGroup() {
               <button
                 className="btn btn-secondary disabled:btn-outline  "
                 disabled={currentWeek === 0}
-                onClick={() => {
-                  if (currentWeek != 0) setCurrentWeek(currentWeek - 1);
-                }}
+                onClick={() => setCurrentWeek(currentWeek - 1)}
               >
                 Previous Week
               </button>
@@ -62,10 +60,7 @@ function SpecificGroup() {
               <button
                 className="btn btn-secondary disabled:btn-outline  "
                 disabled={currentWeek === goals[0].goalWeeks.length - 1}
-                onClick={() => {
-                  if (currentWeek != goals[0].goalWeeks.length - 1)
-                    setCurrentWeek(currentWeek + 1);
-                }}
+                onClick={() => setCurrentWeek(currentWeek + 1)}
               >
                 Next Week
               </button>
@@ -91,9 +86,15 @@ function SpecificGroup() {
             aria-label="Close"
           ></label>
           <div className="card card-bordered border-4 border-primary">
-            <div className="card-body">
-              <h2 className="card-title">{group.name}</h2>
-              <p>{group.description}</p>
+            <div className="card-body ">
+              <div className="join join-vertical text-center">
+                <h2 className="text-2xl font-bold join-item p-4 bg-secondary rounded-md text-secondary-content">
+                  {group.name}
+                </h2>
+                <p className="bg-secondary text-primary-content join-item">
+                  {group.description}
+                </p>
+              </div>
               <h3> Group Members</h3>
               <small>
                 {" "}
@@ -178,7 +179,7 @@ function WeekGoal({
             <h2 className="card-title ">{goal.title}</h2>
             <p>{goal.description} </p>
             <progress
-              className="progress progress-secondary w-42 border-2 border-base-300 h-12 "
+              className="progress progress-secondary w-42 border-2 inset-2 border-base-300 h-12 "
               value={goal.goalWeeks[currentWeek].completedAmount}
               max={goal.goalWeeks[currentWeek].targetAmount}
             ></progress>

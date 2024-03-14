@@ -26,6 +26,7 @@ export const ThemeListButtons = () => {
       </h4>
       {themes.map((theme) => (
         <button
+          key={theme}
           className="btn btn-primary join-item"
           onClick={() => {
             updateTheme(theme);
