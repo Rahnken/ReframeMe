@@ -7,8 +7,8 @@ import {
 } from "../../../api/users/userQueryOptions";
 import moment from "moment-timezone";
 import Select from "react-tailwindcss-select";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { TUpdateUserInfo } from "../../../api/users/userInfo";
+import { TUserInfo } from "../../../types";
 
 export const Route = createFileRoute("/_auth/profile/edit")({
   loader: ({ context: { auth, queryClient } }) => {
@@ -26,9 +26,11 @@ function EditProfile() {
   }));
 
   const { auth, queryClient } = Route.useRouteContext();
-  const { data: profile } = useSuspenseQuery(
-    userInfoQueryOptions(auth.user!.token)
-  );
+  const profile: TUserInfo = queryClient.getQueryData([
+    "userInfo",
+    auth.user!.token,
+  ])!;
+
   type ThemeOption = { label: string; value: string };
   type TimezoneOption = { label: string; value: string };
   const themeOptions: ThemeOption[] = [
@@ -83,9 +85,9 @@ function EditProfile() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl my-4  ">Edit Profile</h1>
+      <h1 className="text-2xl my-4">Edit Profile</h1>
       <form
-        className=" flex-col flex gap-4 bg-primary rounded-lg items-center p-10 "
+        className="flex-col flex gap-4 bg-primary rounded-lg items-center p-10"
         onSubmit={handleSubmit}
       >
         <TextInput
@@ -131,29 +133,54 @@ function EditProfile() {
             isSearchable={true}
             onChange={(value) => setTimezoneInput(value)}
             classNames={{
-              list: "w-full bg-base-200 placeholder-secondary-content text-secondary-content",
-              searchBox: "w-full bg-base-200 text-primary",
-              menu: "w-full bg-base-200 placeholder-secondary-content text-secondary-content",
+              searchBox:
+                "w-full p-2 bg-base-300 text-primary rounded shadow-sm transition-all duration-300 focus:outline-none",
+              searchIcon: "hidden",
+              menuButton: ({ isDisabled }) =>
+                `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
+                  isDisabled
+                    ? "bg-neutral bg-opacity-20 cursor-not-allowed"
+                    : "bg-base-300 "
+                }`,
+              menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
+              listItem: ({ isSelected }) =>
+                `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
+                  isSelected
+                    ? `text-primary`
+                    : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
+                }`,
             }}
           />
         </label>
         <label className="form-control w-full max-w-xs">
-          <span className="label text-lg text-primary-content ">Theme</span>
+          <span className="label text-lg text-primary-content">Theme</span>
           <Select
             value={themeInput}
             options={themeOptions}
             onChange={(value) => setThemeInput(value)}
             primaryColor="indigo"
             classNames={{
-              searchContainer:
-                "w-full bg-base-200 placeholder-secondary-content",
-
-              menu: "w-full bg-base-200  text-primary",
+              menuButton: ({ isDisabled }) =>
+                `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
+                  isDisabled
+                    ? "bg-neutral bg-opacity-20 cursor-not-allowed"
+                    : "bg-base-300 "
+                }`,
+              menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
+              listItem: ({ isSelected }) =>
+                `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
+                  isSelected
+                    ? `text-primary`
+                    : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
+                }`,
             }}
           />
         </label>
 
-        <button className="btn btn-primary mt-4 w-full max-w-xs" type="submit">
+        <button
+          className="btn btn-secondary mt-4 w-full max-w-xs"
+          type="submit"
+        >
           Save
         </button>
       </form>

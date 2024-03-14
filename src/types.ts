@@ -30,6 +30,7 @@ export type TSharedGoal = {
     id:string;
     goal_id:string;
     group_id:string;
+    goal: TGoal;
 }
 
 export type TGoal = {

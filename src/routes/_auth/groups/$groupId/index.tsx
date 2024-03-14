@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { groupQueryIdOptions } from "../../../../api/groups/groupQueries";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { TGoal, TGroup, TGroupUser } from "../../../../types";
+import {
+  groupQueryIdOptions,
+  useAddMemberToGroupMutation,
+} from "../../../../api/groups/groupQueries";
+import { TGoal, TGroup, TGroupUser, TSharedGoal } from "../../../../types";
 import { goalsQueryOptions } from "../../../../api/goals/goalQueries";
 import { useState } from "react";
+import { TextInput } from "../../../../components/component-parts/TextInput";
+import { z } from "zod";
 
 export const Route = createFileRoute("/_auth/groups/$groupId/")({
   loader: ({ context: { auth, queryClient }, params: { groupId } }) => {
@@ -16,21 +20,53 @@ export const Route = createFileRoute("/_auth/groups/$groupId/")({
 function SpecificGroup() {
   const {
     auth: { user: authUser },
+    queryClient,
   } = Route.useRouteContext();
 
   const { groupId } = Route.useParams();
 
-  const { data: group }: { data: TGroup } = useSuspenseQuery(
-    groupQueryIdOptions(authUser!.token, groupId)
-  );
-  const { data: goals }: { data: TGoal[] } = useSuspenseQuery(
-    goalsQueryOptions(authUser!.token)
-  );
+  const group = queryClient.getQueryData([
+    "groups",
+    authUser!.token,
+    groupId,
+  ]) as TGroup;
+  // const goals = queryClient.getQueryData(["goals", authUser!.token]) as TGoal[];
   const sharedGoalIds = group.sharedGoals.map(
     (sharedGoal) => sharedGoal.goal_id
   );
+  const [emailInput, setEmailInput] = useState("");
+  const validEmail = z.string().email();
+  const emailInputValid = validEmail.safeParse(emailInput).success;
   const adminUser = group.users.find((user) => user.role === "ADMIN")?.user;
   const [currentWeek, setCurrentWeek] = useState(0);
+
+  const openModal = (id: string) => () => {
+    const modal = document.getElementById(id) as HTMLDialogElement;
+    modal.showModal();
+  };
+  const closeModal = (id: string) => () => {
+    const modal = document.getElementById(id) as HTMLDialogElement;
+    modal.close();
+  };
+  const mutation = useAddMemberToGroupMutation(
+    authUser!.token,
+    groupId,
+    () => {
+      alert("Member added successfully");
+      closeModal("add-member-dialog")();
+    },
+    (e) => console.error("Mutation error:", e.message)
+  );
+
+  const handleModalSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newEmail = formData.get("newEmail") as string;
+
+    if (emailInputValid) {
+      mutation.mutate([{ user_email: newEmail, role: "MEMBER" }]);
+    }
+  };
 
   return (
     <>
@@ -40,7 +76,7 @@ function SpecificGroup() {
           htmlFor="group-drawer"
           className="btn btn-primary drawer-button lg:hidden"
         >
-          Open drawer
+          Open Group Options
         </label>
 
         <div className="drawer-content flex flex-col mx-4">
@@ -59,34 +95,32 @@ function SpecificGroup() {
               <h4 className="font-bold text-xl">Week {currentWeek + 1}</h4>
               <button
                 className="btn btn-secondary disabled:btn-outline  "
-                disabled={currentWeek === goals[0].goalWeeks.length - 1}
+                disabled={currentWeek === 11}
                 onClick={() => setCurrentWeek(currentWeek + 1)}
               >
                 Next Week
               </button>
             </div>
             <div className="flex gap-4">
-              {goals
-                .filter((goal) => sharedGoalIds.includes(goal.id))
-                .map((goal: TGoal) => (
-                  <WeekGoal
-                    key={goal.id}
-                    goal={goal}
-                    group={group}
-                    currentWeek={currentWeek}
-                  />
-                ))}
+              {group.sharedGoals.map((sharedGoal: TSharedGoal) => (
+                <WeekGoal
+                  key={sharedGoal.goal.id}
+                  goal={sharedGoal.goal}
+                  group={group}
+                  currentWeek={currentWeek}
+                />
+              ))}
             </div>
           </div>
         </div>
-        <div className="drawer-side">
+        <div className="drawer-side ">
           <label
             htmlFor="group-drawer"
             className="drawer-overlay"
             aria-label="Close"
           ></label>
           <div className="card card-bordered border-4 border-primary">
-            <div className="card-body ">
+            <div className="card-body  ">
               <div className="join join-vertical text-center">
                 <h2 className="text-2xl font-bold join-item p-4 bg-secondary rounded-md text-secondary-content">
                   {group.name}
@@ -100,33 +134,27 @@ function SpecificGroup() {
                 {" "}
                 Filter Goals by member by selecting them in the list
               </small>
-              <ul>
+              <div className="flex flex-col gap-3">
                 {group.users.map((gUser: TGroupUser) => (
-                  <li key={gUser.id} className="indicator">
+                  <div key={gUser.id} className="indicator">
                     <div className="btn btn-secondary btn-wide place-items-center">
                       {gUser.user.username}
-
-                      <span className="indicator-item badge badge-primary">
-                        {gUser.role}
-                      </span>
+                      {gUser.role === "ADMIN" && (
+                        <span className="indicator-item badge badge-primary">
+                          {gUser.role}
+                        </span>
+                      )}
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
             {authUser?.userInfo.username === adminUser?.username && (
               <div className="card-actions p-3 justify-end">
                 <button className="btn btn-primary">Edit Group</button>
                 <button
                   className="btn btn-primary"
-                  onClick={() => {
-                    const dialog = document.getElementById(
-                      "add-member-dialog"
-                    ) as HTMLDialogElement;
-                    if (dialog) {
-                      dialog.showModal();
-                    }
-                  }}
+                  onClick={openModal("add-member-dialog")}
                 >
                   Add Members
                 </button>
@@ -138,14 +166,33 @@ function SpecificGroup() {
 
       <dialog id="add-member-dialog" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
+          <h3 className="font-bold text-lg">Add a new Member</h3>
           <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
+            <form
+              className="flex flex-col gap-4"
+              method="dialog"
+              onSubmit={handleModalSubmit}
+            >
+              <button
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={() => closeModal("add-member-dialog")()}
+              >
+                ✕
+              </button>
+              <TextInput
+                labelText="New Member Email"
+                inputAttr={{
+                  name: "newEmail",
+                  type: "email",
+                  value: emailInput,
+                  onChange: (e) => setEmailInput(e.target.value),
+                  placeholder: "newEmail",
+                }}
+              />
+
+              <button className="btn btn-secondary" disabled={!emailInputValid}>
+                Add Members
+              </button>
             </form>
           </div>
         </div>
@@ -167,7 +214,6 @@ function WeekGoal({
     (gUser: TGroupUser) => gUser.user_id === goal.user_id
   );
   const username = userForGoal ? userForGoal.user.username : "Unknown";
-
   return (
     <>
       <div className="indicator">

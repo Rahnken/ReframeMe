@@ -46,12 +46,17 @@ const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
 const UserProfile = () => {
   const {
     auth: { user },
+    queryClient,
   } = Route.useRouteContext();
 
-  const { data: profile } = useSuspenseQuery(userInfoQueryOptions(user!.token));
-  const { data: groupData }: { data: TGroup[] } = useSuspenseQuery(
-    groupQueryOptions(user!.token)
-  );
+  const profile: TUserInfo = queryClient.getQueryData([
+    "userInfo",
+    user!.token,
+  ]) as TUserInfo;
+  const groupData: TGroup[] = queryClient.getQueryData([
+    "groups",
+    user!.token,
+  ]) as TGroup[];
 
   const adminUser = (group: TGroup) =>
     group.users.find((user: { role: string }) => user.role === "ADMIN")!.user;

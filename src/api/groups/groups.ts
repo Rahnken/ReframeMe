@@ -7,12 +7,16 @@ const groupCreateRequestSchema = z.object({
     name:z.string(),
     description:z.string()
 })
+const groupMemberAddRequestSchema = z.object({
+    user_email:z.string().email(),
+    role:z.string()
+})
 
 
 type GroupCreateBody = z.infer<typeof groupCreateRequestSchema>
+type GroupMemberAddBody = z.infer<typeof groupMemberAddRequestSchema>
 
-
-export type{GroupCreateBody}
+export type{GroupCreateBody,GroupMemberAddBody}
 
 export const getAllGroupsQuery = async (token:string) => {
     return await fetch(BASE_URL,{
@@ -41,7 +45,7 @@ export const createGroup = async (
 export const addMembersToGroup = async (
   token: string,
   groupId: string,
-  users: Array<{ user_id: string; role: string }>
+  users: Array<GroupMemberAddBody>
 ) => {
   return await fetch(`${BASE_URL}/${groupId}/users`, {
     method: "POST",
