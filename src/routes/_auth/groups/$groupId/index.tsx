@@ -30,15 +30,13 @@ function SpecificGroup() {
     authUser!.token,
     groupId,
   ]) as TGroup;
-  // const goals = queryClient.getQueryData(["goals", authUser!.token]) as TGoal[];
-  const sharedGoalIds = group.sharedGoals.map(
-    (sharedGoal) => sharedGoal.goal_id
-  );
+
+  const [currentWeek, setCurrentWeek] = useState(0);
   const [emailInput, setEmailInput] = useState("");
+
   const validEmail = z.string().email();
   const emailInputValid = validEmail.safeParse(emailInput).success;
   const adminUser = group.users.find((user) => user.role === "ADMIN")?.user;
-  const [currentWeek, setCurrentWeek] = useState(0);
 
   const openModal = (id: string) => () => {
     const modal = document.getElementById(id) as HTMLDialogElement;
@@ -101,7 +99,7 @@ function SpecificGroup() {
                 Next Week
               </button>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-4">
               {group.sharedGoals.map((sharedGoal: TSharedGoal) => (
                 <WeekGoal
                   key={sharedGoal.goal.id}
