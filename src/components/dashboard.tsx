@@ -1,7 +1,13 @@
 import { useAuth } from "../providers/auth.provider";
 import { Link, Outlet } from "@tanstack/react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd, faEdit, faPerson } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAdd,
+  faArchive,
+  faArrowCircleRight,
+  faEdit,
+  faPerson,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Dashboard() {
   const auth = useAuth();
@@ -18,9 +24,9 @@ export function Dashboard() {
           />
           <label
             htmlFor="dashboard-sidebar"
-            className="btn btn-primary drawer-button lg:hidden "
+            className="btn btn-primary btn-sm rounded-s-none drawer-button lg:hidden mt-2 "
           >
-            Open Drawer{" "}
+            <FontAwesomeIcon icon={faArrowCircleRight} />
           </label>
           <div className="drawer-content flex flex-col align-center">
             <Outlet />

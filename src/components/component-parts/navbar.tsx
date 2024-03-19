@@ -39,8 +39,8 @@ export const Navbar = () => {
           >
             {auth.authState === "authenticated" ? (
               <>
-                {links.map((link) => (
-                  <li className="my-2">
+                {links.map((link, index) => (
+                  <li className="my-2" key={`${link.text}${index}`}>
                     <Link to={link.to} className="">
                       {link.text}
                     </Link>

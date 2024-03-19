@@ -1,10 +1,30 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useAuth } from "../providers/auth.provider";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  beforeLoad: async ({ context }) => {
+    if (context.auth.authState === "authenticated") {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
 });
 
 function Index() {
+  const { authState } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (authState === "authenticated") {
+      navigate({ to: "/dashboard" });
+    }
+  }, [authState, navigate]);
+
   return (
     <div className=" p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center">
       <h1 className="text-6xl p-4 font-headers"> Welcome to Reframe Me </h1>

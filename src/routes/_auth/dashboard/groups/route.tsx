@@ -1,10 +1,8 @@
-import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { groupQueryOptions } from "../../../../api/groups/groupQueries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { GroupCard } from "../../../../components/component-parts/group-card";
 import { TGroup } from "../../../../types";
-import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Route = createFileRoute("/_auth/dashboard/groups")({
   loader: ({ context: { auth, queryClient } }) =>
