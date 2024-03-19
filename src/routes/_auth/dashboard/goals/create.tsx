@@ -1,13 +1,13 @@
 import { FormEvent, useState } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GoalCreateBody } from "../../../api/goals/goals";
-import { useAuth } from "../../../providers/auth.provider";
+import { GoalCreateBody } from "../../../../api/goals/goals";
+import { useAuth } from "../../../../providers/auth.provider";
 
-import { useCreateGoalMutation } from "../../../api/goals/goalQueries";
+import { useCreateGoalMutation } from "../../../../api/goals/goalQueries";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ErrorMessage } from "../../../components/component-parts/ErrorMessage";
-import { TextInput } from "../../../components/component-parts/TextInput";
+import { ErrorMessage } from "../../../../components/component-parts/ErrorMessage";
+import { TextInput } from "../../../../components/component-parts/TextInput";
 
 const CreateGoal = () => {
   const { user } = useAuth();
@@ -113,6 +113,6 @@ const CreateGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/_auth/goals/create")({
+export const Route = createFileRoute("/_auth/dashboard/goals/create")({
   component: CreateGoal,
 });

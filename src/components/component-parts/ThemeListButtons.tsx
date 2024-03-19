@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeType, useThemeProvider } from "../../providers/theme.provider";
 
 export const ThemeListButtons = () => {
-  const { updateTheme } = useThemeProvider();
+  const { theme: currentTheme, updateTheme } = useThemeProvider();
   const themes: ThemeType[] = [
     "reframeDark",
     "coffee",
@@ -27,7 +27,7 @@ export const ThemeListButtons = () => {
       {themes.map((theme) => (
         <button
           key={theme}
-          className="btn btn-primary join-item"
+          className={`btn btn-primary join-item ${currentTheme === theme ? "btn-neutral" : ""}`}
           onClick={() => {
             updateTheme(theme);
           }}

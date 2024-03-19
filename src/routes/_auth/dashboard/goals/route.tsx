@@ -1,17 +1,14 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { Goal } from "../../../components/component-parts/goal";
-import { TGoal } from "../../../types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { goalsQueryOptions } from "../../../api/goals/goalQueries";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { goalsQueryOptions } from "../../../../api/goals/goalQueries";
+import { Goal } from "../../../../components/component-parts/goal";
+import { TGoal } from "../../../../types";
 
-export const Route = createFileRoute("/_auth/goals/")({
+export const Route = createFileRoute("/_auth/dashboard/goals")({
+  component: GoalsPage,
   loader: ({ context: { auth, queryClient } }) =>
     queryClient.ensureQueryData(goalsQueryOptions(auth.user!.token)),
-  component: GoalsPage,
 });
-
 function GoalsPage() {
   const {
     auth: { user },
@@ -21,10 +18,7 @@ function GoalsPage() {
   return (
     <>
       <div className="flex flex-col items-end m-3">
-        <Link to="/goals/create" className="btn btn-secondary">
-          <FontAwesomeIcon icon={faAdd} /> Create New Goal
-        </Link>
-
+        <Outlet />
         <div className="md:container mx-auto w-2/3 flex flex-wrap gap-4 mt-3">
           {goals.map((goal: TGoal) => (
             <Goal key={goal.id} goal={goal} />

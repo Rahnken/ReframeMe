@@ -8,6 +8,11 @@ export const Navbar = () => {
     auth.logout();
     navigate({ to: "/" });
   };
+
+  const links = [
+    { to: "/dashboard", text: "Dashboard" },
+    { to: "/profile", text: "Profile" },
+  ];
   return (
     <div className="navbar bg-base-100 p-6 ">
       <div className="navbar-start">
@@ -34,27 +39,13 @@ export const Navbar = () => {
           >
             {auth.authState === "authenticated" ? (
               <>
-                <li className="my-2">
-                  <Link to="/goals" className="">
-                    Goals
-                  </Link>
-                </li>
-                <li className="my-2">
-                  <Link to="/groups" className="">
-                    Groups
-                  </Link>
-                </li>
-                <div className="divider divider-primary"></div>
-                <li className="my-2">
-                  <Link to="/dashboard" className="">
-                    Dashboard
-                  </Link>
-                </li>
-                <li className="my-2">
-                  <Link to="/profile" className="">
-                    Profile
-                  </Link>
-                </li>
+                {links.map((link) => (
+                  <li className="my-2">
+                    <Link to={link.to} className="">
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
               </>
             ) : (
               <li> Please sign in or sign up</li>
@@ -68,32 +59,6 @@ export const Navbar = () => {
             alt="Reframe Me Logo"
           />
         </Link>
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          {auth.authState === "authenticated" ? (
-            <>
-              <li className="mx-2">
-                <Link
-                  to="/groups"
-                  className="btn btn-secondary [&.active]:btn-primary "
-                >
-                  Groups
-                </Link>
-              </li>
-              <li className="mx-2">
-                <Link
-                  to="/goals"
-                  className="btn btn-secondary [&.active]:btn-primary "
-                >
-                  Goals
-                </Link>
-              </li>
-            </>
-          ) : (
-            <li> Please sign in or sign up</li>
-          )}
-        </ul>
       </div>
       <div className="navbar-end">
         {auth.authState === "authenticated" ? (

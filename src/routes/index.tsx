@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className=" p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center">
-      <h1 className="text-3xl p-4 font-headers"> Welcome to Reframe Me </h1>
+      <h1 className="text-6xl p-4 font-headers"> Welcome to Reframe Me </h1>
       <p className="text-xl font-body ">
         Reframe Me is a comprehensive personal development application designed
         to foster alignment and focus on an individual's goals across various

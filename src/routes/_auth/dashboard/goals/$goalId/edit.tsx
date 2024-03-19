@@ -1,17 +1,17 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, FormEvent, useEffect } from "react";
-import { GoalUpdateBody } from "../../../../api/goals/goals";
-import { ErrorMessage } from "../../../../components/component-parts/ErrorMessage";
-import { TextInput } from "../../../../components/component-parts/TextInput";
+import { GoalUpdateBody } from "../../../../../api/goals/goals";
+import { ErrorMessage } from "../../../../../components/component-parts/ErrorMessage";
+import { TextInput } from "../../../../../components/component-parts/TextInput";
 import {
   goalQueryIdOptions,
   useUpdateGoalMutation,
-} from "../../../../api/goals/goalQueries";
-import { TGoal, TGroup } from "../../../../types";
+} from "../../../../../api/goals/goalQueries";
+import { TGoal, TGroup } from "../../../../../types";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { groupQueryOptions } from "../../../../api/groups/groupQueries";
+import { groupQueryOptions } from "../../../../../api/groups/groupQueries";
 
 const EditGoal = () => {
   const {
@@ -28,7 +28,7 @@ const EditGoal = () => {
 
   const onSuccess = () => {
     resetFormInputs();
-    navigate({ to: "/goals/$goalId", params: { goalId: goalId } });
+    navigate({ to: "/dashboard/goals/$goalId", params: { goalId: goalId } });
   };
   const onError = (e: Error) => {
     setServerError(e.message);
@@ -168,7 +168,7 @@ const EditGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/_auth/goals/$goalId/edit")({
+export const Route = createFileRoute("/_auth/dashboard/goals/$goalId/edit")({
   loader: ({ context: { auth, queryClient } }) => {
     queryClient.ensureQueryData(groupQueryOptions(auth.user!.token));
   },

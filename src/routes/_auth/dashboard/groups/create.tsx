@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useAuth } from "../../../providers/auth.provider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import { TextInput } from "../../../components/component-parts/TextInput";
-import { useCreateGroupMutation } from "../../../api/groups/groupQueries";
+import { TextInput } from "../../../../components/component-parts/TextInput";
+import { useCreateGroupMutation } from "../../../../api/groups/groupQueries";
 import { FormEvent, useState } from "react";
-import { ErrorMessage } from "../../../components/component-parts/ErrorMessage";
-import { GroupCreateBody } from "../../../api/groups/groups";
+import { ErrorMessage } from "../../../../components/component-parts/ErrorMessage";
+import { GroupCreateBody } from "../../../../api/groups/groups";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAuth } from "../../../../providers/auth.provider";
 
 const CreateGroup = () => {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ const CreateGroup = () => {
 
   const onSuccess = () => {
     resetFormInputs();
-    navigate({ to: "/groups" });
+    navigate({ to: "/dashboard/groups" });
   };
   const onError = (e: Error) => {
     setServerError(e.message);
@@ -82,6 +83,6 @@ const CreateGroup = () => {
     </>
   );
 };
-export const Route = createFileRoute("/_auth/groups/create")({
+export const Route = createFileRoute("/_auth/dashboard/groups/create")({
   component: CreateGroup,
 });

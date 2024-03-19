@@ -1,6 +1,6 @@
 import { faCheck, faFaceFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "@tanstack/react-router";
+import { Link, Outlet } from "@tanstack/react-router";
 import { TGoal } from "../../types";
 import { useAuth } from "../../providers/auth.provider";
 import { useUpdateGoalMutation } from "../../api/goals/goalQueries";
@@ -23,8 +23,10 @@ export function Goal({ goal }: { goal: TGoal }) {
         <div className="card-actions items-center justify-around backdrop-opacity-20 rounded-md p-3 bg-black/50">
           <h3 className="text-primary text-3xl card-title  font-subHeaders font-medium">
             <Link
-              to="/goals/$goalId"
-              mask={{ to: `/goals/${goal.title.replaceAll(" ", "")}` }}
+              to="/dashboard/goals/$goalId"
+              mask={{
+                to: `/dashboard/goals/${goal.title.replaceAll(" ", "")}`,
+              }}
               params={{ goalId: goal.id }}
             >
               {goal.title}

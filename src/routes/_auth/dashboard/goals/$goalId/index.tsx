@@ -1,8 +1,8 @@
-import { TGoal } from "../../../../types";
-import { GoalAccordion } from "../../../../components/component-parts/GoalAccordian";
+import { TGoal } from "../../../../../types";
+import { GoalAccordion } from "../../../../../components/component-parts/GoalAccordian";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { goalQueryIdOptions } from "../../../../api/goals/goalQueries";
+import { goalQueryIdOptions } from "../../../../../api/goals/goalQueries";
 
 const SpecificGoal = () => {
   const {
@@ -22,7 +22,7 @@ const SpecificGoal = () => {
         <div className="flex gap-2">
           <Link
             className="btn btn-primary"
-            to="/goals/$goalId/edit"
+            to="/dashboard/goals/$goalId/edit"
             params={{ goalId: goal.id }}
           >
             Edit Goal
@@ -43,7 +43,7 @@ const SpecificGoal = () => {
   );
 };
 
-export const Route = createFileRoute("/_auth/goals/$goalId/")({
+export const Route = createFileRoute("/_auth/dashboard/goals/$goalId/")({
   loader: ({ context: { auth, queryClient }, params: { goalId } }) =>
     queryClient.ensureQueryData(goalQueryIdOptions(auth.user!.token, goalId)),
   component: SpecificGoal,

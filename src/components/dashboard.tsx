@@ -1,57 +1,74 @@
 import { useAuth } from "../providers/auth.provider";
-import { useQuery } from "@tanstack/react-query";
-import { TGoal, TGroup } from "../types";
-
-import { goalsQueryOptions } from "../api/goals/goalQueries";
-import { GroupCard } from "./component-parts/group-card";
-import { DashboardGoalCard } from "./component-parts/dashboard-goal";
-import { ThemeListButtons } from "./component-parts/ThemeListButtons";
-import { groupQueryOptions } from "../api/groups/groupQueries";
+import { Link, Outlet } from "@tanstack/react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd, faEdit, faPerson } from "@fortawesome/free-solid-svg-icons";
 
 export function Dashboard() {
   const auth = useAuth();
   const user = auth.user;
 
-  const { isSuccess: goalsIsSuccess, data: goalData } = useQuery(
-    goalsQueryOptions(user!.token)
-  );
-  const { isSuccess: groupIsSuccess, data: groupData } = useQuery(
-    groupQueryOptions(user!.token)
-  );
-
   return (
     <>
       <div className="flex gap-3 ">
-        <div className="card card-bordered ml-4 bg-base-300 w-1/3 ">
-          <div className="card-body">
-            <h4 className="card-title">
-              Welcome Back {user?.userInfo.username}
-            </h4>
-            <ThemeListButtons />
+        <div className="drawer lg:drawer-open bg-base-300 ">
+          <input
+            id="dashboard-sidebar"
+            type="checkbox"
+            className="drawer-toggle"
+          />
+          <label
+            htmlFor="dashboard-sidebar"
+            className="btn btn-primary drawer-button lg:hidden "
+          >
+            Open Drawer{" "}
+          </label>
+          <div className="drawer-content flex flex-col align-center">
+            <Outlet />
           </div>
-        </div>
-        <div className="bg-secondary rounded-lg p-6 ">
-          <h2 className="font-headers  text-secondary-content text-3xl text-center mb-5 underline  ">
-            Your Goals
-          </h2>
-          <div className="flex flex-wrap gap-3 rounded-md  p-2 content-start">
-            {goalsIsSuccess &&
-              goalData.map((goal: TGoal) => (
-                <DashboardGoalCard key={goal.id} goal={goal} />
-              ))}
-          </div>
-        </div>
-        <div className="bg-primary rounded-lg p-6 ">
-          <h2 className="font-headers text-3xl text-center mb-5 underline text-primary-content ">
-            Your Groups
-          </h2>
-          <div className="flex flex-col gap-3 p-5">
-            {groupIsSuccess &&
-              groupData
-                .slice(0, 3)
-                .map((group: TGroup) => (
-                  <GroupCard key={group.id} group={group} />
-                ))}
+          <div className="drawer-side border-r-white border-r-2  ">
+            <label
+              htmlFor="dashboard-sidebar"
+              aria-label="close sidebar"
+              className="drawer-overlay"
+            ></label>
+            <div className="flex flex-col gap-3 p-6">
+              <h4 className="card-title self-center">
+                Welcome Back {user?.userInfo.username}
+              </h4>
+              <Link
+                to="/dashboard/groups/create"
+                activeOptions={{ exact: true }}
+                className="btn btn-secondary [&.active]:btn-primary  "
+              >
+                Create New Group
+                <FontAwesomeIcon icon={faAdd} />
+              </Link>
+              <Link
+                to="/dashboard/groups"
+                activeOptions={{ exact: true }}
+                className="btn btn-secondary [&.active]:btn-primary  "
+              >
+                View Groups
+                <FontAwesomeIcon icon={faPerson} />
+              </Link>
+              <div className="divider divider-primary"></div>
+              <Link
+                to="/dashboard/goals/create"
+                activeOptions={{ exact: true }}
+                className="btn btn-secondary [&.active]:btn-primary "
+              >
+                Create New Goal
+                <FontAwesomeIcon icon={faAdd} />
+              </Link>
+              <Link
+                to="/dashboard/goals"
+                activeOptions={{ exact: true }}
+                className="btn btn-secondary [&.active]:btn-primary "
+              >
+                View Goals
+                <FontAwesomeIcon icon={faEdit} />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
