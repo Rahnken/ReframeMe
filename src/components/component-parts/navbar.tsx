@@ -86,14 +86,14 @@ export const Navbar = () => {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/register"
-              className="text-2xl  btn btn-primary [&.active]:font-bold "
+              className="text-xl  btn btn-primary [&.active]:font-bold "
             >
               {" "}
               Sign Up
             </Link>
             <Link
               to="/login"
-              className=" text-2xl btn btn-secondary [&.active]:font-bold "
+              className=" text-xl btn btn-secondary [&.active]:font-bold "
             >
               Sign In
             </Link>
