@@ -1,5 +1,6 @@
 
 import { z } from 'zod';
+import { ThemeTypeSchema } from '../../providers/theme.provider';
 
 // Define a schema for the sign-in request
 const SignInRequestSchema = z.object({
@@ -20,7 +21,8 @@ export const SignInResponseSchema = z.object({
   userInfo: z.object({
     email: z.string(), 
     username: z.string(),
-    lastLogin: z.string().datetime()
+    lastLogin: z.string().datetime(),
+    theme:  ThemeTypeSchema,
   }),
   message: z.string().optional(), // Assuming the message might be included in the response
 });

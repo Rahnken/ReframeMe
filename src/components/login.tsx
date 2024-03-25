@@ -12,6 +12,7 @@ import {
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../providers/auth.provider";
 import { flushSync } from "react-dom";
+import { useThemeProvider } from "../providers/theme.provider";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
@@ -22,6 +23,7 @@ export const Login = () => {
   const passwordValidState = validatePasswordInput(password);
   const navigate = useNavigate();
   const authContext = useAuth();
+  const { updateTheme } = useThemeProvider();
 
   const usernameErrorMessage =
     usernameValidState.error?.flatten().formErrors[0];
@@ -32,8 +34,11 @@ export const Login = () => {
     mutationKey: ["signInUser"],
     mutationFn: (body: SignInRequest) => signInUser(body),
     onSuccess: (data) => {
+      console.log(data);
       flushSync(() => {
         localStorage.setItem("user", JSON.stringify(data));
+        updateTheme(data.userInfo.theme);
+
         authContext.login(data);
       });
       setIsSubmitted(false);

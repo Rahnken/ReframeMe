@@ -60,12 +60,15 @@ const EditGoal = () => {
 
   // Populate sharedToGroup on component mount
   useEffect(() => {
-    const initialSharedGroups = groups.filter((group) =>
-      group.sharedGoals.some((val) => val.id === goal.id)
-    );
+    const initialSharedGroups = groups.filter((group) => {
+      console.log("group", group);
+      console.log("goal", goal);
+      return group.sharedGoals.some((val) => val.id === goal.id);
+    });
     setSharedToGroup(initialSharedGroups);
   }, [goal.id, groups]);
 
+  console.log("sharedToGroup", sharedToGroup);
   const handleGroupChange = (group: TGroup) => {
     setSharedToGroup((prev) => {
       const isAlreadyShared = prev.some((g) => g.id === group.id);

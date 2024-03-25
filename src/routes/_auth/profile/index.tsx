@@ -1,5 +1,8 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { userInfoQueryOptions } from "../../../api/users/userQueryOptions";
+import {
+  useUpdateUserInfoMutation,
+  userInfoQueryOptions,
+} from "../../../api/users/userQueryOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { TGroup, TUserInfo } from "../../../types";
@@ -7,6 +10,9 @@ import { GroupCard } from "../../../components/component-parts/group-card";
 
 import { ThemeListButtons } from "../../../components/component-parts/ThemeListButtons";
 import { groupQueryOptions } from "../../../api/groups/groupQueries";
+import { ThemeType, useThemeProvider } from "../../../providers/theme.provider";
+import { TUpdateUserInfo } from "../../../api/users/userInfo";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
   const {
@@ -47,11 +53,20 @@ const UserProfile = () => {
     auth: { user },
     queryClient,
   } = Route.useRouteContext();
+  const { theme, updateTheme } = useThemeProvider();
 
-  const profile: TUserInfo = queryClient.getQueryData([
-    "userInfo",
+  const mutation = useUpdateUserInfoMutation(
     user!.token,
-  ]) as TUserInfo;
+    () => {
+      console.log("Profile Updated");
+      queryClient.invalidateQueries({ queryKey: ["userInfo", user!.token] });
+    },
+    (e) => console.error("Mutation error:", e.message)
+  );
+
+  const profile: TUserInfo = useSuspenseQuery(userInfoQueryOptions(user!.token))
+    .data as TUserInfo;
+
   const groupData: TGroup[] = queryClient.getQueryData([
     "groups",
     user!.token,
@@ -60,6 +75,17 @@ const UserProfile = () => {
   const adminUser = (group: TGroup) =>
     group.users.find((user: { role: string }) => user.role === "ADMIN")!.user;
 
+  const updateProfileTheme = (theme: ThemeType) => {
+    const updatedProfile: TUpdateUserInfo = {
+      userSettings: {
+        userSetting_id: profile.userSettings.userSetting_id,
+        theme: theme,
+        profileComplete: profile.userSettings.profileComplete,
+      },
+    };
+    mutation.mutate(updatedProfile);
+    updateTheme(theme);
+  };
   return (
     <>
       <div className="flex items-center justify-center mx-auto gap-10">
@@ -76,16 +102,16 @@ const UserProfile = () => {
               <GroupCard key={group.id} group={group} />
             ))}
         </div>
-        <ThemeListButtons />
+        <ThemeListButtons updateProfileTheme={updateProfileTheme} />
       </div>
     </>
   );
 };
 
 export const Route = createFileRoute("/_auth/profile/")({
-  loader: ({ context: { auth, queryClient } }) => {
-    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token));
-    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token));
+  loader: async ({ context: { auth, queryClient } }) => {
+    await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token));
+    await queryClient.prefetchQuery(groupQueryOptions(auth.user!.token));
   },
   component: UserProfile,
 });

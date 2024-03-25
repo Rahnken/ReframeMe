@@ -50,8 +50,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const authState = deriveAuthState({ user, isLoading });
+  const resetThemeDefault = () => {
+    localStorage.setItem("theme", "reframeDark");
+    document.documentElement.setAttribute("data-theme", "reframeDark");
+  };
   const logout = () => {
+    console.log("Logging out");
     clearUser();
+    resetThemeDefault();
     setUser(null);
   };
 

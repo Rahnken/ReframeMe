@@ -30,10 +30,13 @@ export const useUpdateGoalMutation = (token:string, goalId:string,onSuccessCallb
   return useMutation({
     mutationKey: ["goals", "updateGoal"],
     mutationFn: (body:GoalUpdateBody) => updateGoalById(token, body),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Mutation success:", data);
       queryClient.invalidateQueries({ queryKey: ["goals", "userGoals"] });
       queryClient.invalidateQueries({ queryKey: ["goals", token] });
       queryClient.invalidateQueries({ queryKey: ["goals", token, goalId] });
+      queryClient.invalidateQueries({ queryKey: ["groups",token] });
+      queryClient.invalidateQueries({ queryKey: ["groups",token,data.sharedGoals.group_id] });
       onSuccessCallback()
 
     },

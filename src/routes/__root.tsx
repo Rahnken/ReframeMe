@@ -4,6 +4,7 @@ import { AuthContextType } from "../providers/auth.provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Navbar } from "../components/component-parts/navbar";
 import { ThemeContextType } from "../providers/theme.provider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 interface RouterContext {
   auth: AuthContextType;
@@ -21,6 +22,7 @@ function Root() {
       <Navbar />
       <Outlet />
       <TanStackRouterDevtools position="bottom-right" />
+      <ReactQueryDevtools initialIsOpen={false} />
     </>
   );
 }

@@ -12,11 +12,10 @@ export const useUpdateUserInfoMutation = (token:string, onSuccessCallback:()=>vo
     mutationKey: ['updateUserInfo'],
     mutationFn: (updateRequestBody:
       TUpdateUserInfo) => updateUserInfo(token, updateRequestBody),
-    onSuccess: (data) => {
-      onSuccessCallback();
-      // Invalidate queries as needed
-      console.log(data)
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userInfo',token] });
+      onSuccessCallback();
+     
     },
     onError: (error) => {
       console.error('Mutation error:', error.message);

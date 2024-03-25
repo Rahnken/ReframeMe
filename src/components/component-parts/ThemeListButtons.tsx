@@ -1,8 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeType, useThemeProvider } from "../../providers/theme.provider";
 
-export const ThemeListButtons = () => {
-  const { theme: currentTheme, updateTheme } = useThemeProvider();
+export const ThemeListButtons = ({
+  updateProfileTheme,
+}: {
+  updateProfileTheme: (theme: ThemeType) => void;
+}) => {
+  const { theme: currentTheme } = useThemeProvider();
   const themes: ThemeType[] = [
     "reframeDark",
     "coffee",
@@ -29,7 +33,7 @@ export const ThemeListButtons = () => {
           key={theme}
           className={`btn btn-primary join-item ${currentTheme === theme ? "btn-neutral" : ""}`}
           onClick={() => {
-            updateTheme(theme);
+            updateProfileTheme(theme);
           }}
         >
           {themeNames[theme].name}{" "}

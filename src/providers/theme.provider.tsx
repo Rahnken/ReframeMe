@@ -8,7 +8,7 @@ import {
 import { z } from "zod";
 
 // Define your ThemeType as a Zod schema
-const ThemeTypeSchema = z.enum([
+export const ThemeTypeSchema = z.enum([
   "coffee",
   "sunset",
   "reframeDark",
@@ -49,18 +49,25 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedTheme = getThemeFromLocalStorage();
     if (storedTheme) {
-      setTheme(storedTheme);
+      updateTheme(storedTheme);
       document.documentElement.setAttribute("data-theme", storedTheme);
     }
   }, []);
 
   useEffect(() => {
     // This effect updates the HTML tag whenever the theme changes
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme); // Save the theme to local storage
+    const storedTheme = getThemeFromLocalStorage();
+    if (storedTheme !== theme && storedTheme !== null) {
+      updateTheme(storedTheme);
+    } else {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme); // Save the theme to local storage
+    }
   }, [theme]);
 
   const updateTheme = (newTheme: ThemeType) => {
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
     setTheme(newTheme);
   };
 
