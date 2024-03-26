@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { z } from "zod";
+import { set, z } from "zod";
 import { goalsQueryOptions } from "../../../../../api/goals/goalQueries";
 import {
   groupQueryIdOptions,
@@ -8,6 +8,7 @@ import {
 } from "../../../../../api/groups/groupQueries";
 import { TextInput } from "../../../../../components/component-parts/TextInput";
 import { TGroup, TSharedGoal, TGroupUser, TGoal } from "../../../../../types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Route = createFileRoute("/_auth/dashboard/groups/$groupId/")({
   loader: ({ context: { auth, queryClient }, params: { groupId } }) => {
@@ -33,7 +34,25 @@ function SpecificGroup() {
 
   const [currentWeek, setCurrentWeek] = useState(0);
   const [emailInput, setEmailInput] = useState("");
+  const [sharedGoals, setSharedGoals] = useState<TSharedGoal[]>(
+    group.sharedGoals
+  );
+  const [selectedUser, setSelectedUser] = useState<TGroupUser | null>(null);
+  const userGoals = group.users.reduce(
+    (acc, user) => {
+      // Filter the shared goals for the current user
+      const goalsForUser = group.sharedGoals.filter(
+        (sharedGoal) => sharedGoal.goal.user_id === user.id
+      );
 
+      // Add the goals to the accumulator object
+      acc[user.user.username] = goalsForUser;
+
+      return acc;
+    },
+    {} as Record<string, TSharedGoal[]>
+  );
+  console.log("userGoals", userGoals);
   const validEmail = z.string().email();
   const emailInputValid = validEmail.safeParse(emailInput).success;
   const adminUser = group.users.find((user) => user.role === "ADMIN")?.user;
@@ -55,6 +74,18 @@ function SpecificGroup() {
     },
     (e) => console.error("Mutation error:", e.message)
   );
+  const filterGoalsByUser = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const username = target.dataset.value;
+    const user = group.users.find((gUser) => gUser.user.username === username);
+    if (!user) return;
+    setSelectedUser(user);
+    setSharedGoals(
+      group.sharedGoals.filter(
+        (sharedGoal) => sharedGoal.goal.user_id === user?.user_id
+      )
+    );
+  };
 
   const handleModalSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +132,7 @@ function SpecificGroup() {
                 </button>
               </div>
               <div className="flex gap-4 mt-4">
-                {group.sharedGoals.map((sharedGoal: TSharedGoal) => (
+                {sharedGoals.map((sharedGoal: TSharedGoal) => (
                   <WeekGoal
                     key={sharedGoal.goal.id}
                     goal={sharedGoal.goal}
@@ -124,7 +155,7 @@ function SpecificGroup() {
                   <h2 className="text-2xl font-bold join-item p-4 bg-secondary rounded-md text-secondary-content">
                     {group.name}
                   </h2>
-                  <p className="bg-secondary text-primary-content join-item">
+                  <p className="bg-primary text-primary-content join-item">
                     {group.description}
                   </p>
                 </div>
@@ -135,24 +166,45 @@ function SpecificGroup() {
                 </small>
                 <div className="flex flex-col gap-3">
                   {group.users.map((gUser: TGroupUser) => (
-                    <div key={gUser.id} className="indicator">
-                      <div className="btn btn-secondary btn-wide place-items-center">
-                        {gUser.user.username}
-                        {gUser.role === "ADMIN" && (
-                          <span className="indicator-item badge badge-primary">
-                            {gUser.role}
-                          </span>
-                        )}
+                    <div className="flex items-center gap-2">
+                      <div key={gUser.id} className="indicator">
+                        <div
+                          onClick={filterGoalsByUser}
+                          data-value={gUser.user.username}
+                          className={`btn  btn-wide place-items-center ${selectedUser?.user_id === gUser.user_id ? "btn-primary" : "btn-secondary"}`}
+                        >
+                          {gUser.user.username}
+                          {gUser.role === "ADMIN" && (
+                            <div
+                              className={`indicator-item badge indicator-start indicator-middle  ${selectedUser?.user_id === gUser.user_id ? "badge-secondary" : "badge-primary"}`}
+                            >
+                              {gUser.role}
+                            </div>
+                          )}
+                        </div>
                       </div>
+                      {selectedUser &&
+                        selectedUser.user_id === gUser.user_id && (
+                          <button
+                            className="btn btn-error "
+                            onClick={() => {
+                              setSharedGoals(group.sharedGoals);
+                              setSelectedUser(null);
+                            }}
+                          >
+                            <FontAwesomeIcon icon="times" />
+                          </button>
+                        )}
                     </div>
                   ))}
                 </div>
               </div>
+              <div className="divider divider-accent my-0"></div>
               {authUser?.userInfo.username === adminUser?.username && (
-                <div className="card-actions p-3 justify-end">
-                  <button className="btn btn-primary">Edit Group</button>
+                <div className="card-actions p-2 justify-evenly items-center">
+                  <button className="btn btn-primary w-40">Edit Group</button>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary w-40"
                     onClick={openModal("add-member-dialog")}
                   >
                     Add Members
