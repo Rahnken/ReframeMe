@@ -40,6 +40,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL+"/user"
 export const signInUser = async (
   body: SignInRequest
 ): Promise<SignInResponse> => {
+  console.log(BASE_URL)
   // Validate request body against SignInRequestSchema
   const requestBody = SignInRequestSchema.safeParse(body);
   if (!requestBody.success) {
