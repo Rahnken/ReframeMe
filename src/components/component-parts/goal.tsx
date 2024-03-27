@@ -2,6 +2,7 @@ import { faCheck, faFaceFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "@tanstack/react-router";
 import { TGoal } from "../../types";
+import React from "react";
 
 export function Goal({ goal }: { goal: TGoal }) {
   return (
@@ -9,13 +10,7 @@ export function Goal({ goal }: { goal: TGoal }) {
       <div className="card-body bg-secondary/70 rounded-lg">
         <div className="card-actions items-center justify-around backdrop-opacity-20 rounded-md p-3 bg-black/50">
           <h3 className="text-primary text-3xl card-title  font-subHeaders font-medium">
-            <Link
-              to="/dashboard/goals/$goalId"
-              mask={{
-                to: `/dashboard/goals/${goal.title.replaceAll(" ", "")}`,
-              }}
-              params={{ goalId: goal.id }}
-            >
+            <Link to="/dashboard/goals/$goalId" params={{ goalId: goal.id }}>
               {goal.title}
             </Link>
           </h3>{" "}
@@ -43,11 +38,13 @@ export function Goal({ goal }: { goal: TGoal }) {
                       <div
                         key={weekProgress.id}
                         className="radial-progress bg-primary border-2 border-primary"
-                        style={{
-                          "--value": prog,
-                          "--size": "4rem",
-                          "--thickness": "8px",
-                        }}
+                        style={
+                          {
+                            "--value": prog,
+                            "--size": "4rem",
+                            "--thickness": "8px",
+                          } as React.CSSProperties
+                        }
                         role="progressbar"
                       >
                         {prog}%

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GoalCreateBody } from "../../../../api/goals/goals";
@@ -53,6 +53,14 @@ const CreateGoal = () => {
     };
     mutation.mutate(requestBody);
   };
+
+  function handleGroupChange(group: TGroup): void {
+    if (sharedToGroup.some((g) => g.id === group.id)) {
+      setSharedToGroup(sharedToGroup.filter((g) => g.id !== group.id));
+    } else {
+      setSharedToGroup([...sharedToGroup, group]);
+    }
+  }
 
   return (
     <>

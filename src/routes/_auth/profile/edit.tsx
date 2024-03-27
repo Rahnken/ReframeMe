@@ -41,15 +41,25 @@ function EditProfile() {
     { label: "Reframe Light", value: "reframeLight" },
   ];
   const navigate = useNavigate();
+
+  const getTimezoneFromProfile = (profile: TUserInfo) => {
+    const timezone = mappedTimezones.find(
+      (tz) => tz.value === profile.timezone
+    );
+    return timezone || null;
+  };
   const [firstNameInput, setFirstNameInput] = useState(profile.firstName || "");
   const [lastNameInput, setLastNameInput] = useState(profile.lastName || "");
   const [timezoneInput, setTimezoneInput] = useState<null | TimezoneOption>(
-    null
+    getTimezoneFromProfile(profile)
   );
   const [countryInput, setCountryInput] = useState(profile.country || "");
-  const [themeInput, setThemeInput] = useState<null | ThemeOption>(null);
+  const [themeInput, setThemeInput] = useState<null | ThemeOption>(
+    themeOptions.find(
+      (option) => option.value === profile.userSettings.theme
+    ) || null
+  );
 
-  // const [searchInput, setSearchInput] = useState("");
   const mutation = useUpdateUserInfoMutation(
     auth.user!.token,
     () => {
@@ -58,9 +68,7 @@ function EditProfile() {
     },
     (e) => console.error("Mutation error:", e.message)
   );
-  // const filteredTimezones = timezones.filter((timezone) =>
-  //   timezone.toLowerCase().includes(searchInput.toLowerCase())
-  // );
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!timezoneInput || !themeInput)
@@ -131,21 +139,22 @@ function EditProfile() {
             options={mappedTimezones}
             value={timezoneInput}
             isSearchable={true}
-            onChange={(value) => setTimezoneInput(value)}
+            isDisabled={false}
+            onChange={(v) => setTimezoneInput(v ? (v as TimezoneOption) : null)}
             classNames={{
               searchBox:
                 "w-full p-2 bg-base-300 text-primary rounded shadow-sm transition-all duration-300 focus:outline-none",
               searchIcon: "hidden",
-              menuButton: ({ isDisabled }) =>
+              menuButton: (props) =>
                 `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                  isDisabled
+                  props && props.isDisabled
                     ? "bg-neutral bg-opacity-20 cursor-not-allowed"
                     : "bg-base-300 "
                 }`,
               menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
-              listItem: ({ isSelected }) =>
+              listItem: (props) =>
                 `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                  isSelected
+                  props && props.isSelected
                     ? `text-primary`
                     : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
                 }`,
@@ -157,19 +166,21 @@ function EditProfile() {
           <Select
             value={themeInput}
             options={themeOptions}
-            onChange={(value) => setThemeInput(value)}
+            onChange={(value) =>
+              setThemeInput(value ? (value as ThemeOption) : null)
+            }
             primaryColor="indigo"
             classNames={{
-              menuButton: ({ isDisabled }) =>
+              menuButton: (props) =>
                 `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                  isDisabled
+                  props && props.isDisabled
                     ? "bg-neutral bg-opacity-20 cursor-not-allowed"
                     : "bg-base-300 "
                 }`,
               menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
-              listItem: ({ isSelected }) =>
+              listItem: (props) =>
                 `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                  isSelected
+                  props && props.isSelected
                     ? `text-primary`
                     : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
                 }`,
