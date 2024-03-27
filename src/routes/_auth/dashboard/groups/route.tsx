@@ -16,16 +16,16 @@ function GroupsPage() {
   } = Route.useRouteContext();
   const sq = useSuspenseQuery(groupQueryOptions(user!.token));
   const groups = sq.data;
+
   return (
     <>
-      <div className="flex flex-col items-end">
-        <Outlet />
-
-        <div className="md:container mx-auto w-2/3 flex flex-wrap gap-4 mt-3">
+      <div className="flex">
+        <div className="flex flex-col items-start w-1/3 gap-2  p-4 bg-primary h-screen rounded">
           {groups.map((group: TGroup) => (
             <GroupCard key={group.id} group={group} />
           ))}
         </div>
+        <Outlet />
       </div>
     </>
   );

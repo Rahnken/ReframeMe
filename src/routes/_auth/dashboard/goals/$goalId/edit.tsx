@@ -61,9 +61,7 @@ const EditGoal = () => {
   // Populate sharedToGroup on component mount
   useEffect(() => {
     const initialSharedGroups = groups.filter((group) => {
-      console.log("group", group);
-      console.log("goal", goal);
-      return group.sharedGoals.some((val) => val.id === goal.id);
+      return group.sharedGoals.some((val) => val.goal_id === goal.id);
     });
     setSharedToGroup(initialSharedGroups);
   }, [goal.id, groups]);
@@ -85,7 +83,7 @@ const EditGoal = () => {
     const sharedGroups = sharedToGroup.map((entry) => {
       return entry.id;
     });
-    console.log("SharedLog", sharedGroups);
+
     const requestBody: GoalUpdateBody = {
       id: goalId,
       title: titleInput,
@@ -94,7 +92,6 @@ const EditGoal = () => {
       weeklyTrackingTotal: weeklyTrackingTotalInput,
       sharedGroups: sharedGroups,
     };
-    console.log("RequestBody", requestBody);
     mutation.mutate(requestBody);
   };
 
@@ -126,7 +123,7 @@ const EditGoal = () => {
             value={descriptionInput}
             onChange={(e) => setDescriptionInput(e.target.value)}
             required
-            className="textarea textarea-bordered"
+            className="textarea textarea-bordered placeholder-secondary text-secondary"
           ></textarea>
         </div>
 
@@ -152,7 +149,9 @@ const EditGoal = () => {
           <h4>Share to Groups:</h4>
           {groups.map((group: TGroup) => (
             <label className="label cursor-pointer" key={group.id}>
-              <span className="label-text p-3">{group.name}</span>
+              <span className="label-text p-3 text-neutral-content">
+                {group.name}
+              </span>
               <input
                 type="checkbox"
                 className="toggle"

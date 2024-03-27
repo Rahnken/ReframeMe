@@ -53,7 +53,7 @@ const UserProfile = () => {
     auth: { user },
     queryClient,
   } = Route.useRouteContext();
-  const { theme, updateTheme } = useThemeProvider();
+  const { updateTheme } = useThemeProvider();
 
   const mutation = useUpdateUserInfoMutation(
     user!.token,

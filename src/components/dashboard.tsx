@@ -3,7 +3,6 @@ import { Link, Outlet } from "@tanstack/react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
-  faArchive,
   faArrowCircleRight,
   faEdit,
   faPerson,

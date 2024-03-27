@@ -1,22 +1,9 @@
 import { faCheck, faFaceFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, Outlet } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { TGoal } from "../../types";
-import { useAuth } from "../../providers/auth.provider";
-import { useUpdateGoalMutation } from "../../api/goals/goalQueries";
 
 export function Goal({ goal }: { goal: TGoal }) {
-  const { user } = useAuth();
-
-  const mutation = useUpdateGoalMutation(
-    user!.token,
-    goal.id,
-    () => {},
-    (e) => {
-      e;
-    }
-  );
-
   return (
     <div className="card w-128 gap-1 p-7 max-w-128 bg-secondary-content">
       <div className="card-body bg-secondary/70 rounded-lg">

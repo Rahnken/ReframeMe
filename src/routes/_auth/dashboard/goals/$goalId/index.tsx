@@ -13,7 +13,7 @@ const SpecificGoal = () => {
   const goal: TGoal = sq.data;
 
   return (
-    <div className="p-4 rounded-xl flex flex-col mx-auto md:w-3/4 sm:w-1/2 bg-slate-700 m-2 gap-3">
+    <div className="p-4 rounded-xl flex flex-col md:w-3/4 sm:w-1/2 bg-slate-700 mx-4 my-2 gap-3">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-primary-700 text-3xl font-subHeaders">
           {" "}
@@ -44,6 +44,7 @@ const SpecificGoal = () => {
 };
 
 export const Route = createFileRoute("/_auth/dashboard/goals/$goalId/")({
+  parseParams: (params) => ({ goalId: params.goalId }),
   loader: ({ context: { auth, queryClient }, params: { goalId } }) =>
     queryClient.ensureQueryData(goalQueryIdOptions(auth.user!.token, goalId)),
   component: SpecificGoal,

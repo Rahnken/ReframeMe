@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { set, z } from "zod";
+import { z } from "zod";
 import { goalsQueryOptions } from "../../../../../api/goals/goalQueries";
 import {
   groupQueryIdOptions,
@@ -9,6 +9,7 @@ import {
 import { TextInput } from "../../../../../components/component-parts/TextInput";
 import { TGroup, TSharedGoal, TGroupUser, TGoal } from "../../../../../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_auth/dashboard/groups/$groupId/")({
   loader: ({ context: { auth, queryClient }, params: { groupId } }) => {
@@ -21,28 +22,23 @@ export const Route = createFileRoute("/_auth/dashboard/groups/$groupId/")({
 function SpecificGroup() {
   const {
     auth: { user: authUser },
-    queryClient,
   } = Route.useRouteContext();
 
   const { groupId } = Route.useParams();
 
-  const group = queryClient.getQueryData([
-    "groups",
-    authUser!.token,
-    groupId,
-  ]) as TGroup;
+  const group: TGroup = useSuspenseQuery(
+    groupQueryIdOptions(authUser!.token, groupId)
+  ).data;
 
   const [currentWeek, setCurrentWeek] = useState(0);
   const [emailInput, setEmailInput] = useState("");
-  const [sharedGoals, setSharedGoals] = useState<TSharedGoal[]>(
-    group.sharedGoals
-  );
   const [selectedUser, setSelectedUser] = useState<TGroupUser | null>(null);
+
   const userGoals = group.users.reduce(
     (acc, user) => {
       // Filter the shared goals for the current user
       const goalsForUser = group.sharedGoals.filter(
-        (sharedGoal) => sharedGoal.goal.user_id === user.id
+        (sharedGoal) => sharedGoal.goal.user_id === user.user_id
       );
 
       // Add the goals to the accumulator object
@@ -52,7 +48,6 @@ function SpecificGroup() {
     },
     {} as Record<string, TSharedGoal[]>
   );
-  console.log("userGoals", userGoals);
   const validEmail = z.string().email();
   const emailInputValid = validEmail.safeParse(emailInput).success;
   const adminUser = group.users.find((user) => user.role === "ADMIN")?.user;
@@ -77,15 +72,17 @@ function SpecificGroup() {
   const filterGoalsByUser = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
     const username = target.dataset.value;
-    const user = group.users.find((gUser) => gUser.user.username === username);
-    if (!user) return;
-    setSelectedUser(user);
-    setSharedGoals(
-      group.sharedGoals.filter(
-        (sharedGoal) => sharedGoal.goal.user_id === user?.user_id
-      )
-    );
+    if (username) {
+      setSelectedUser(
+        group.users.find((user) => user.user.username === username) || null
+      );
+
+      return userGoals[username];
+    }
   };
+  const displayedGoals = selectedUser
+    ? userGoals[selectedUser.user.username]
+    : group.sharedGoals;
 
   const handleModalSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,11 +97,11 @@ function SpecificGroup() {
   return (
     <>
       <div className="w-full">
-        <div className="drawer lg:drawer-open mx-4">
-          <input id="group-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer drawer-end xl:drawer-open mx-4">
+          <input id="group-drawer" type="checkbox" className="drawer-toggle " />
           <label
             htmlFor="group-drawer"
-            className="btn btn-primary drawer-button lg:hidden"
+            className="btn btn-primary drawer-button xl:hidden place-self-end"
           >
             Open Group Options
           </label>
@@ -131,8 +128,8 @@ function SpecificGroup() {
                   Next Week
                 </button>
               </div>
-              <div className="flex gap-4 mt-4">
-                {sharedGoals.map((sharedGoal: TSharedGoal) => (
+              <div className="flex flex-wrap gap-4 mt-4 justify-center">
+                {displayedGoals.map((sharedGoal: TSharedGoal) => (
                   <WeekGoal
                     key={sharedGoal.goal.id}
                     goal={sharedGoal.goal}
@@ -149,7 +146,7 @@ function SpecificGroup() {
               className="drawer-overlay"
               aria-label="Close"
             ></label>
-            <div className="card card-bordered border-4 border-primary">
+            <div className="card card-bordered border-4 border-primary max-xl:bg-neutral">
               <div className="card-body  ">
                 <div className="join join-vertical text-center">
                   <h2 className="text-2xl font-bold join-item p-4 bg-secondary rounded-md text-secondary-content">
@@ -166,8 +163,8 @@ function SpecificGroup() {
                 </small>
                 <div className="flex flex-col gap-3">
                   {group.users.map((gUser: TGroupUser) => (
-                    <div className="flex items-center gap-2">
-                      <div key={gUser.id} className="indicator">
+                    <div key={gUser.id} className="flex items-center gap-2">
+                      <div className="indicator">
                         <div
                           onClick={filterGoalsByUser}
                           data-value={gUser.user.username}
@@ -188,7 +185,6 @@ function SpecificGroup() {
                           <button
                             className="btn btn-error "
                             onClick={() => {
-                              setSharedGoals(group.sharedGoals);
                               setSelectedUser(null);
                             }}
                           >
