@@ -67,7 +67,7 @@ const CreateGoal = () => {
       {serverError && <div>{serverError}</div>}
       <form
         onSubmit={handleSubmit}
-        className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col items-center"
+        className="bg-neutral-900 p-8 rounded-3xl my-5 w-3/4 mx-auto flex flex-col gap-2 items-center"
       >
         <TextInput
           labelText="Title"
