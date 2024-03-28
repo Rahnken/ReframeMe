@@ -9,7 +9,7 @@ const SpecificGoal = () => {
     auth: { user },
   } = Route.useRouteContext();
   const { goalId } = Route.useParams();
-  const sq = useSuspenseQuery(goalQueryIdOptions(user!.token, goalId));
+  const sq = useSuspenseQuery(goalQueryIdOptions(user!.token!, goalId));
   const goal: TGoal = sq.data;
 
   return (
@@ -46,6 +46,6 @@ const SpecificGoal = () => {
 export const Route = createFileRoute("/_auth/dashboard/goals/$goalId/")({
   parseParams: (params) => ({ goalId: params.goalId }),
   loader: ({ context: { auth, queryClient }, params: { goalId } }) =>
-    queryClient.ensureQueryData(goalQueryIdOptions(auth.user!.token, goalId)),
+    queryClient.ensureQueryData(goalQueryIdOptions(auth.user!.token!, goalId)),
   component: SpecificGoal,
 });

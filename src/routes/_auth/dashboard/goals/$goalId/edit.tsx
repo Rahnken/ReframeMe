@@ -19,10 +19,10 @@ const EditGoal = () => {
   } = Route.useRouteContext();
   const { goalId } = Route.useParams();
   const { data: goal }: { data: TGoal } = useSuspenseQuery(
-    goalQueryIdOptions(user!.token, goalId)
+    goalQueryIdOptions(user!.token!, goalId)
   );
   const { data: groups }: { data: TGroup[] } = useSuspenseQuery(
-    groupQueryOptions(user!.token)
+    groupQueryOptions(user!.token!)
   );
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -35,7 +35,7 @@ const EditGoal = () => {
   };
 
   const mutation = useUpdateGoalMutation(
-    user!.token,
+    user!.token!,
     goalId,
     onSuccess,
     onError
@@ -172,7 +172,7 @@ const EditGoal = () => {
 
 export const Route = createFileRoute("/_auth/dashboard/goals/$goalId/edit")({
   loader: ({ context: { auth, queryClient } }) => {
-    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token));
+    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token!));
   },
   component: EditGoal,
 });

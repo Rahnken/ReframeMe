@@ -8,13 +8,13 @@ import { GoalCard } from "../../../../components/component-parts/goal-card";
 export const Route = createFileRoute("/_auth/dashboard/goals")({
   component: GoalsPage,
   loader: ({ context: { auth, queryClient } }) =>
-    queryClient.ensureQueryData(goalsQueryOptions(auth.user!.token)),
+    queryClient.ensureQueryData(goalsQueryOptions(auth.user!.token!)),
 });
 function GoalsPage() {
   const {
     auth: { user },
   } = Route.useRouteContext();
-  const sq = useSuspenseQuery(goalsQueryOptions(user!.token));
+  const sq = useSuspenseQuery(goalsQueryOptions(user!.token!));
   const goals = sq.data;
   const currentPath = window.location.pathname;
   return (

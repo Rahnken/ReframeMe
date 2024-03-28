@@ -6,7 +6,7 @@ import { TGroup } from "../../../../types";
 
 export const Route = createFileRoute("/_auth/dashboard/groups")({
   loader: ({ context: { auth, queryClient } }) =>
-    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token)),
+    queryClient.ensureQueryData(groupQueryOptions(auth.user!.token!)),
   component: GroupsPage,
 });
 
@@ -14,7 +14,7 @@ function GroupsPage() {
   const {
     auth: { user },
   } = Route.useRouteContext();
-  const sq = useSuspenseQuery(groupQueryOptions(user!.token));
+  const sq = useSuspenseQuery(groupQueryOptions(user!.token!));
   const groups = sq.data;
 
   return (

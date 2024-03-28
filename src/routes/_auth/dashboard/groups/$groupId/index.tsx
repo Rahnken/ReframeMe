@@ -13,8 +13,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_auth/dashboard/groups/$groupId/")({
   loader: ({ context: { auth, queryClient }, params: { groupId } }) => {
-    queryClient.ensureQueryData(groupQueryIdOptions(auth.user!.token, groupId));
-    queryClient.ensureQueryData(goalsQueryOptions(auth.user!.token));
+    queryClient.ensureQueryData(
+      groupQueryIdOptions(auth.user!.token!, groupId)
+    );
+    queryClient.ensureQueryData(goalsQueryOptions(auth.user!.token!));
   },
   component: SpecificGroup,
 });
@@ -27,7 +29,7 @@ function SpecificGroup() {
   const { groupId } = Route.useParams();
 
   const group: TGroup = useSuspenseQuery(
-    groupQueryIdOptions(authUser!.token, groupId)
+    groupQueryIdOptions(authUser!.token!, groupId)
   ).data;
 
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -61,7 +63,7 @@ function SpecificGroup() {
     modal.close();
   };
   const mutation = useAddMemberToGroupMutation(
-    authUser!.token,
+    authUser!.token!,
     groupId,
     () => {
       alert("Member added successfully");
@@ -196,7 +198,7 @@ function SpecificGroup() {
                 </div>
               </div>
               <div className="divider divider-accent my-0"></div>
-              {authUser?.userInfo.username === adminUser?.username && (
+              {authUser?.userInfo!.username === adminUser?.username && (
                 <div className="card-actions p-2 justify-evenly items-center">
                   <button className="btn btn-primary w-40">Edit Group</button>
                   <button

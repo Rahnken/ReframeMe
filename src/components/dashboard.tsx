@@ -38,7 +38,7 @@ export function Dashboard() {
             ></label>
             <div className="flex flex-col gap-3 p-6">
               <h4 className="card-title self-center">
-                Welcome Back {user?.userInfo.username}
+                Welcome Back {user?.userInfo?.username}
               </h4>
               <Link
                 to="/dashboard/groups/create"

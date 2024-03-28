@@ -25,7 +25,7 @@ const CreateGroup = () => {
     setServerError(e.message);
   };
   const navigate = useNavigate({ from: Route.fullPath });
-  const mutation = useCreateGroupMutation(user!.token, onSuccess, onError);
+  const mutation = useCreateGroupMutation(user!.token!, onSuccess, onError);
 
   const [serverError, setServerError] = useState("");
   const [groupNameInput, setGroupNameInput] = useState("");

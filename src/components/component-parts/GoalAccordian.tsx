@@ -75,7 +75,7 @@ const AccordionItem = ({
   };
 
   const updateProgress = useUpdateGoalProgressMutation(
-    user!.token,
+    user!.token!,
     onSuccess,
     onError
   );

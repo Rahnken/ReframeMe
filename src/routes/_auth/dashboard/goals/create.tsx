@@ -30,11 +30,11 @@ const CreateGoal = () => {
     setServerError(e.message);
   };
   const { data: groups }: { data: TGroup[] } = useSuspenseQuery(
-    groupQueryOptions(user!.token)
+    groupQueryOptions(user!.token!)
   );
 
   const navigate = useNavigate({ from: Route.fullPath });
-  const mutation = useCreateGoalMutation(user!.token, onSuccess, onError);
+  const mutation = useCreateGoalMutation(user!.token!, onSuccess, onError);
 
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");

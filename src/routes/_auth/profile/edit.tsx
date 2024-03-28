@@ -12,7 +12,7 @@ import { TUserInfo } from "../../../types";
 
 export const Route = createFileRoute("/_auth/profile/edit")({
   loader: ({ context: { auth, queryClient } }) => {
-    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token));
+    queryClient.ensureQueryData(userInfoQueryOptions(auth.user!.token!));
   },
 
   component: EditProfile,
@@ -61,7 +61,7 @@ function EditProfile() {
   );
 
   const mutation = useUpdateUserInfoMutation(
-    auth.user!.token,
+    auth.user!.token!,
     () => {
       alert("Profile updated successfully");
       navigate({ to: "/profile" });
@@ -87,7 +87,7 @@ function EditProfile() {
       };
       mutation.mutate(updatedProfile);
 
-      queryClient.invalidateQueries(userInfoQueryOptions(auth.user!.token));
+      queryClient.invalidateQueries(userInfoQueryOptions(auth.user!.token!));
     }
   };
 

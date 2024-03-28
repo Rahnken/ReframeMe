@@ -56,20 +56,21 @@ const UserProfile = () => {
   const { updateTheme } = useThemeProvider();
 
   const mutation = useUpdateUserInfoMutation(
-    user!.token,
+    user!.token!,
     () => {
       console.log("Profile Updated");
-      queryClient.invalidateQueries({ queryKey: ["userInfo", user!.token] });
+      queryClient.invalidateQueries({ queryKey: ["userInfo", user!.token!] });
     },
     (e) => console.error("Mutation error:", e.message)
   );
 
-  const profile: TUserInfo = useSuspenseQuery(userInfoQueryOptions(user!.token))
-    .data as TUserInfo;
+  const profile: TUserInfo = useSuspenseQuery(
+    userInfoQueryOptions(user!.token!)
+  ).data as TUserInfo;
 
   const groupData: TGroup[] = queryClient.getQueryData([
     "groups",
-    user!.token,
+    user!.token!,
   ]) as TGroup[];
 
   const adminUser = (group: TGroup) =>
@@ -96,7 +97,7 @@ const UserProfile = () => {
           </h2>
           {groupData
             .filter(
-              (group) => adminUser(group).username === user?.userInfo.username
+              (group) => adminUser(group).username === user?.userInfo!.username
             )
             .map((group: TGroup) => (
               <GroupCard key={group.id} group={group} />
@@ -110,8 +111,8 @@ const UserProfile = () => {
 
 export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { auth, queryClient } }) => {
-    await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token));
-    await queryClient.prefetchQuery(groupQueryOptions(auth.user!.token));
+    await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
+    await queryClient.prefetchQuery(groupQueryOptions(auth.user!.token!));
   },
   component: UserProfile,
 });
