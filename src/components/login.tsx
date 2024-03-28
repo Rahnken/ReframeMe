@@ -34,13 +34,18 @@ export const Login = () => {
     mutationKey: ["signInUser"],
     mutationFn: (body: SignInRequest) => signInUser(body),
     onSuccess: (data) => {
-      console.log(data);
-      flushSync(() => {
-        localStorage.setItem("user", JSON.stringify(data));
-        updateTheme(data.userInfo.theme);
+      if (!data.token && !data.userInfo) {
+        throw new Error(data.message);
+      } else {
+        flushSync(() => {
+          if (data.token && data.userInfo) {
+            localStorage.setItem("user", JSON.stringify(data));
+            updateTheme(data.userInfo.theme);
 
-        authContext.login(data);
-      });
+            authContext.login(data);
+          }
+        });
+      }
       setIsSubmitted(false);
       navigate({ to: "/dashboard" });
     },

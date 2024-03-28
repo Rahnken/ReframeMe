@@ -17,13 +17,13 @@ const createUserRequestSchema = z.object({
 
 // Assuming the response includes a token and userInfo, define a schema for that
 export const SignInResponseSchema = z.object({
-  token: z.string(),
+  token: z.string().optional(),
   userInfo: z.object({
     email: z.string(), 
     username: z.string(),
     lastLogin: z.string().datetime(),
     theme:  ThemeTypeSchema,
-  }),
+  }).optional(),
   message: z.string().optional(), // Assuming the message might be included in the response
 });
 
@@ -40,7 +40,6 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL+"/user"
 export const signInUser = async (
   body: SignInRequest
 ): Promise<SignInResponse> => {
-  console.log(BASE_URL)
   // Validate request body against SignInRequestSchema
   const requestBody = SignInRequestSchema.safeParse(body);
   if (!requestBody.success) {

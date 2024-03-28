@@ -10,11 +10,16 @@ import {
   validatePasswordInput,
   validateEmailInput,
 } from "../utils/validationUtils";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const RegisterUser = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -101,32 +106,43 @@ export const RegisterUser = () => {
           message={emailErrorMessage || ""}
           show={isSubmitted && !emailValidState.success}
         />
-
-        <TextInput
-          labelText={"Password"}
-          inputAttr={{
-            name: "password",
-            placeholder: "password",
-            type: "password",
-            value: password,
-            onChange: (e) => setPassword(e.target.value),
-          }}
-        />
+        <div className="form-control w-full max-w-sm">
+          <label className="input input-bordered flex items-center gap-2">
+            Password
+            <input
+              type={!showPassword ? "password" : "text"}
+              className="grow"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <PasswordIconSwap
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+          </label>
+        </div>
         <ErrorMessage
           message={passwordErrorMessage || ""}
           show={isSubmitted && !passwordValidState.success}
         />
 
-        <TextInput
-          labelText={"Confirm Password"}
-          inputAttr={{
-            name: "confirmPassword",
-            placeholder: "confirmPassword",
-            type: "password",
-            value: confirmPassword,
-            onChange: (e) => setConfirmPassword(e.target.value),
-          }}
-        />
+        <div className="form-control w-full max-w-sm">
+          <label className="input input-bordered flex items-center gap-2">
+            Confirm Password
+            <input
+              type={!showPassword ? "password" : "text"}
+              className="grow"
+              placeholder="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <PasswordIconSwap
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+          </label>
+        </div>
         <ErrorMessage
           message={"Passwords must match exactly"}
           show={isSubmitted && !confirmedPassword}
@@ -140,5 +156,20 @@ export const RegisterUser = () => {
         </button>
       </form>
     </div>
+  );
+};
+
+const PasswordIconSwap = ({
+  showPassword,
+  setShowPassword,
+}: {
+  showPassword: boolean;
+  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <FontAwesomeIcon
+      icon={showPassword ? faEyeSlash : faEye}
+      onClick={() => setShowPassword(!showPassword)}
+    />
   );
 };
