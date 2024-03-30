@@ -25,6 +25,7 @@ const createGoalRequestSchema = z.object({
   description: z.string(),
   isPrivate: z.boolean(),
   weeklyTrackingTotal: z.number(),
+  sharedToGroup: z.string().array().optional(),
 });
 
 type GoalProgressUpdateBody = z.infer<typeof goalProgressRequestSchema>;

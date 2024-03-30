@@ -53,6 +53,7 @@ const CreateGoal = () => {
       description: descriptionInput,
       isPrivate: isPrivateInput,
       weeklyTrackingTotal: weeklyTrackingTotalInput,
+      sharedToGroup: sharedToGroup.map((g) => g.id),
     };
     mutation.mutate(requestBody);
   };
