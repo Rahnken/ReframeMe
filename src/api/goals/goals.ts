@@ -25,6 +25,7 @@ const createGoalRequestSchema = z.object({
   description: z.string(),
   isPrivate: z.boolean(),
   weeklyTrackingTotal: z.number(),
+  sharedToGroup: z.string().array().optional(),
 });
 
 type GoalProgressUpdateBody = z.infer<typeof goalProgressRequestSchema>;
@@ -77,5 +78,13 @@ export const updateGoalById = async (token: string, body: GoalUpdateBody) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+  }).then((response) => response.json());
+};
+export const deleteGoalById = async (token: string, goalId: string) => {
+  return await fetch(`${BASE_URL}/${goalId}/delete`, {
+    method: "DELETE",
+    headers : {
+      Authorization: `Bearer ${token}`
+    }
   }).then((response) => response.json());
 };

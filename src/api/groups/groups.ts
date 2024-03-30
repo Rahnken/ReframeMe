@@ -71,6 +71,20 @@ export const updateUserRoleInGroup = async (
     body: JSON.stringify({ role }),
   }).then((response) => response.json());
 };
+export const deleteUserFromGroup = async (
+  token: string,
+  groupId: string,
+  userId: string,
+) => {
+  return await fetch(`${BASE_URL}/${groupId}/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+};
+
 export const removeUserFromGroup = async (
   token: string,
   groupId: string,
@@ -83,3 +97,11 @@ export const removeUserFromGroup = async (
     },
   }).then((response) => response.json());
 };
+export const deleteGroup = async (token: string, groupId: string) => {
+  return await fetch(`${BASE_URL}/${groupId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => response.json());
+}

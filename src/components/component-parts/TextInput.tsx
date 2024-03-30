@@ -17,8 +17,8 @@ export const TextInput = ({
           type="text"
           className={
             theme === "coffee"
-              ? "placeholder-secondary-content text-secondary-content"
-              : "placeholder-secondary text-secondary"
+              ? "placeholder-secondary-content/50 text-secondary-content"
+              : "placeholder-secondary/50 text-secondary"
           }
           {...inputAttr}
         />

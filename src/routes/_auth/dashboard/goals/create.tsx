@@ -20,6 +20,7 @@ const CreateGoal = () => {
     setDescriptionInput("");
     setIsPrivateInput(false);
     setWeeklyTrackingTotalInput(0);
+    setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -37,6 +38,7 @@ const CreateGoal = () => {
   const mutation = useCreateGoalMutation(user!.token!, onSuccess, onError);
 
   const [titleInput, setTitleInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [descriptionInput, setDescriptionInput] = useState("");
   const [isPrivateInput, setIsPrivateInput] = useState(false);
   const [weeklyTrackingTotalInput, setWeeklyTrackingTotalInput] = useState(0);
@@ -45,11 +47,13 @@ const CreateGoal = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     const requestBody: GoalCreateBody = {
       title: titleInput,
       description: descriptionInput,
       isPrivate: isPrivateInput,
       weeklyTrackingTotal: weeklyTrackingTotalInput,
+      sharedToGroup: sharedToGroup.map((g) => g.id),
     };
     mutation.mutate(requestBody);
   };
@@ -124,7 +128,8 @@ const CreateGoal = () => {
         </div>
         <button
           type="submit"
-          className="bg-primary text-slate-100 font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-slate-800 disabled:bg-gray-600"
+          disabled={isLoading}
+          className="bg-primary text-primary-content font-semibold rounded-md self-center px-4 py-2 w-40 hover:bg-primary-content hover:text-primary disabled:bg-gray-600"
         >
           {"Create"} <FontAwesomeIcon icon={faCirclePlus} />
         </button>

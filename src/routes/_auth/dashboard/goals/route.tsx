@@ -31,7 +31,7 @@ function GoalsPage() {
           </div>
         </>
       ) : (
-        <div className="flex">
+        <div className="flex ml-2">
           <div className="flex flex-col items-center w-1/3 gap-2 bg-primary rounded p-4 mx-auto ">
             {goals.map((goal: TGoal) => (
               <GoalCard key={goal.id} goal={goal} />

@@ -1,5 +1,5 @@
 import { queryOptions,useMutation} from "@tanstack/react-query";
-import { getGoalById, getAllGoalsQuery,updateGoalById, GoalUpdateBody, updateGoalProgressById, GoalProgressUpdateBody, GoalCreateBody, createGoal } from "./goals";
+import { getGoalById, getAllGoalsQuery,updateGoalById, GoalUpdateBody, updateGoalProgressById, GoalProgressUpdateBody, GoalCreateBody, createGoal, deleteGoalById } from "./goals";
 import { queryClient } from "../../main";
 
 export const goalsQueryOptions = (token:string) => queryOptions({
@@ -66,4 +66,19 @@ export const useUpdateGoalProgressMutation = (token:string, onSuccessCallback:()
     },
   });
 };
+export const useDeleteGoalMutation = (token:string, goalId:string, onSuccessCallback:()=>void, onErrorCallback:(error:Error)=>void) => {
+  return useMutation({
+    mutationKey: ['deleteGoal'],
+    mutationFn: () => deleteGoalById(token, goalId),
+    onSuccess: () => {
+      onSuccessCallback();
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+    },
+    onError: (error) => {
+      console.error('Mutation error:', error.message);
+      onErrorCallback(error);
+    },
+  });
+}
+
 

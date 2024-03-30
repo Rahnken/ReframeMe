@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { SignInResponseSchema, User } from "../api/users/auth";
+import { useNavigate } from "@tanstack/react-router";
 
 type AuthState = "authenticated" | "unauthenticated" | "loading";
 
@@ -48,6 +49,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<null | User>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const authState = deriveAuthState({ user, isLoading });
   const resetThemeDefault = () => {
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     clearUser();
     resetThemeDefault();
     setUser(null);
+    navigate({ to: "/" });
   };
 
   const login = (data: User) => {

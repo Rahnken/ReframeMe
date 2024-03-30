@@ -16,7 +16,7 @@ export const GroupCard = ({ group }: { group: TGroup }) => {
             <li key={userInfo.id}>
               {userInfo.user.username}{" "}
               <div
-                className={`  ${userInfo.role === "ADMIN" ? "badge badge-primary" : "badge badge-neutral"}`}
+                className={` badge ${userInfo.role === "ADMIN" ? " badge-primary" : " badge-accent"}`}
               >
                 {userInfo.role}
               </div>
