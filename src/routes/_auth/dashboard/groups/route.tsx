@@ -19,7 +19,7 @@ function GroupsPage() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex ml-2">
         <div className="flex flex-col items-start w-1/3 gap-2  p-4 bg-primary h-screen rounded">
           {groups.map((group: TGroup) => (
             <GroupCard key={group.id} group={group} />

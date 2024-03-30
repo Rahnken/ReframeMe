@@ -30,7 +30,7 @@ export function Dashboard() {
           <div className="drawer-content flex flex-col align-center">
             <Outlet />
           </div>
-          <div className="drawer-side border-r-white border-r-2  ">
+          <div className="drawer-side border-r-accent border-r-8  ">
             <label
               htmlFor="dashboard-sidebar"
               aria-label="close sidebar"

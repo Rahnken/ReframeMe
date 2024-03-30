@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { goalsQueryOptions } from "../../../../../api/goals/goalQueries";
@@ -200,7 +200,13 @@ function SpecificGroup() {
               <div className="divider divider-accent my-0"></div>
               {authUser?.userInfo!.username === adminUser?.username && (
                 <div className="card-actions p-2 justify-evenly items-center">
-                  <button className="btn btn-primary w-40">Edit Group</button>
+                  <Link
+                    to={"/dashboard/groups/$groupId/edit"}
+                    params={{ groupId }}
+                    className="btn btn-primary w-40"
+                  >
+                    Edit Group
+                  </Link>
                   <button
                     className="btn btn-primary w-40"
                     onClick={openModal("add-member-dialog")}
