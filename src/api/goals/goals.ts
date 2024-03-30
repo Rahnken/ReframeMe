@@ -79,3 +79,11 @@ export const updateGoalById = async (token: string, body: GoalUpdateBody) => {
     },
   }).then((response) => response.json());
 };
+export const deleteGoalById = async (token: string, goalId: string) => {
+  return await fetch(`${BASE_URL}/${goalId}/delete`, {
+    method: "DELETE",
+    headers : {
+      Authorization: `Bearer ${token}`
+    }
+  }).then((response) => response.json());
+};

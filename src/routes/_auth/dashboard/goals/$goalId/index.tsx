@@ -1,8 +1,13 @@
 import { TGoal } from "../../../../../types";
 import { GoalAccordion } from "../../../../../components/component-parts/GoalAccordian";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { goalQueryIdOptions } from "../../../../../api/goals/goalQueries";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  goalQueryIdOptions,
+  useDeleteGoalMutation,
+} from "../../../../../api/goals/goalQueries";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const SpecificGoal = () => {
   const {
@@ -11,6 +16,28 @@ const SpecificGoal = () => {
   const { goalId } = Route.useParams();
   const sq = useSuspenseQuery(goalQueryIdOptions(user!.token!, goalId));
   const goal: TGoal = sq.data;
+  const navigate = useNavigate();
+
+  const onDeleteSuccess = () => {
+    navigate({ to: "/dashboard/goals" });
+  };
+  const onError = (e: Error) => {
+    console.error(e);
+  };
+  const deleteMutation = useDeleteGoalMutation(
+    user!.token!,
+    goalId,
+    onDeleteSuccess,
+    onError
+  );
+  const handleDelete = () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this goal?"
+    );
+    if (!confirmDelete) return;
+
+    deleteMutation.mutate();
+  };
 
   return (
     <div className="p-4 rounded-xl flex flex-col md:w-3/4 sm:w-1/2 bg-slate-700 mx-4 my-2 gap-3">
@@ -25,8 +52,11 @@ const SpecificGoal = () => {
             to="/dashboard/goals/$goalId/edit"
             params={{ goalId: goal.id }}
           >
-            Edit Goal
+            <FontAwesomeIcon icon={faEdit} />
           </Link>
+          <button onClick={handleDelete} className="btn btn-error">
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
         </div>
       </div>
       <div className="mx-auto p-5 bg-secondary-700 w-4/5 rounded-xl ">
