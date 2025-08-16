@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Target, Users, BarChart3, Plus } from "lucide-react";
 import { useModal } from "../utils/useModal";
 import { Modal } from "./component-parts/modal";
-import { CreateGoalForm } from "./forms/CreateGoalForm";
+import { GoalForm } from "./forms/GoalForm";
 import { CreateGroupForm } from "./forms/CreateGroupForm";
 import { WeeklyGoals } from "./WeeklyGoals";
 import { MonthlyProgress } from "./MonthlyProgress";
@@ -23,7 +23,7 @@ export function DashboardContent() {
           <div className="relative overflow-hidden rounded-2xl bg-card border border-border p-8 shadow-sm">
             <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
               <div>
-                <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                <h1 className="text-4xl font-bold tracking-wide text-primary font-headers ">
                   Dashboard
                 </h1>
                 <p className="text-muted-foreground mt-2">
@@ -106,7 +106,7 @@ export function DashboardContent() {
         title="Create New SMART Goal"
         size="lg"
       >
-        <CreateGoalForm onSuccess={createGoalModal.close} />
+        <GoalForm onSuccess={createGoalModal.close} />
       </Modal>
 
       <Modal

@@ -9,7 +9,7 @@ export const GroupCard = ({ group }: { group: TGroup }) => {
       className="card bg-secondary [&.active]:bg-neutral [&.active]:text-neutral-content border-secondary border-4  hover:border-6 hover:border-base-300 text-secondary-content min-w-64 max-w-96 w-full "
     >
       <div className="card-body">
-        <h2 className="card-title">{group.name}</h2>
+        <h2 className="card-title font-headers">{group.name}</h2>
         <p> {group.description}</p>
         <ul>
           {group.users.map((userInfo) => (

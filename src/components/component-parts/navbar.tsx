@@ -1,12 +1,21 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../../providers/auth.provider";
 import { useState, useEffect } from "react";
+import { useNotificationPopups } from "../../hooks/useNotificationPopups";
+import { Bell } from "lucide-react";
 
 export const Navbar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Get notification count for the badge (no popups in navbar)
+  const { unreadCount } = useNotificationPopups({
+    token: auth.user?.token || '',
+    enabled: auth.authState === "authenticated" && !!auth.user?.token,
+    showPopups: false, // Don't show popups from navbar, only from the auth layout
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +32,7 @@ export const Navbar = () => {
 
   const links = [
     { to: "/dashboard", text: "Dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+    { to: "/dashboard/groups", text: "Groups", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
     { to: "/profile", text: "Profile", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
   ];
 
@@ -52,14 +62,30 @@ export const Navbar = () => {
                     key={link.to}
                     to={link.to}
                     className="relative px-4 py-2 text-base-content/80 hover:text-primary transition-colors duration-300 font-medium [&.active]:text-primary"
+                    activeOptions={{ exact: true }}
                   >
                     <span className="relative z-10">{link.text}</span>
                     <span className="absolute inset-0 bg-primary/10 rounded-lg scale-0 [.active_&]:scale-100 transition-transform duration-300"></span>
                   </Link>
                 ))}
+                
+                {/* Notification Bell */}
+                <Link
+                  to="/profile"
+                  className="relative btn btn-ghost btn-sm hover:text-primary transition-colors duration-300"
+                  title="Notifications"
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+                
                 <button
                   onClick={handleLogout}
-                  className="btn btn-ghost btn-sm hover:btn-error transition-colors duration-300 ml-4"
+                  className="btn btn-ghost btn-sm hover:btn-error transition-colors duration-300"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -122,6 +148,7 @@ export const Navbar = () => {
                     to={link.to}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center px-3 py-2 rounded-lg text-base font-medium text-base-content/80 hover:text-primary hover:bg-primary/10 transition-all duration-300 [&.active]:bg-primary/20 [&.active]:text-primary"
+                    activeOptions={{ exact: true }}
                   >
                     <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={link.icon} />
@@ -129,6 +156,24 @@ export const Navbar = () => {
                     {link.text}
                   </Link>
                 ))}
+                
+                {/* Notification Link for Mobile */}
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-lg text-base font-medium text-base-content/80 hover:text-primary hover:bg-primary/10 transition-all duration-300"
+                >
+                  <div className="flex items-center">
+                    <Bell className="h-5 w-5 mr-3" />
+                    Notifications
+                  </div>
+                  {unreadCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+                
                 <button
                   onClick={() => {
                     handleLogout();

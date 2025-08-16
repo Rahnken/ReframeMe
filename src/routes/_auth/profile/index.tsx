@@ -5,13 +5,14 @@ import {
 } from "../../../api/users/userQueryOptions";
 import { TGroup, TUserInfo } from "../../../types";
 import { groupQueryOptions } from "../../../api/groups/groupQueries";
+import { notificationsQueryOptions } from "../../../api/notifications/notificationQueryOptions";
 import { ThemeType, useThemeProvider } from "../../../providers/theme.provider";
 import { TUpdateUserInfo } from "../../../api/users/userInfo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   User, 
   Edit, 
@@ -20,13 +21,15 @@ import {
   Palette, 
   CheckCircle, 
   Users,
-  Crown
+  Crown,
+  Mail
 } from "lucide-react";
 import { ThemeSelector } from "../../../components/ThemeSelector";
+import { GroupNotifications } from "../../../components/GroupNotifications";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
+const ProfileCard = ({ profile, userEmail }: { profile: TUserInfo; userEmail?: string }) => {
   const {
     firstName,
     lastName,
@@ -44,7 +47,6 @@ const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
       <CardHeader className="text-center pb-4">
         <div className="flex justify-center mb-4">
           <Avatar className="w-24 h-24 border-4 border-gradient-to-r from-primary to-secondary">
-            <AvatarImage src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
             <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white text-xl font-bold">
               {getInitials(firstName, lastName)}
             </AvatarFallback>
@@ -69,6 +71,18 @@ const ProfileCard = ({ profile }: { profile: TUserInfo }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4">
+          {userEmail && (
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-blue-100/50 to-transparent">
+              <div className="w-8 h-8 rounded-full bg-blue-200/50 flex items-center justify-center">
+                <Mail className="h-4 w-4 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="font-medium">{userEmail}</p>
+              </div>
+            </div>
+          )}
+          
           <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/5 to-transparent">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
               <MapPin className="h-4 w-4 text-primary" />
@@ -187,7 +201,7 @@ const UserProfile = () => {
         {/* Header */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-background to-secondary/10 p-8 border border-primary/20 mb-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-headers tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
               Profile Settings
             </h1>
             <p className="text-muted-foreground">
@@ -203,7 +217,7 @@ const UserProfile = () => {
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <ProfileCard profile={profile} />
+            <ProfileCard profile={profile} userEmail={user?.userInfo?.email} />
           </div>
 
           {/* Groups and Theme */}
@@ -227,7 +241,7 @@ const UserProfile = () => {
                     <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-secondary/20 to-primary/20 flex items-center justify-center">
                       <Users className="h-8 w-8 text-secondary" />
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">No groups owned</h3>
+                    <h3 className="text-lg font-subheaders mb-2">No groups owned</h3>
                     <p className="text-muted-foreground mb-4">
                       Create your first group to start collaborating
                     </p>
@@ -242,7 +256,7 @@ const UserProfile = () => {
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <h4 className="font-semibold">{group.name}</h4>
+                              <h4 className="font-subheaders">{group.name}</h4>
                               <p className="text-sm text-muted-foreground">
                                 {group.users.length} member{group.users.length !== 1 ? 's' : ''}
                               </p>
@@ -261,6 +275,9 @@ const UserProfile = () => {
 
             {/* Theme Selector */}
             <ThemeSelector updateProfileTheme={updateProfileTheme} />
+            
+            {/* Group Notifications */}
+            <GroupNotifications token={user!.token!} />
           </div>
         </div>
       </div>
@@ -272,6 +289,7 @@ export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { auth, queryClient } }) => {
     await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
     await queryClient.prefetchQuery(groupQueryOptions(auth.user!.token!));
+    await queryClient.prefetchQuery(notificationsQueryOptions(auth.user!.token!));
   },
   component: UserProfile,
 });

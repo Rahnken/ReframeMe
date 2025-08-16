@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Palette, Sun, Moon, Check } from "lucide-react";
@@ -22,9 +28,9 @@ export const ThemeSelector = ({ updateProfileTheme }: ThemeSelectorProps) => {
     }
   };
 
-  const themes: { 
-    key: ThemeType; 
-    name: string; 
+  const themes: {
+    key: ThemeType;
+    name: string;
     description: string;
     isLight: boolean;
     colors: string;
@@ -32,30 +38,30 @@ export const ThemeSelector = ({ updateProfileTheme }: ThemeSelectorProps) => {
     {
       key: "modernDark",
       name: "Modern Dark",
-      description: "Sleek dark theme with orange accents",
+      description: "Dark theme with orange & green accents",
       isLight: false,
-      colors: "from-gray-900 via-gray-800 to-orange-900/20",
-    },
-    {
-      key: "modernLight",
-      name: "Modern Light",
-      description: "Clean light theme with vibrant colors",
-      isLight: true,
-      colors: "from-orange-50 via-orange-25 to-green-50",
-    },
-    {
-      key: "glassLight",
-      name: "Glass Light",
-      description: "Elegant glassmorphism design",
-      isLight: true,
-      colors: "from-blue-50 via-indigo-25 to-purple-50",
+      colors: "from-gray-900 via-orange-600 to-emerald-500",
     },
     {
       key: "sunset",
       name: "Sunset",
-      description: "Warm sunset inspired theme",
+      description: "Warm sunset with orange highlights",
       isLight: false,
-      colors: "from-gray-900 via-orange-900 to-red-900",
+      colors: "from-gray-800 via-orange-500 to-rose-400",
+    },
+    {
+      key: "modernLight",
+      name: "Modern Light",
+      description: "Bright theme with vibrant orange & green",
+      isLight: true,
+      colors: "from-orange-100 via-orange-500 to-emerald-400",
+    },
+    {
+      key: "glassLight",
+      name: "Glass Light",
+      description: "Soft glassmorphism with brand colors",
+      isLight: true,
+      colors: "from-orange-50 via-orange-400 to-emerald-300",
     },
   ];
 
@@ -85,10 +91,12 @@ export const ThemeSelector = ({ updateProfileTheme }: ThemeSelectorProps) => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className={`w-12 h-8 rounded-md bg-gradient-to-r ${themeOption.colors} border border-border/20`}></div>
+                <div
+                  className={`w-16 h-10 rounded-lg bg-gradient-to-r ${themeOption.colors} border border-border/20 shadow-sm`}
+                ></div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="font-semibold">{themeOption.name}</h4>
+                    <h4 className="font-subheaders">{themeOption.name}</h4>
                     <Badge variant="outline" className="text-xs">
                       {themeOption.isLight ? (
                         <>
@@ -103,17 +111,19 @@ export const ThemeSelector = ({ updateProfileTheme }: ThemeSelectorProps) => {
                       )}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{themeOption.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {themeOption.description}
+                  </p>
                 </div>
               </div>
-              
+
               {currentTheme === themeOption.key && (
                 <div className="flex items-center gap-2">
                   <Check className="h-5 w-5 text-primary" />
                   <Badge className="bg-primary">Active</Badge>
                 </div>
               )}
-              
+
               {isUpdating === themeOption.key && (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -121,7 +131,7 @@ export const ThemeSelector = ({ updateProfileTheme }: ThemeSelectorProps) => {
                 </div>
               )}
             </div>
-            
+
             {currentTheme !== themeOption.key && (
               <Button
                 variant="outline"

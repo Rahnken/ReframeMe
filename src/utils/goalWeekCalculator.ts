@@ -12,9 +12,9 @@ export function getCurrentGoalWeek(startDate: string | Date, cycleDuration: numb
   start.setHours(0, 0, 0, 0);
   today.setHours(0, 0, 0, 0);
   
-  // If goal hasn't started yet, return 0
+  // If goal hasn't started yet, return week 1 (allow progress tracking before official start)
   if (today < start) {
-    return 0;
+    return 1;
   }
   
   // Calculate days since start

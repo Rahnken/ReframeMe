@@ -17,7 +17,7 @@ import { TGoal } from "../types";
 import { useState } from "react";
 import { Modal } from "./component-parts/modal";
 import { GoalProgressTracker } from "./GoalProgressTracker";
-import { EditGoalForm } from "./EditGoalForm";
+import { GoalForm } from "./forms/GoalForm";
 import { updateGoalProgressById, updateGoalById } from "../api/goals/goals";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -30,8 +30,10 @@ interface WeeklyGoalsProps {
 export function WeeklyGoals({ onCreateGoal }: WeeklyGoalsProps = {}) {
   const { user, handleAuthError } = useAuth();
   const queryClient = useQueryClient();
-  
-  const { data: goals = [] } = useSuspenseQuery(goalsQueryOptions(user!.token!));
+
+  const { data: goals = [] } = useSuspenseQuery(
+    goalsQueryOptions(user!.token!)
+  );
 
   const [selectedGoal, setSelectedGoal] = useState<TGoal | null>(null);
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
@@ -160,7 +162,9 @@ export function WeeklyGoals({ onCreateGoal }: WeeklyGoalsProps = {}) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Goal Progress</h2>
+          <h2 className="text-2xl font-headers tracking-wide">
+            Goal Progress
+          </h2>
           <p className="text-muted-foreground">
             Track your progress across all active goals
           </p>
@@ -174,7 +178,7 @@ export function WeeklyGoals({ onCreateGoal }: WeeklyGoalsProps = {}) {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
                 <Target className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No goals yet</h3>
+              <h3 className="text-lg font-subheaders mb-2">No goals yet</h3>
               <p className="text-muted-foreground mb-4">
                 Create your first SMART goal to start tracking your progress
               </p>
@@ -298,7 +302,7 @@ export function WeeklyGoals({ onCreateGoal }: WeeklyGoalsProps = {}) {
         size="xl"
       >
         {selectedGoal && (
-          <EditGoalForm
+          <GoalForm
             goal={selectedGoal}
             onClose={() => setIsEditModalOpen(false)}
             onSave={handleSaveGoal}

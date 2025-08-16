@@ -17,10 +17,11 @@ import { Route as IndexImport } from './routes/index'
 import { Route as PublicIndexImport } from './routes/_public/index'
 import { Route as PublicRegisterImport } from './routes/_public/register'
 import { Route as PublicLoginImport } from './routes/_public/login'
-import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard/route'
+import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
+import { Route as AuthDashboardIndexImport } from './routes/_auth/dashboard/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
-import { Route as AuthDashboardGroupsRouteImport } from './routes/_auth/dashboard/groups/route'
+import { Route as AuthDashboardGroupsIndexImport } from './routes/_auth/dashboard/groups/index'
 import { Route as AuthDashboardGroupsCreateImport } from './routes/_auth/dashboard/groups/create'
 import { Route as AuthDashboardGroupsGroupIdIndexImport } from './routes/_auth/dashboard/groups/$groupId/index'
 import { Route as AuthDashboardGroupsGroupIdEditImport } from './routes/_auth/dashboard/groups/$groupId/edit'
@@ -57,7 +58,7 @@ const PublicLoginRoute = PublicLoginImport.update({
   getParentRoute: () => PublicRoute,
 } as any)
 
-const AuthDashboardRouteRoute = AuthDashboardRouteImport.update({
+const AuthDashboardRoute = AuthDashboardImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthRoute,
 } as any)
@@ -67,31 +68,36 @@ const AuthProfileIndexRoute = AuthProfileIndexImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthDashboardIndexRoute = AuthDashboardIndexImport.update({
+  path: '/',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+
 const AuthProfileEditRoute = AuthProfileEditImport.update({
   path: '/profile/edit',
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthDashboardGroupsRouteRoute = AuthDashboardGroupsRouteImport.update({
-  path: '/groups',
-  getParentRoute: () => AuthDashboardRouteRoute,
+const AuthDashboardGroupsIndexRoute = AuthDashboardGroupsIndexImport.update({
+  path: '/groups/',
+  getParentRoute: () => AuthDashboardRoute,
 } as any)
 
 const AuthDashboardGroupsCreateRoute = AuthDashboardGroupsCreateImport.update({
-  path: '/create',
-  getParentRoute: () => AuthDashboardGroupsRouteRoute,
+  path: '/groups/create',
+  getParentRoute: () => AuthDashboardRoute,
 } as any)
 
 const AuthDashboardGroupsGroupIdIndexRoute =
   AuthDashboardGroupsGroupIdIndexImport.update({
-    path: '/$groupId/',
-    getParentRoute: () => AuthDashboardGroupsRouteRoute,
+    path: '/groups/$groupId/',
+    getParentRoute: () => AuthDashboardRoute,
   } as any)
 
 const AuthDashboardGroupsGroupIdEditRoute =
   AuthDashboardGroupsGroupIdEditImport.update({
-    path: '/$groupId/edit',
-    getParentRoute: () => AuthDashboardGroupsRouteRoute,
+    path: '/groups/$groupId/edit',
+    getParentRoute: () => AuthDashboardRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -111,7 +117,7 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof rootRoute
     }
     '/_auth/dashboard': {
-      preLoaderRoute: typeof AuthDashboardRouteImport
+      preLoaderRoute: typeof AuthDashboardImport
       parentRoute: typeof AuthImport
     }
     '/_public/login': {
@@ -126,13 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexImport
       parentRoute: typeof PublicImport
     }
-    '/_auth/dashboard/groups': {
-      preLoaderRoute: typeof AuthDashboardGroupsRouteImport
-      parentRoute: typeof AuthDashboardRouteImport
-    }
     '/_auth/profile/edit': {
       preLoaderRoute: typeof AuthProfileEditImport
       parentRoute: typeof AuthImport
+    }
+    '/_auth/dashboard/': {
+      preLoaderRoute: typeof AuthDashboardIndexImport
+      parentRoute: typeof AuthDashboardImport
     }
     '/_auth/profile/': {
       preLoaderRoute: typeof AuthProfileIndexImport
@@ -140,15 +146,19 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/dashboard/groups/create': {
       preLoaderRoute: typeof AuthDashboardGroupsCreateImport
-      parentRoute: typeof AuthDashboardGroupsRouteImport
+      parentRoute: typeof AuthDashboardImport
+    }
+    '/_auth/dashboard/groups/': {
+      preLoaderRoute: typeof AuthDashboardGroupsIndexImport
+      parentRoute: typeof AuthDashboardImport
     }
     '/_auth/dashboard/groups/$groupId/edit': {
       preLoaderRoute: typeof AuthDashboardGroupsGroupIdEditImport
-      parentRoute: typeof AuthDashboardGroupsRouteImport
+      parentRoute: typeof AuthDashboardImport
     }
     '/_auth/dashboard/groups/$groupId/': {
       preLoaderRoute: typeof AuthDashboardGroupsGroupIdIndexImport
-      parentRoute: typeof AuthDashboardGroupsRouteImport
+      parentRoute: typeof AuthDashboardImport
     }
   }
 }
@@ -158,12 +168,12 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   AuthRoute.addChildren([
-    AuthDashboardRouteRoute.addChildren([
-      AuthDashboardGroupsRouteRoute.addChildren([
-        AuthDashboardGroupsCreateRoute,
-        AuthDashboardGroupsGroupIdEditRoute,
-        AuthDashboardGroupsGroupIdIndexRoute,
-      ]),
+    AuthDashboardRoute.addChildren([
+      AuthDashboardIndexRoute,
+      AuthDashboardGroupsCreateRoute,
+      AuthDashboardGroupsIndexRoute,
+      AuthDashboardGroupsGroupIdEditRoute,
+      AuthDashboardGroupsGroupIdIndexRoute,
     ]),
     AuthProfileEditRoute,
     AuthProfileIndexRoute,
