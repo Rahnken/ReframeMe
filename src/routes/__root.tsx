@@ -23,8 +23,12 @@ function Root() {
       <main className="pt-16 sm:pt-20">
         <Outlet />
       </main>
-      <TanStackRouterDevtools position="bottom-right" />
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      {import.meta.env.DEV && (
+        <>
+          <TanStackRouterDevtools position="bottom-right" />
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+        </>
+      )}
     </div>
   );
 }
