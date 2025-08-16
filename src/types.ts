@@ -2,10 +2,15 @@
 export type TGoalProgress = {
     id:string;
     goal_id:string;
-    feedback:string;
+    feedback:string | null;
     targetAmount:number;
     completedAmount:number;
     weekNumber:number;
+    // Enhanced progress tracking fields
+    achieved?: boolean;
+    notes?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export type TGroupUser = {
@@ -40,6 +45,19 @@ export type TGoal = {
     isPrivate:boolean;
     user_id:string;
     goalWeeks: TGoalProgress[];
+    // SMART goal fields
+    specific?: string;
+    measurable?: string;
+    attainable?: string;
+    relevant?: string;
+    timeBound?: string;
+    // Goal cycle fields (optional until backend is updated)
+    startDate?: string;
+    endDate?: string;
+    cycleDuration?: number;
+    currentWeek?: number;
+    isActive?: boolean;
+    daysRemaining?: number;
 }
 export type TUserInfo = {
     profile_id: string;

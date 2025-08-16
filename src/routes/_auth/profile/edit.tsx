@@ -34,11 +34,10 @@ function EditProfile() {
   type ThemeOption = { label: string; value: string };
   type TimezoneOption = { label: string; value: string };
   const themeOptions: ThemeOption[] = [
-    { label: "Reframe Dark", value: "reframeDark" },
-    { label: "Coffee", value: "coffee" },
+    { label: "Modern Dark", value: "modernDark" },
+    { label: "Modern Light", value: "modernLight" },
+    { label: "Glass Light", value: "glassLight" },
     { label: "Sunset", value: "sunset" },
-    { label: "Emerald", value: "Emerald" },
-    { label: "Reframe Light", value: "reframeLight" },
   ];
   const navigate = useNavigate();
 
@@ -63,7 +62,6 @@ function EditProfile() {
   const mutation = useUpdateUserInfoMutation(
     auth.user!.token!,
     () => {
-      alert("Profile updated successfully");
       navigate({ to: "/profile" });
     },
     (e) => console.error("Mutation error:", e.message)
@@ -92,109 +90,121 @@ function EditProfile() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl my-4">Edit Profile</h1>
-      <form
-        className="flex-col flex gap-4 bg-primary rounded-lg items-center p-10"
-        onSubmit={handleSubmit}
-      >
-        <TextInput
-          labelText="First Name"
-          inputAttr={{
-            name: "firstName",
-            type: "text",
-            value: firstNameInput,
-            onChange: (e) => setFirstNameInput(e.target.value),
-            required: true,
-            placeholder: "First Name",
-          }}
-        />
-        <TextInput
-          labelText="Last Name"
-          inputAttr={{
-            name: "lastName",
-            type: "text",
-            value: lastNameInput,
-            onChange: (e) => setLastNameInput(e.target.value),
-            required: true,
-            placeholder: "Last Name",
-          }}
-        />
-        <TextInput
-          labelText="Country"
-          inputAttr={{
-            name: "country",
-            type: "text",
-            value: countryInput,
-            onChange: (e) => setCountryInput(e.target.value),
-            required: true,
-            placeholder: "Country",
-          }}
-        />
+    <div className="min-h-screen bg-background p-6">
+      <div className="container mx-auto max-w-2xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Edit Profile</h1>
+          <p className="text-muted-foreground mt-2">
+            Update your personal information and preferences
+          </p>
+        </div>
 
-        <label className="form-control w-full max-w-xs">
-          <span className="label text-lg text-primary-content">Timezone</span>
-          <Select
-            primaryColor="indigo"
-            options={mappedTimezones}
-            value={timezoneInput}
-            isSearchable={true}
-            isDisabled={false}
-            onChange={(v) => setTimezoneInput(v ? (v as TimezoneOption) : null)}
-            classNames={{
-              searchBox:
-                "w-full p-2 bg-base-300 text-primary rounded shadow-sm transition-all duration-300 focus:outline-none",
-              searchIcon: "hidden",
-              menuButton: (props) =>
-                `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                  props && props.isDisabled
-                    ? "bg-neutral bg-opacity-20 cursor-not-allowed"
-                    : "bg-base-300 "
-                }`,
-              menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
-              listItem: (props) =>
-                `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                  props && props.isSelected
-                    ? `text-primary`
-                    : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
-                }`,
-            }}
-          />
-        </label>
-        <label className="form-control w-full max-w-xs">
-          <span className="label text-lg text-primary-content">Theme</span>
-          <Select
-            value={themeInput}
-            options={themeOptions}
-            onChange={(value) =>
-              setThemeInput(value ? (value as ThemeOption) : null)
-            }
-            primaryColor="indigo"
-            classNames={{
-              menuButton: (props) =>
-                `flex text-sm text-primary  rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                  props && props.isDisabled
-                    ? "bg-neutral bg-opacity-20 cursor-not-allowed"
-                    : "bg-base-300 "
-                }`,
-              menu: "absolute z-10 w-full bg-base-200 shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700",
-              listItem: (props) =>
-                `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                  props && props.isSelected
-                    ? `text-primary`
-                    : `text-primary hover:bg-secondary hover:bg-opacity-80 hover:text-secondary-content`
-                }`,
-            }}
-          />
-        </label>
-
-        <button
-          className="btn btn-secondary mt-4 w-full max-w-xs"
-          type="submit"
+        <form
+          className="bg-card border border-border rounded-2xl p-8 shadow-sm space-y-6"
+          onSubmit={handleSubmit}
         >
-          Save
-        </button>
-      </form>
+          <TextInput
+            labelText="First Name"
+            inputAttr={{
+              name: "firstName",
+              type: "text",
+              value: firstNameInput,
+              onChange: (e) => setFirstNameInput(e.target.value),
+              required: true,
+              placeholder: "First Name",
+            }}
+          />
+          <TextInput
+            labelText="Last Name"
+            inputAttr={{
+              name: "lastName",
+              type: "text",
+              value: lastNameInput,
+              onChange: (e) => setLastNameInput(e.target.value),
+              required: true,
+              placeholder: "Last Name",
+            }}
+          />
+          <TextInput
+            labelText="Country"
+            inputAttr={{
+              name: "country",
+              type: "text",
+              value: countryInput,
+              onChange: (e) => setCountryInput(e.target.value),
+              required: true,
+              placeholder: "Country",
+            }}
+          />
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">
+              Timezone
+            </label>
+            <Select
+              primaryColor="orange"
+              options={mappedTimezones}
+              value={timezoneInput}
+              isSearchable={true}
+              isDisabled={false}
+              onChange={(v) =>
+                setTimezoneInput(v ? (v as TimezoneOption) : null)
+              }
+              classNames={{
+                searchBox:
+                  "w-full p-3 bg-background border border-border text-foreground rounded-lg shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary",
+                searchIcon: "hidden",
+                menuButton: (props) =>
+                  `flex text-sm text-foreground rounded-lg border border-border shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
+                    props && props.isDisabled
+                      ? "bg-muted cursor-not-allowed"
+                      : "bg-background hover:bg-muted/50"
+                  }`,
+                menu: "absolute z-10 w-full bg-card border border-border shadow-lg rounded-lg py-1 mt-1.5 text-sm text-card-foreground",
+                listItem: (props) =>
+                  `block transition duration-200 px-3 py-2 cursor-pointer select-none truncate rounded-md ${
+                    props && props.isSelected
+                      ? `bg-primary text-primary-foreground`
+                      : `text-card-foreground hover:bg-muted`
+                  }`,
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Theme</label>
+            <Select
+              value={themeInput}
+              options={themeOptions}
+              onChange={(value) =>
+                setThemeInput(value ? (value as ThemeOption) : null)
+              }
+              primaryColor="orange"
+              classNames={{
+                menuButton: (props) =>
+                  `flex text-sm text-foreground rounded-lg border border-border shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
+                    props && props.isDisabled
+                      ? "bg-muted cursor-not-allowed"
+                      : "bg-background hover:bg-muted/50"
+                  }`,
+                menu: "absolute z-10 w-full bg-card border border-border shadow-lg rounded-lg py-1 mt-1.5 text-sm text-card-foreground",
+                listItem: (props) =>
+                  `block transition duration-200 px-3 py-2 cursor-pointer select-none truncate rounded-md ${
+                    props && props.isSelected
+                      ? `bg-primary text-primary-foreground`
+                      : `text-card-foreground hover:bg-muted`
+                  }`,
+              }}
+            />
+          </div>
+
+          <button
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 px-4 rounded-lg font-medium transition-colors duration-200"
+            type="submit"
+          >
+            Save Profile
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

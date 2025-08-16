@@ -21,13 +21,9 @@ import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard/rout
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
 import { Route as AuthDashboardGroupsRouteImport } from './routes/_auth/dashboard/groups/route'
-import { Route as AuthDashboardGoalsRouteImport } from './routes/_auth/dashboard/goals/route'
 import { Route as AuthDashboardGroupsCreateImport } from './routes/_auth/dashboard/groups/create'
-import { Route as AuthDashboardGoalsCreateImport } from './routes/_auth/dashboard/goals/create'
 import { Route as AuthDashboardGroupsGroupIdIndexImport } from './routes/_auth/dashboard/groups/$groupId/index'
-import { Route as AuthDashboardGoalsGoalIdIndexImport } from './routes/_auth/dashboard/goals/$goalId/index'
 import { Route as AuthDashboardGroupsGroupIdEditImport } from './routes/_auth/dashboard/groups/$groupId/edit'
-import { Route as AuthDashboardGoalsGoalIdEditImport } from './routes/_auth/dashboard/goals/$goalId/edit'
 
 // Create/Update Routes
 
@@ -81,19 +77,9 @@ const AuthDashboardGroupsRouteRoute = AuthDashboardGroupsRouteImport.update({
   getParentRoute: () => AuthDashboardRouteRoute,
 } as any)
 
-const AuthDashboardGoalsRouteRoute = AuthDashboardGoalsRouteImport.update({
-  path: '/goals',
-  getParentRoute: () => AuthDashboardRouteRoute,
-} as any)
-
 const AuthDashboardGroupsCreateRoute = AuthDashboardGroupsCreateImport.update({
   path: '/create',
   getParentRoute: () => AuthDashboardGroupsRouteRoute,
-} as any)
-
-const AuthDashboardGoalsCreateRoute = AuthDashboardGoalsCreateImport.update({
-  path: '/create',
-  getParentRoute: () => AuthDashboardGoalsRouteRoute,
 } as any)
 
 const AuthDashboardGroupsGroupIdIndexRoute =
@@ -102,22 +88,10 @@ const AuthDashboardGroupsGroupIdIndexRoute =
     getParentRoute: () => AuthDashboardGroupsRouteRoute,
   } as any)
 
-const AuthDashboardGoalsGoalIdIndexRoute =
-  AuthDashboardGoalsGoalIdIndexImport.update({
-    path: '/$goalId/',
-    getParentRoute: () => AuthDashboardGoalsRouteRoute,
-  } as any)
-
 const AuthDashboardGroupsGroupIdEditRoute =
   AuthDashboardGroupsGroupIdEditImport.update({
     path: '/$groupId/edit',
     getParentRoute: () => AuthDashboardGroupsRouteRoute,
-  } as any)
-
-const AuthDashboardGoalsGoalIdEditRoute =
-  AuthDashboardGoalsGoalIdEditImport.update({
-    path: '/$goalId/edit',
-    getParentRoute: () => AuthDashboardGoalsRouteRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -152,10 +126,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexImport
       parentRoute: typeof PublicImport
     }
-    '/_auth/dashboard/goals': {
-      preLoaderRoute: typeof AuthDashboardGoalsRouteImport
-      parentRoute: typeof AuthDashboardRouteImport
-    }
     '/_auth/dashboard/groups': {
       preLoaderRoute: typeof AuthDashboardGroupsRouteImport
       parentRoute: typeof AuthDashboardRouteImport
@@ -168,25 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileIndexImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/dashboard/goals/create': {
-      preLoaderRoute: typeof AuthDashboardGoalsCreateImport
-      parentRoute: typeof AuthDashboardGoalsRouteImport
-    }
     '/_auth/dashboard/groups/create': {
       preLoaderRoute: typeof AuthDashboardGroupsCreateImport
       parentRoute: typeof AuthDashboardGroupsRouteImport
     }
-    '/_auth/dashboard/goals/$goalId/edit': {
-      preLoaderRoute: typeof AuthDashboardGoalsGoalIdEditImport
-      parentRoute: typeof AuthDashboardGoalsRouteImport
-    }
     '/_auth/dashboard/groups/$groupId/edit': {
       preLoaderRoute: typeof AuthDashboardGroupsGroupIdEditImport
       parentRoute: typeof AuthDashboardGroupsRouteImport
-    }
-    '/_auth/dashboard/goals/$goalId/': {
-      preLoaderRoute: typeof AuthDashboardGoalsGoalIdIndexImport
-      parentRoute: typeof AuthDashboardGoalsRouteImport
     }
     '/_auth/dashboard/groups/$groupId/': {
       preLoaderRoute: typeof AuthDashboardGroupsGroupIdIndexImport
@@ -201,11 +159,6 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   AuthRoute.addChildren([
     AuthDashboardRouteRoute.addChildren([
-      AuthDashboardGoalsRouteRoute.addChildren([
-        AuthDashboardGoalsCreateRoute,
-        AuthDashboardGoalsGoalIdEditRoute,
-        AuthDashboardGoalsGoalIdIndexRoute,
-      ]),
       AuthDashboardGroupsRouteRoute.addChildren([
         AuthDashboardGroupsCreateRoute,
         AuthDashboardGroupsGroupIdEditRoute,

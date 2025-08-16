@@ -21,7 +21,7 @@ export const SignInResponseSchema = z.object({
   userInfo: z.object({
     email: z.string(), 
     username: z.string(),
-    lastLogin: z.string().datetime(),
+    lastLogin: z.string().datetime().nullable(),
     theme:  ThemeTypeSchema,
   }).optional(),
   message: z.string().optional(), // Assuming the message might be included in the response
