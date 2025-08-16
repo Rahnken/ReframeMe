@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { TextInput } from "../../../components/component-parts/TextInput";
 import { useState } from "react";
 import {
   useUpdateUserInfoMutation,
@@ -12,20 +11,17 @@ import moment from "moment-timezone";
 import Select from "react-tailwindcss-select";
 import { TUpdateUserInfo } from "../../../api/users/userInfo";
 import { TUserInfo } from "../../../types";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Shield, 
-  AlertTriangle,
-  ChevronLeft
-} from "lucide-react";
+import { User, Mail, Lock, Shield, ChevronLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
@@ -77,10 +73,14 @@ function EditProfile() {
       (option) => option.value === profile.userSettings.theme
     ) || null
   );
-  
+
   // Account settings
-  const [emailInput, setEmailInput] = useState(auth.user?.userInfo?.email || "");
-  const [usernameInput, setUsernameInput] = useState(auth.user?.userInfo?.username || "");
+  const [emailInput, setEmailInput] = useState(
+    auth.user?.userInfo?.email || ""
+  );
+  const [usernameInput, setUsernameInput] = useState(
+    auth.user?.userInfo?.username || ""
+  );
   const [emailPassword, setEmailPassword] = useState("");
   const [usernamePassword, setUsernamePassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -102,7 +102,9 @@ function EditProfile() {
   const emailMutation = useUpdateEmailMutation(
     auth.user!.token!,
     () => {
-      toast.success("Email updated successfully! Please log in again with your new email.");
+      toast.success(
+        "Email updated successfully! Please log in again with your new email."
+      );
       setEmailPassword("");
       // Force re-login since the auth token contains old email
       setTimeout(() => {
@@ -118,7 +120,9 @@ function EditProfile() {
   const usernameMutation = useUpdateUsernameMutation(
     auth.user!.token!,
     () => {
-      toast.success("Username updated successfully! Please log in again with your new username.");
+      toast.success(
+        "Username updated successfully! Please log in again with your new username."
+      );
       setUsernamePassword("");
       // Force re-login since the auth token contains old username
       setTimeout(() => {
@@ -151,7 +155,7 @@ function EditProfile() {
       toast.error("Please fill out all required fields");
       return;
     }
-    
+
     const updatedProfile: TUpdateUserInfo = {
       firstName: firstNameInput,
       lastName: lastNameInput,
@@ -177,7 +181,7 @@ function EditProfile() {
       toast.error("New email must be different from current email");
       return;
     }
-    
+
     emailMutation.mutate({
       newEmail: emailInput,
       currentPassword: emailPassword,
@@ -194,7 +198,7 @@ function EditProfile() {
       toast.error("New username must be different from current username");
       return;
     }
-    
+
     usernameMutation.mutate({
       newUsername: usernameInput,
       currentPassword: usernamePassword,
@@ -219,7 +223,7 @@ function EditProfile() {
       toast.error("New password must be different from current password");
       return;
     }
-    
+
     passwordMutation.mutate({
       currentPassword,
       newPassword,
@@ -235,7 +239,9 @@ function EditProfile() {
             <ChevronLeft className="h-6 w-6" />
           </Link>
           <div>
-            <h1 className="text-3xl font-headers tracking-wide">Edit Profile</h1>
+            <h1 className="text-3xl font-headers tracking-wide">
+              Edit Profile
+            </h1>
             <p className="text-muted-foreground mt-1">
               Update your personal information and account settings
             </p>
@@ -299,11 +305,15 @@ function EditProfile() {
                     options={mappedTimezones}
                     value={timezoneInput}
                     isSearchable={true}
-                    onChange={(v) => setTimezoneInput(v ? (v as TimezoneOption) : null)}
+                    onChange={(v) =>
+                      setTimezoneInput(v ? (v as TimezoneOption) : null)
+                    }
                     classNames={{
-                      menuButton: () => "flex text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md",
+                      menuButton: () =>
+                        "flex text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md",
                       menu: "absolute z-10 w-full bg-popover border border-border shadow-lg rounded-md py-1 mt-1",
-                      listItem: (props) => `block px-3 py-2 cursor-pointer text-sm ${props?.isSelected ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"}`,
+                      listItem: (props) =>
+                        `block px-3 py-2 cursor-pointer text-sm ${props?.isSelected ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"}`,
                     }}
                   />
                 </div>
@@ -313,19 +323,23 @@ function EditProfile() {
                   <Select
                     value={themeInput}
                     options={themeOptions}
-                    onChange={(value) => setThemeInput(value ? (value as ThemeOption) : null)}
+                    onChange={(value) =>
+                      setThemeInput(value ? (value as ThemeOption) : null)
+                    }
                     primaryColor="orange"
                     classNames={{
-                      menuButton: () => "flex text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md",
+                      menuButton: () =>
+                        "flex text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md",
                       menu: "absolute z-10 w-full bg-popover border border-border shadow-lg rounded-md py-1 mt-1",
-                      listItem: (props) => `block px-3 py-2 cursor-pointer text-sm ${props?.isSelected ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"}`,
+                      listItem: (props) =>
+                        `block px-3 py-2 cursor-pointer text-sm ${props?.isSelected ? "bg-accent text-accent-foreground" : "hover:bg-accent/50"}`,
                     }}
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full" 
+                <Button
+                  type="submit"
+                  className="w-full"
                   disabled={profileMutation.isPending}
                 >
                   {profileMutation.isPending ? "Saving..." : "Save Profile"}
@@ -344,9 +358,7 @@ function EditProfile() {
                   </div>
                   Email Address
                 </CardTitle>
-                <CardDescription>
-                  Update your email address
-                </CardDescription>
+                <CardDescription>Update your email address</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -374,9 +386,9 @@ function EditProfile() {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={emailMutation.isPending}
                   >
                     {emailMutation.isPending ? "Updating..." : "Update Email"}
@@ -394,9 +406,7 @@ function EditProfile() {
                   </div>
                   Username
                 </CardTitle>
-                <CardDescription>
-                  Update your username
-                </CardDescription>
+                <CardDescription>Update your username</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleUsernameSubmit} className="space-y-4">
@@ -423,12 +433,14 @@ function EditProfile() {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={usernameMutation.isPending}
                   >
-                    {usernameMutation.isPending ? "Updating..." : "Update Username"}
+                    {usernameMutation.isPending
+                      ? "Updating..."
+                      : "Update Username"}
                   </Button>
                 </form>
               </CardContent>
@@ -474,7 +486,9 @@ function EditProfile() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Label htmlFor="confirmPassword">
+                      Confirm New Password
+                    </Label>
                     <Input
                       id="confirmPassword"
                       type="password"
@@ -485,13 +499,15 @@ function EditProfile() {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={passwordMutation.isPending}
                   >
                     <Shield className="h-4 w-4 mr-2" />
-                    {passwordMutation.isPending ? "Updating..." : "Update Password"}
+                    {passwordMutation.isPending
+                      ? "Updating..."
+                      : "Update Password"}
                   </Button>
                 </form>
               </CardContent>

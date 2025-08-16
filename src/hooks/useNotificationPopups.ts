@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { notificationsQueryOptions, useMarkNotificationAsReadMutation } from '../api/notifications/notificationQueryOptions';
-import { TNotification } from '../types';
-import { toast } from 'sonner';
-import { Users, Target, Bell } from 'lucide-react';
-import { useRouter } from '@tanstack/react-router';
+import React, { useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  notificationsQueryOptions,
+  useMarkNotificationAsReadMutation,
+} from "../api/notifications/notificationQueryOptions";
+import { TNotification } from "../types";
+import { toast } from "sonner";
+import { Users, Target, Bell } from "lucide-react";
+import { useRouter } from "@tanstack/react-router";
 
 interface UseNotificationPopupsProps {
   token: string;
@@ -13,15 +16,15 @@ interface UseNotificationPopupsProps {
   showPopups?: boolean; // whether to show toast popups, default true
 }
 
-export const useNotificationPopups = ({ 
-  token, 
-  enabled = true, 
+export const useNotificationPopups = ({
+  token,
+  enabled = true,
   pollInterval = 30000, // 30 seconds
-  showPopups = true 
+  showPopups = true,
 }: UseNotificationPopupsProps) => {
   const previousNotificationsRef = useRef<TNotification[]>([]);
   const router = useRouter();
-  
+
   // Poll for notifications
   const { data: notifications = [] } = useQuery({
     ...notificationsQueryOptions(token),
@@ -33,11 +36,11 @@ export const useNotificationPopups = ({
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'GROUP_INVITATION':
+      case "GROUP_INVITATION":
         return Users;
-      case 'GROUP_REMOVAL':
+      case "GROUP_REMOVAL":
         return Users;
-      case 'GOAL_SHARED':
+      case "GOAL_SHARED":
         return Target;
       default:
         return Bell;
@@ -46,14 +49,14 @@ export const useNotificationPopups = ({
 
   const getNotificationColor = (type: string) => {
     switch (type) {
-      case 'GROUP_INVITATION':
-        return 'text-blue-600';
-      case 'GROUP_REMOVAL':
-        return 'text-red-600';
-      case 'GOAL_SHARED':
-        return 'text-green-600';
+      case "GROUP_INVITATION":
+        return "text-blue-600";
+      case "GROUP_REMOVAL":
+        return "text-red-600";
+      case "GOAL_SHARED":
+        return "text-green-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -69,16 +72,15 @@ export const useNotificationPopups = ({
     if (!enabled || !showPopups || notifications.length === 0) return;
 
     const previousNotifications = previousNotificationsRef.current;
-    
-    // Find new notifications (ones that weren't in the previous fetch)
-    const newNotifications = notifications.filter(notification => 
-      !previousNotifications.some(prev => prev.id === notification.id)
+    const newNotifications = notifications.filter(
+      (notification: TNotification) =>
+        !previousNotifications.some((prev) => prev.id === notification.id)
     );
 
     // Show popup for each new unread notification
     newNotifications
-      .filter(notification => !notification.read)
-      .forEach(notification => {
+      .filter((notification: TNotification) => !notification.read)
+      .forEach((notification: TNotification) => {
         const Icon = getNotificationIcon(notification.type);
         const iconColor = getNotificationColor(notification.type);
         const notificationData = parseNotificationData(notification.data);
@@ -86,18 +88,22 @@ export const useNotificationPopups = ({
         toast(notification.title, {
           description: notification.message,
           duration: 8000, // 8 seconds
-          icon: React.createElement(Icon, { className: `h-4 w-4 ${iconColor}` }),
-          action: notificationData.groupId ? {
-            label: "View Group",
-            onClick: () => {
-              // Mark as read and navigate to the group
-              markAsReadMutation.mutate(notification.id);
-              router.navigate({ 
-                to: '/dashboard/groups/$groupId', 
-                params: { groupId: notificationData.groupId } 
-              });
-            },
-          } : undefined,
+          icon: React.createElement(Icon, {
+            className: `h-4 w-4 ${iconColor}`,
+          }),
+          action: notificationData.groupId
+            ? {
+                label: "View Group",
+                onClick: () => {
+                  // Mark as read and navigate to the group
+                  markAsReadMutation.mutate(notification.id);
+                  router.navigate({
+                    to: "/dashboard/groups/$groupId",
+                    params: { groupId: notificationData.groupId },
+                  });
+                },
+              }
+            : undefined,
           cancel: {
             label: "Mark Read",
             onClick: () => {
@@ -114,6 +120,6 @@ export const useNotificationPopups = ({
 
   return {
     notifications,
-    unreadCount: notifications.filter(n => !n.read).length,
+    unreadCount: notifications.filter((n: TNotification) => !n.read).length,
   };
 };

@@ -81,7 +81,6 @@ export const GoalForm = ({
       return "";
     }
   };
-  
 
   const [goalData, setGoalData] = useState<SMARTGoalData>({
     title: goal?.title || "",
@@ -104,9 +103,9 @@ export const GoalForm = ({
   // Initialize with proper TGroup objects for already shared groups in edit mode
   const [sharedToGroup, setSharedToGroup] = useState<TGroup[]>(() => {
     if (!goal?.sharedToGroup || !isEditMode) return [];
-    
-    // Find the actual TGroup objects from groups array that match the shared group IDs
-    return groups.filter(group => goal.sharedToGroup?.includes(group.id));
+    return groups.filter((group: TGroup) =>
+      goal.sharedToGroup?.includes(group.id)
+    );
   });
 
   const smartSections = [
@@ -330,10 +329,7 @@ export const GoalForm = ({
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label
-                  htmlFor="cycleDuration"
-                  className="text-sm font-medium"
-                >
+                <Label htmlFor="cycleDuration" className="text-sm font-medium">
                   Cycle Duration (weeks)
                 </Label>
                 <Input
@@ -343,10 +339,7 @@ export const GoalForm = ({
                   max="52"
                   value={goalData.cycleDuration}
                   onChange={(e) =>
-                    handleChange(
-                      "cycleDuration",
-                      parseInt(e.target.value) || 1
-                    )
+                    handleChange("cycleDuration", parseInt(e.target.value) || 1)
                   }
                   className="w-full"
                 />
@@ -356,7 +349,10 @@ export const GoalForm = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="startDate" className="text-sm font-medium flex items-center gap-1">
+                <Label
+                  htmlFor="startDate"
+                  className="text-sm font-medium flex items-center gap-1"
+                >
                   <Calendar className="h-3 w-3 opacity-60" />
                   <span>Start Date</span>
                 </Label>
@@ -370,7 +366,10 @@ export const GoalForm = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="endDate" className="text-sm font-medium flex items-center gap-1">
+                <Label
+                  htmlFor="endDate"
+                  className="text-sm font-medium flex items-center gap-1"
+                >
                   <Calendar className="h-3 w-3 opacity-60" />
                   <span>End Date</span>
                 </Label>
@@ -381,12 +380,10 @@ export const GoalForm = ({
                   disabled
                   className="w-full bg-muted date-picker"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Auto-calculated
-                </p>
+                <p className="text-xs text-muted-foreground">Auto-calculated</p>
               </div>
             </div>
-            
+
             <div className="bg-muted/50 rounded-lg p-3 text-sm">
               <p className="text-muted-foreground">
                 Your goal will run for{" "}
@@ -394,14 +391,12 @@ export const GoalForm = ({
                   {goalData.cycleDuration} weeks
                 </span>
                 , from {new Date(goalData.startDate).toLocaleDateString()} to{" "}
-                {new Date(goalData.endDate).toLocaleDateString()}. Progress
-                will be tracked weekly from Week 1 to Week{" "}
-                {goalData.cycleDuration}.
+                {new Date(goalData.endDate).toLocaleDateString()}. Progress will
+                be tracked weekly from Week 1 to Week {goalData.cycleDuration}.
               </p>
             </div>
           </CardContent>
         </Card>
-
 
         {/* SMART Goal Sections */}
         <div className="space-y-4">

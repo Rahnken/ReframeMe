@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, X, Mail, User, Trash2 } from "lucide-react";
 import { TGroup } from "../types";
-import { useAuth } from "../providers/auth.provider";
 
 interface AddMemberModalProps {
   group: TGroup;
@@ -14,32 +13,37 @@ interface AddMemberModalProps {
   onAddMember: (identifier: string, role: string) => Promise<void>;
 }
 
-export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalProps) {
-  const { user } = useAuth();
+export function AddMemberModal({
+  group,
+  onClose,
+  onAddMember,
+}: AddMemberModalProps) {
   const [identifier, setIdentifier] = useState("");
   const [role, setRole] = useState("MEMBER");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pendingMembers, setPendingMembers] = useState<Array<{id: string, identifier: string, role: string}>>([]);
+  const [pendingMembers, setPendingMembers] = useState<
+    Array<{ id: string; identifier: string; role: string }>
+  >([]);
 
   const isEmail = (str: string) => {
-    return str.includes('@') && str.includes('.');
+    return str.includes("@") && str.includes(".");
   };
 
   const addToPending = () => {
     if (!identifier.trim()) return;
-    
+
     const newMember = {
       id: Date.now().toString(),
       identifier: identifier.trim(),
-      role
+      role,
     };
-    
+
     setPendingMembers([...pendingMembers, newMember]);
     setIdentifier("");
   };
 
   const removePending = (id: string) => {
-    setPendingMembers(pendingMembers.filter(member => member.id !== id));
+    setPendingMembers(pendingMembers.filter((member) => member.id !== id));
   };
 
   const handleSubmit = async () => {
@@ -79,10 +83,16 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
       <CardContent className="space-y-6">
         {/* Current Members */}
         <div>
-          <h4 className="text-sm font-subheaders mb-2">Current Members ({group.users.length})</h4>
+          <h4 className="text-sm font-subheaders mb-2">
+            Current Members ({group.users.length})
+          </h4>
           <div className="flex flex-wrap gap-2">
             {group.users.map((groupUser) => (
-              <Badge key={groupUser.id} variant="outline" className="flex items-center gap-1">
+              <Badge
+                key={groupUser.id}
+                variant="outline"
+                className="flex items-center gap-1"
+              >
                 <User className="h-3 w-3" />
                 {groupUser.user.username}
                 {groupUser.role === "ADMIN" && (
@@ -106,7 +116,7 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="user@example.com or username"
                   className="pl-8"
-                  onKeyDown={(e) => e.key === 'Enter' && addToPending()}
+                  onKeyDown={(e) => e.key === "Enter" && addToPending()}
                 />
                 <div className="absolute left-2 top-1/2 -translate-y-1/2">
                   {isEmail(identifier) ? (
@@ -117,7 +127,7 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
                 </div>
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="role">Role</Label>
               <select
@@ -132,9 +142,9 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={addToPending}
-            variant="outline" 
+            variant="outline"
             size="sm"
             disabled={!identifier.trim()}
             className="w-full"
@@ -147,10 +157,15 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
         {/* Pending Members */}
         {pendingMembers.length > 0 && (
           <div>
-            <h4 className="text-sm font-subheaders mb-2">Members to Add ({pendingMembers.length})</h4>
+            <h4 className="text-sm font-subheaders mb-2">
+              Members to Add ({pendingMembers.length})
+            </h4>
             <div className="space-y-2">
               {pendingMembers.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
+                <div
+                  key={member.id}
+                  className="flex items-center justify-between p-3 border border-border rounded-lg bg-card"
+                >
                   <div className="flex items-center gap-2">
                     {isEmail(member.identifier) ? (
                       <Mail className="h-4 w-4 text-muted-foreground" />
@@ -181,7 +196,7 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
           <Button variant="outline" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleSubmit}
             disabled={pendingMembers.length === 0 || isSubmitting}
             className="flex-1 bg-secondary hover:bg-secondary/90"
@@ -191,7 +206,8 @@ export function AddMemberModal({ group, onClose, onAddMember }: AddMemberModalPr
             ) : (
               <UserPlus className="h-4 w-4 mr-2" />
             )}
-            Add {pendingMembers.length} Member{pendingMembers.length !== 1 ? 's' : ''}
+            Add {pendingMembers.length} Member
+            {pendingMembers.length !== 1 ? "s" : ""}
           </Button>
         </div>
       </CardContent>

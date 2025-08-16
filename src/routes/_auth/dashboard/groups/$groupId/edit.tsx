@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,7 +34,7 @@ import {
   UserMinus,
   Crown,
   User,
-  Settings
+  Settings,
 } from "lucide-react";
 import { getAvatarProps } from "../../../../../utils/avatarUtils";
 import { toast } from "sonner";
@@ -116,7 +115,7 @@ function EditGroup() {
     event.preventDefault();
     updateGroupMutation.mutate({
       name: groupNameInput,
-      description: groupDescriptionInput
+      description: groupDescriptionInput,
     });
   };
 
@@ -132,15 +131,21 @@ function EditGroup() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to={`/dashboard/groups/${groupId}`} className="hover:text-primary">
+          <Link
+            to="/dashboard/groups/$groupId"
+            params={{ groupId }}
+            className="hover:text-primary"
+          >
             <ChevronLeft className="h-6 w-6" />
           </Link>
           <div>
             <h1 className="text-3xl font-headers tracking-wide">Edit Group</h1>
-            <p className="text-muted-foreground mt-1">Manage group settings and members</p>
+            <p className="text-muted-foreground mt-1">
+              Manage group settings and members
+            </p>
           </div>
         </div>
-        
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm">
@@ -152,13 +157,16 @@ function EditGroup() {
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Group</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the group
-                and remove all shared goals and member associations.
+                This action cannot be undone. This will permanently delete the
+                group and remove all shared goals and member associations.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteGroup} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction
+                onClick={handleDeleteGroup}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
                 Delete Group
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -196,7 +204,7 @@ function EditGroup() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="groupDescription">Group Description</Label>
                 <Textarea
@@ -208,10 +216,10 @@ function EditGroup() {
                   rows={4}
                 />
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
+
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={updateGroupMutation.isPending}
               >
                 {updateGroupMutation.isPending ? "Updating..." : "Update Group"}
@@ -230,10 +238,18 @@ function EditGroup() {
           </CardHeader>
           <CardContent className="space-y-4">
             {group.users.map((member: TGroupUser) => {
-              const avatarProps = getAvatarProps(undefined, undefined, member.user.username, "md");
-              
+              const avatarProps = getAvatarProps(
+                undefined,
+                undefined,
+                member.user.username,
+                "md"
+              );
+
               return (
-                <div key={member.id} className="flex items-center justify-between p-3 border border-border/20 rounded-lg">
+                <div
+                  key={member.id}
+                  className="flex items-center justify-between p-3 border border-border/20 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
                     <Avatar className={avatarProps.className}>
                       <AvatarFallback className={avatarProps.fallbackClassName}>
@@ -241,42 +257,59 @@ function EditGroup() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h4 className="font-subheaders">{member.user.username}</h4>
-                      <Badge 
-                        variant={member.role === "ADMIN" ? "default" : "secondary"}
+                      <h4 className="font-subheaders">
+                        {member.user.username}
+                      </h4>
+                      <Badge
+                        variant={
+                          member.role === "ADMIN" ? "default" : "secondary"
+                        }
                         className="text-xs"
                       >
-                        {member.role === "ADMIN" && <Crown className="h-3 w-3 mr-1" />}
+                        {member.role === "ADMIN" && (
+                          <Crown className="h-3 w-3 mr-1" />
+                        )}
                         {member.role}
                       </Badge>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
-                          {member.role === "MEMBER" ? "Make Admin" : "Make Member"}
+                          {member.role === "MEMBER"
+                            ? "Make Admin"
+                            : "Make Member"}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Change Member Role</AlertDialogTitle>
+                          <AlertDialogTitle>
+                            Change Member Role
+                          </AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to change {member.user.username}'s role to {member.role === "MEMBER" ? "ADMIN" : "MEMBER"}?
+                            Are you sure you want to change{" "}
+                            {member.user.username}'s role to{" "}
+                            {member.role === "MEMBER" ? "ADMIN" : "MEMBER"}?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => updateMemberRole(member.id, member.role === "MEMBER" ? "ADMIN" : "MEMBER")}
+                            onClick={() =>
+                              updateMemberRole(
+                                member.id,
+                                member.role === "MEMBER" ? "ADMIN" : "MEMBER"
+                              )
+                            }
                           >
                             Change Role
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    
+
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="sm">
@@ -287,8 +320,9 @@ function EditGroup() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Remove Member</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to remove {member.user.username} from this group?
-                            This will also remove their shared goals from the group.
+                            Are you sure you want to remove{" "}
+                            {member.user.username} from this group? This will
+                            also remove their shared goals from the group.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

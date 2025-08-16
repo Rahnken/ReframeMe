@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -15,15 +17,11 @@ import {
 import {
   Users,
   Target,
-  TrendingUp,
-  Calendar,
   ChevronRight,
   Trophy,
   Clock,
-  User,
   Crown,
   Menu,
-  X,
   Edit,
   BarChart3,
 } from "lucide-react";
@@ -63,25 +61,29 @@ interface MemberProgress {
   }[];
 }
 
-export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) {
+export function GroupsOverview({
+  groups,
+  userGoals = [],
+}: GroupsOverviewProps) {
   const { user, handleAuthError } = useAuth();
   const queryClient = useQueryClient();
-  
+
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(
     groups[0]?.id || null
   );
-  
+
   // Get the selected group first
   const selectedGroup = groups.find((g) => g.id === selectedGroupId);
-  
+
   // Find current user in the selected group to get their user_id
   const currentUserInGroup = selectedGroup?.users.find(
-    (groupUser: TGroupUser) => groupUser.user.username === user?.userInfo?.username
+    (groupUser: TGroupUser) =>
+      groupUser.user.username === user?.userInfo?.username
   );
   const currentUserId = currentUserInGroup?.user_id;
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Goal editing state
   const [selectedGoal, setSelectedGoal] = useState<TGoal | null>(null);
   const progressModal = useModal();
@@ -92,8 +94,8 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
       setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleUpdateProgress = (goal: TGoal) => {
@@ -111,8 +113,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
       // Update each week individually using the existing API
       const updatePromises = Object.entries(progressData.weekProgress).map(
         async ([weekNumber, data]: [string, any]) => {
-          const goalWeek = selectedGoal
-            ?.goalWeeks.find((w: any) => w.weekNumber === parseInt(weekNumber));
+          const goalWeek = selectedGoal?.goalWeeks.find(
+            (w: any) => w.weekNumber === parseInt(weekNumber)
+          );
 
           if (goalWeek) {
             return updateGoalProgressById(user!.token!, {
@@ -155,10 +158,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
 
     // Check if group has required properties
     if (!group || !group.users || !Array.isArray(group.users)) {
-      console.warn('Invalid group structure:', group);
+      console.warn("Invalid group structure:", group);
       return [];
     }
-
 
     // Initialize members
     group.users.forEach((groupUser: TGroupUser) => {
@@ -172,30 +174,31 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
 
     // Process shared goals
     if (!group.sharedGoals || !Array.isArray(group.sharedGoals)) {
-      console.warn('Group missing sharedGoals:', group);
+      console.warn("Group missing sharedGoals:", group);
       return Array.from(memberProgressMap.values());
     }
-    
-    group.sharedGoals.forEach((sharedGoal: TSharedGoal, index: number) => {
-      let goal = sharedGoal.goal;
-      
+
+    group.sharedGoals.forEach((sharedGoal: TSharedGoal) => {
+      let goal: TGoal | undefined = sharedGoal.goal;
       // If goal data is missing, try to find it in user's goals
       if (!goal && sharedGoal.goal_id) {
-        goal = userGoals.find(g => g.id === sharedGoal.goal_id);
+        goal = userGoals.find((g) => g.id === sharedGoal.goal_id);
       }
-      
       // Check if goal data is properly populated
       if (!goal) {
-        console.warn('Shared goal missing goal data and not found in user goals:', sharedGoal);
+        console.warn(
+          "Shared goal missing goal data and not found in user goals:",
+          sharedGoal
+        );
         return;
       }
-      
+
       // Skip if goal doesn't have user_id
       if (!goal.user_id) {
-        console.warn('Goal missing user_id:', goal);
+        console.warn("Goal missing user_id:", goal);
         return;
       }
-      
+
       const member = memberProgressMap.get(goal.user_id);
 
       if (member) {
@@ -212,12 +215,15 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
               completed: currentWeekData.completedAmount,
               target: currentWeekData.targetAmount,
               percentage: Math.round(
-                (currentWeekData.completedAmount / currentWeekData.targetAmount) * 100
+                (currentWeekData.completedAmount /
+                  currentWeekData.targetAmount) *
+                  100
               ),
             }
           : { completed: 0, target: 1, percentage: 0 };
 
-        const weeksCompleted = goal.goalWeeks?.filter((w) => w.achieved).length || 0;
+        const weeksCompleted =
+          goal.goalWeeks?.filter((w) => w.achieved).length || 0;
         const totalWeeks = goal.cycleDuration || 12;
         const overallProgress = {
           weeksCompleted,
@@ -231,16 +237,19 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
           overallProgress,
         });
       } else {
-        console.warn('Goal user_id', goal.user_id, 'not found in group members. Goal:', goal.title);
+        console.warn(
+          "Goal user_id",
+          goal.user_id,
+          "not found in group members. Goal:",
+          goal.title
+        );
       }
     });
 
     return Array.from(memberProgressMap.values());
   };
 
-  const memberProgress = selectedGroup
-    ? getMemberProgress(selectedGroup)
-    : [];
+  const memberProgress = selectedGroup ? getMemberProgress(selectedGroup) : [];
 
   // Sort members: admins first, then by username
   memberProgress.sort((a, b) => {
@@ -254,7 +263,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-headers tracking-tight">Groups Overview</h1>
+          <h1 className="text-3xl font-headers tracking-tight">
+            Groups Overview
+          </h1>
           <p className="text-muted-foreground mt-2">
             Track progress across all your groups and members
           </p>
@@ -445,10 +456,17 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           {(() => {
-                            const avatarProps = getAvatarProps(undefined, undefined, member.username, "md");
+                            const avatarProps = getAvatarProps(
+                              undefined,
+                              undefined,
+                              member.username,
+                              "md"
+                            );
                             return (
                               <Avatar className={avatarProps.className}>
-                                <AvatarFallback className={avatarProps.fallbackClassName}>
+                                <AvatarFallback
+                                  className={avatarProps.fallbackClassName}
+                                >
                                   {/* TODO: Pass firstName/lastName when available from backend */}
                                   {avatarProps.initials}
                                 </AvatarFallback>
@@ -532,7 +550,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        onClick={() => handleEditGoal(goalData.goal)}
+                                        onClick={() =>
+                                          handleEditGoal(goalData.goal)
+                                        }
                                         className="text-xs h-6 px-2 hover:bg-secondary/10"
                                       >
                                         <Edit className="h-3 w-3 mr-1" />
@@ -541,7 +561,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                                       <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => handleUpdateProgress(goalData.goal)}
+                                        onClick={() =>
+                                          handleUpdateProgress(goalData.goal)
+                                        }
                                         className="text-xs h-6 px-2 border-primary/30 hover:border-primary hover:bg-primary/10"
                                       >
                                         <BarChart3 className="h-3 w-3 mr-1" />
@@ -553,12 +575,12 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                               );
                             })}
                           </TabsContent>
-                          <TabsContent value="overall" className="space-y-3 mt-4">
+                          <TabsContent
+                            value="overall"
+                            className="space-y-3 mt-4"
+                          >
                             {member.goals.map((goalData) => (
-                              <div
-                                key={goalData.goal.id}
-                                className="space-y-2"
-                              >
+                              <div key={goalData.goal.id} className="space-y-2">
                                 <div className="flex items-center justify-between">
                                   <h5 className="font-subheaders text-sm">
                                     {goalData.goal.title}
@@ -568,9 +590,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                                       goalData.overallProgress.percentage >= 80
                                         ? "default"
                                         : goalData.overallProgress.percentage >=
-                                          50
-                                        ? "secondary"
-                                        : "outline"
+                                            50
+                                          ? "secondary"
+                                          : "outline"
                                     }
                                     className="text-xs"
                                   >
@@ -593,7 +615,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      onClick={() => handleEditGoal(goalData.goal)}
+                                      onClick={() =>
+                                        handleEditGoal(goalData.goal)
+                                      }
                                       className="text-xs h-6 px-2 hover:bg-secondary/10"
                                     >
                                       <Edit className="h-3 w-3 mr-1" />
@@ -602,7 +626,9 @@ export function GroupsOverview({ groups, userGoals = [] }: GroupsOverviewProps) 
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleUpdateProgress(goalData.goal)}
+                                      onClick={() =>
+                                        handleUpdateProgress(goalData.goal)
+                                      }
                                       className="text-xs h-6 px-2 border-primary/30 hover:border-primary hover:bg-primary/10"
                                     >
                                       <BarChart3 className="h-3 w-3 mr-1" />

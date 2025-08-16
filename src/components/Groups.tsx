@@ -1,8 +1,23 @@
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Plus, Crown, Calendar, User, UserPlus, Eye, Settings } from "lucide-react";
+import {
+  Users,
+  Plus,
+  Crown,
+  Calendar,
+  User,
+  UserPlus,
+  Eye,
+} from "lucide-react";
+
 import { groupQueryOptions } from "../api/groups/groupQueries";
 import { useAuth } from "../providers/auth.provider";
 import { TGroup } from "../types";
@@ -29,7 +44,9 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
 
   const adminUser = (group: TGroup) =>
-    group.users.find((groupUser: { role: string }) => groupUser.role === "ADMIN")!.user;
+    group.users.find(
+      (groupUser: { role: string }) => groupUser.role === "ADMIN"
+    )!.user;
 
   const ownedGroups = groups.filter(
     (group: TGroup) => adminUser(group).username === user?.userInfo!.username
@@ -55,7 +72,9 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
     } catch (error) {
       console.error("Failed to add member:", error);
       handleAuthError(error);
-      toast.error("Failed to add member. Please check the email/username and try again.");
+      toast.error(
+        "Failed to add member. Please check the email/username and try again."
+      );
       throw error; // Re-throw so the modal can handle it
     }
   };
@@ -70,14 +89,17 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => navigate({ to: "/dashboard/groups" })}
           >
             <Eye className="h-4 w-4 mr-2" />
             Groups Overview
           </Button>
-          <Button onClick={onCreateGroup} className="bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary shadow-lg hover:shadow-secondary/25">
+          <Button
+            onClick={onCreateGroup}
+            className="bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary shadow-lg hover:shadow-secondary/25"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Create Group
           </Button>
@@ -95,7 +117,7 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
               <p className="text-muted-foreground mb-4">
                 Create your first group to start collaborating with others
               </p>
-              <Button 
+              <Button
                 onClick={onCreateGroup}
                 className="bg-gradient-to-r from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 shadow-lg hover:shadow-secondary/25"
               >
@@ -116,7 +138,10 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
                 {ownedGroups.map((group: TGroup) => (
-                  <Card key={group.id} className="card-gradient hover:border-primary/20">
+                  <Card
+                    key={group.id}
+                    className="card-gradient hover:border-primary/20"
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
@@ -137,26 +162,37 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Users className="h-4 w-4" />
-                          <span>{group.users.length} member{group.users.length !== 1 ? 's' : ''}</span>
+                          <span>
+                            {group.users.length} member
+                            {group.users.length !== 1 ? "s" : ""}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="h-4 w-4" />
-                          <span>{group.sharedGoals.length} shared goal{group.sharedGoals.length !== 1 ? 's' : ''}</span>
+                          <span>
+                            {group.sharedGoals.length} shared goal
+                            {group.sharedGoals.length !== 1 ? "s" : ""}
+                          </span>
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => navigate({ to: "/dashboard/groups/$groupId", params: { groupId: group.id } })}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            navigate({
+                              to: "/dashboard/groups/$groupId",
+                              params: { groupId: group.id },
+                            })
+                          }
                           className="flex-1 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleManageGroup(group)}
                           className="border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
                         >
@@ -179,7 +215,10 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
                 {memberGroups.map((group: TGroup) => (
-                  <Card key={group.id} className="card-gradient hover:border-secondary/20">
+                  <Card
+                    key={group.id}
+                    className="card-gradient hover:border-secondary/20"
+                  >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
@@ -200,20 +239,31 @@ export function Groups({ onCreateGroup }: GroupsProps = {}) {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Users className="h-4 w-4" />
-                          <span>{group.users.length} member{group.users.length !== 1 ? 's' : ''}</span>
+                          <span>
+                            {group.users.length} member
+                            {group.users.length !== 1 ? "s" : ""}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="h-4 w-4" />
-                          <span>{group.sharedGoals.length} shared goal{group.sharedGoals.length !== 1 ? 's' : ''}</span>
+                          <span>
+                            {group.sharedGoals.length} shared goal
+                            {group.sharedGoals.length !== 1 ? "s" : ""}
+                          </span>
                         </div>
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Owned by {adminUser(group).username}
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => navigate({ to: "/dashboard/groups/$groupId", params: { groupId: group.id } })}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          navigate({
+                            to: "/dashboard/groups/$groupId",
+                            params: { groupId: group.id },
+                          })
+                        }
                         className="w-full border-secondary/30 hover:border-secondary hover:bg-secondary/10 transition-all duration-300"
                       >
                         <Eye className="h-4 w-4 mr-2" />

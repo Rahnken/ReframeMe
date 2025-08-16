@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
@@ -12,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,22 +38,21 @@ import {
   Target,
   Crown,
   User,
-  Plus,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Calendar,
   Trophy,
   Settings,
   UserPlus,
   Menu,
-  X,
   Edit,
   BarChart3,
 } from "lucide-react";
-import { getCurrentGoalWeek } from "../../../../../utils/goalWeekCalculator";
 import { getAvatarProps } from "../../../../../utils/avatarUtils";
-import { updateGoalProgressById, updateGoalById } from "../../../../../api/goals/goals";
+import {
+  updateGoalProgressById,
+  updateGoalById,
+} from "../../../../../api/goals/goals";
 import { GoalProgressTracker } from "../../../../../components/GoalProgressTracker";
 import { GoalForm } from "../../../../../components/forms/GoalForm";
 import { Modal } from "../../../../../components/component-parts/modal";
@@ -89,7 +89,7 @@ function GroupDetailPage() {
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
   const [isMembersSheetOpen, setIsMembersSheetOpen] = useState(false);
   const [identifierInput, setIdentifierInput] = useState("");
-  
+
   // Goal editing state
   const [selectedGoal, setSelectedGoal] = useState<TGoal | null>(null);
   const progressModal = useModal();
@@ -99,13 +99,12 @@ function GroupDetailPage() {
   const identifierValid = validIdentifier.safeParse(identifierInput).success;
   const adminUser = group.users.find((user) => user.role === "ADMIN")?.user;
   const isUserAdmin = authUser?.userInfo?.username === adminUser?.username;
-  
+
   // Find current user in the group to get their user_id (similar to GroupsOverview)
   const currentUserInGroup = group.users.find(
     (groupUser) => groupUser.user.username === authUser?.userInfo?.username
   );
   const currentUserId = currentUserInGroup?.user_id;
-
 
   const mutation = useAddMemberToGroupMutation(
     authUser!.token!,
@@ -157,8 +156,9 @@ function GroupDetailPage() {
       // Update each week individually using the existing API
       const updatePromises = Object.entries(progressData.weekProgress).map(
         async ([weekNumber, data]: [string, any]) => {
-          const goalWeek = selectedGoal
-            ?.goalWeeks.find((w: any) => w.weekNumber === parseInt(weekNumber));
+          const goalWeek = selectedGoal?.goalWeeks.find(
+            (w: any) => w.weekNumber === parseInt(weekNumber)
+          );
 
           if (goalWeek) {
             return updateGoalProgressById(authUser!.token!, {
@@ -178,7 +178,9 @@ function GroupDetailPage() {
       await Promise.all(updatePromises.filter(Boolean));
       toast.success("Progress saved successfully!");
       // Refetch group data to update UI
-      queryClient.invalidateQueries({ queryKey: ["groups", authUser!.token!, groupId] });
+      queryClient.invalidateQueries({
+        queryKey: ["groups", authUser!.token!, groupId],
+      });
     } catch (error) {
       console.error("Failed to save progress:", error);
       handleAuthError(error);
@@ -191,7 +193,9 @@ function GroupDetailPage() {
       await updateGoalById(authUser!.token!, goalData);
       toast.success("Goal updated successfully!");
       // Refetch group data to update UI
-      queryClient.invalidateQueries({ queryKey: ["groups", authUser!.token!, groupId] });
+      queryClient.invalidateQueries({
+        queryKey: ["groups", authUser!.token!, groupId],
+      });
     } catch (error) {
       console.error("Failed to update goal:", error);
       handleAuthError(error);
@@ -200,9 +204,7 @@ function GroupDetailPage() {
   };
 
   const maxWeek = Math.max(
-    ...displayedGoals.map((sharedGoal) => 
-      sharedGoal.goal.cycleDuration || 12
-    ),
+    ...displayedGoals.map((sharedGoal) => sharedGoal.goal.cycleDuration || 12),
     12
   );
 
@@ -215,11 +217,13 @@ function GroupDetailPage() {
             <ChevronLeft className="h-6 w-6" />
           </Link>
           <div>
-            <h1 className="text-3xl font-headers tracking-wide">{group.name}</h1>
+            <h1 className="text-3xl font-headers tracking-wide">
+              {group.name}
+            </h1>
             <p className="text-muted-foreground mt-1">{group.description}</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {/* Mobile Members Button */}
           <Sheet open={isMembersSheetOpen} onOpenChange={setIsMembersSheetOpen}>
@@ -248,7 +252,11 @@ function GroupDetailPage() {
                 {group.users.map((gUser: TGroupUser) => (
                   <Button
                     key={gUser.id}
-                    variant={selectedUser?.user_id === gUser.user_id ? "default" : "outline"}
+                    variant={
+                      selectedUser?.user_id === gUser.user_id
+                        ? "default"
+                        : "outline"
+                    }
                     className="w-full justify-start"
                     onClick={() => {
                       setSelectedUser(gUser);
@@ -256,16 +264,25 @@ function GroupDetailPage() {
                     }}
                   >
                     {(() => {
-                      const avatarProps = getAvatarProps(undefined, undefined, gUser.user.username, "sm");
+                      const avatarProps = getAvatarProps(
+                        undefined,
+                        undefined,
+                        gUser.user.username,
+                        "sm"
+                      );
                       return (
                         <Avatar className={`${avatarProps.className} mr-2`}>
-                          <AvatarFallback className={avatarProps.fallbackClassName}>
+                          <AvatarFallback
+                            className={avatarProps.fallbackClassName}
+                          >
                             {avatarProps.initials}
                           </AvatarFallback>
                         </Avatar>
                       );
                     })()}
-                    <span className="flex-1 text-left">{gUser.user.username}</span>
+                    <span className="flex-1 text-left">
+                      {gUser.user.username}
+                    </span>
                     {gUser.role === "ADMIN" && (
                       <Crown className="h-3 w-3 text-primary" />
                     )}
@@ -324,7 +341,7 @@ function GroupDetailPage() {
             </Dialog>
           )}
 
-          <Link to={`/dashboard/groups/${groupId}/edit`}>
+          <Link to="/dashboard/groups/$groupId/edit" params={{ groupId }}>
             <Button variant="outline" size="sm">
               <Settings className="h-4 w-4 mr-2" />
               Settings
@@ -351,15 +368,12 @@ function GroupDetailPage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-accent">
-                {displayedGoals.reduce(
-                  (acc, sharedGoal) => {
-                    const currentWeekData = sharedGoal.goal.goalWeeks?.find(
-                      (w) => w.weekNumber === currentWeek
-                    );
-                    return acc + (currentWeekData?.achieved ? 1 : 0);
-                  },
-                  0
-                )}
+                {displayedGoals.reduce((acc, sharedGoal) => {
+                  const currentWeekData = sharedGoal.goal.goalWeeks?.find(
+                    (w) => w.weekNumber === currentWeek
+                  );
+                  return acc + (currentWeekData?.achieved ? 1 : 0);
+                }, 0)}
               </p>
               <p className="text-sm text-muted-foreground">
                 Completed This Week
@@ -388,21 +402,34 @@ function GroupDetailPage() {
               {group.users.map((gUser: TGroupUser) => (
                 <Button
                   key={gUser.id}
-                  variant={selectedUser?.user_id === gUser.user_id ? "default" : "outline"}
+                  variant={
+                    selectedUser?.user_id === gUser.user_id
+                      ? "default"
+                      : "outline"
+                  }
                   className="w-full justify-start"
                   onClick={() => setSelectedUser(gUser)}
                 >
                   {(() => {
-                    const avatarProps = getAvatarProps(undefined, undefined, gUser.user.username, "sm");
+                    const avatarProps = getAvatarProps(
+                      undefined,
+                      undefined,
+                      gUser.user.username,
+                      "sm"
+                    );
                     return (
                       <Avatar className={`${avatarProps.className} mr-2`}>
-                        <AvatarFallback className={avatarProps.fallbackClassName}>
+                        <AvatarFallback
+                          className={avatarProps.fallbackClassName}
+                        >
                           {avatarProps.initials}
                         </AvatarFallback>
                       </Avatar>
                     );
                   })()}
-                  <span className="flex-1 text-left">{gUser.user.username}</span>
+                  <span className="flex-1 text-left">
+                    {gUser.user.username}
+                  </span>
                   {gUser.role === "ADMIN" && (
                     <Crown className="h-3 w-3 text-primary" />
                   )}
@@ -446,7 +473,9 @@ function GroupDetailPage() {
               <CardContent className="pt-6">
                 <div className="text-center py-8">
                   <Target className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-subheaders mb-2">No goals found</h3>
+                  <h3 className="text-lg font-subheaders mb-2">
+                    No goals found
+                  </h3>
                   <p className="text-muted-foreground">
                     {selectedUser
                       ? `${selectedUser.user.username} hasn't shared any goals with this group yet`
@@ -527,13 +556,18 @@ function GoalCard({
     (gUser: TGroupUser) => gUser.user_id === goal.user_id
   );
   const username = userForGoal ? userForGoal.user.username : "Unknown";
-  
-  const currentWeekData = goal.goalWeeks?.find(w => w.weekNumber === currentWeek);
-  const progressPercentage = currentWeekData 
-    ? Math.round((currentWeekData.completedAmount / currentWeekData.targetAmount) * 100)
+
+  const currentWeekData = goal.goalWeeks?.find(
+    (w) => w.weekNumber === currentWeek
+  );
+  const progressPercentage = currentWeekData
+    ? Math.round(
+        (currentWeekData.completedAmount / currentWeekData.targetAmount) * 100
+      )
     : 0;
 
-  const totalWeeksCompleted = goal.goalWeeks?.filter(w => w.achieved).length || 0;
+  const totalWeeksCompleted =
+    goal.goalWeeks?.filter((w) => w.achieved).length || 0;
   const totalWeeks = goal.cycleDuration || 12;
   const overallProgress = Math.round((totalWeeksCompleted / totalWeeks) * 100);
 
@@ -542,7 +576,9 @@ function GoalCard({
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1">
-            <CardTitle className="text-lg leading-tight">{goal.title}</CardTitle>
+            <CardTitle className="text-lg leading-tight">
+              {goal.title}
+            </CardTitle>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {goal.description}
             </p>
@@ -569,14 +605,17 @@ function GoalCard({
           </TabsList>
           <TabsContent value="week" className="space-y-3 mt-4">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Week {currentWeek} Progress</span>
+              <span className="text-muted-foreground">
+                Week {currentWeek} Progress
+              </span>
               <span className="font-medium">{progressPercentage}%</span>
             </div>
             <Progress value={progressPercentage} className="h-2" />
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Target</span>
               <span className="font-medium">
-                {currentWeekData?.completedAmount || 0} / {currentWeekData?.targetAmount || 1}
+                {currentWeekData?.completedAmount || 0} /{" "}
+                {currentWeekData?.targetAmount || 1}
               </span>
             </div>
             {currentWeekData?.notes && (
@@ -601,28 +640,31 @@ function GoalCard({
           </TabsContent>
         </Tabs>
         {/* Show edit buttons if this is the current user's goal */}
-        {currentUserId && goal.user_id === currentUserId && onUpdateProgress && onEditGoal && (
-          <div className="flex items-center gap-2 pt-3 border-t border-border/20">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditGoal(goal)}
-              className="flex-1 hover:bg-secondary/10 transition-all duration-300"
-            >
-              <Edit className="h-4 w-4 mr-1" />
-              Edit Goal
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onUpdateProgress(goal)}
-              className="flex-1 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
-            >
-              <BarChart3 className="h-4 w-4 mr-1" />
-              Update Progress
-            </Button>
-          </div>
-        )}
+        {currentUserId &&
+          goal.user_id === currentUserId &&
+          onUpdateProgress &&
+          onEditGoal && (
+            <div className="flex items-center gap-2 pt-3 border-t border-border/20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEditGoal(goal)}
+                className="flex-1 hover:bg-secondary/10 transition-all duration-300"
+              >
+                <Edit className="h-4 w-4 mr-1" />
+                Edit Goal
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onUpdateProgress(goal)}
+                className="flex-1 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+              >
+                <BarChart3 className="h-4 w-4 mr-1" />
+                Update Progress
+              </Button>
+            </div>
+          )}
       </CardContent>
     </Card>
   );
