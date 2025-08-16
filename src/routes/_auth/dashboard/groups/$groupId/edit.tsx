@@ -113,10 +113,8 @@ function EditGroup() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updateGroupMutation.mutate({
-      name: groupNameInput,
-      description: groupDescriptionInput,
-    });
+    // TODO: Backend doesn't have group update endpoint yet
+    toast.error("Group update functionality not implemented in backend yet");
   };
 
   const updateMemberRole = (userId: string, role: "ADMIN" | "MEMBER") => {
@@ -299,7 +297,7 @@ function EditGroup() {
                           <AlertDialogAction
                             onClick={() =>
                               updateMemberRole(
-                                member.id,
+                                member.user_id,
                                 member.role === "MEMBER" ? "ADMIN" : "MEMBER"
                               )
                             }
@@ -328,7 +326,7 @@ function EditGroup() {
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => removeMemberFromGroup(member.id)}
+                            onClick={() => removeMemberFromGroup(member.user_id)}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           >
                             Remove Member
