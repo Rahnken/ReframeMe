@@ -9,11 +9,10 @@ import { z } from "zod";
 
 // Define your ThemeType as a Zod schema
 export const ThemeTypeSchema = z.enum([
-  "coffee",
+  "modernDark",
+  "modernLight",
+  "glassLight",
   "sunset",
-  "reframeDark",
-  "emerald",
-  "reframeLight",
 ]);
 
 export type ThemeType = z.infer<typeof ThemeTypeSchema>;
@@ -25,8 +24,18 @@ export type ThemeContextType = {
 
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
+const getDefaultTheme = (): ThemeType => {
+  // Check user's browser preference
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return "modernDark";
+  } else {
+    return "modernLight";
+  }
+};
+
 const resetThemeDefault = () => {
-  localStorage.setItem("theme", "reframeDark");
+  const defaultTheme = getDefaultTheme();
+  localStorage.setItem("theme", defaultTheme);
 };
 
 const getThemeFromLocalStorage = (): ThemeType | null => {
@@ -44,14 +53,31 @@ const getThemeFromLocalStorage = (): ThemeType | null => {
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("reframeDark");
+  const [theme, setTheme] = useState<ThemeType>(getDefaultTheme());
 
   useEffect(() => {
     const storedTheme = getThemeFromLocalStorage();
     if (storedTheme) {
       updateTheme(storedTheme);
-      document.documentElement.setAttribute("data-theme", storedTheme);
+    } else {
+      // No stored theme, use system preference
+      const defaultTheme = getDefaultTheme();
+      updateTheme(defaultTheme);
     }
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only update if user hasn't manually selected a theme
+      const hasStoredTheme = localStorage.getItem("theme");
+      if (!hasStoredTheme) {
+        const newTheme = e.matches ? "modernDark" : "modernLight";
+        updateTheme(newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
@@ -68,6 +94,15 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const updateTheme = (newTheme: ThemeType) => {
     localStorage.setItem("theme", newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
+    
+    // Apply dark class for dark themes
+    const isDarkTheme = newTheme === "modernDark" || newTheme === "sunset";
+    if (isDarkTheme) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    
     setTheme(newTheme);
   };
 

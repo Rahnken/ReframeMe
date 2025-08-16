@@ -8,19 +8,17 @@ export const ThemeListButtons = ({
 }) => {
   const { theme: currentTheme } = useThemeProvider();
   const themes: ThemeType[] = [
-    "reframeDark",
-    "coffee",
+    "modernDark",
+    "modernLight",
+    "glassLight",
     "sunset",
-    "reframeLight",
-    "emerald",
   ];
   const themeNames: { [key in ThemeType]: { name: string; isLight: boolean } } =
     {
-      reframeDark: { name: "Reframe Dark", isLight: false },
-      coffee: { name: "Coffee", isLight: false },
+      modernDark: { name: "Modern Dark", isLight: false },
+      modernLight: { name: "Modern Light", isLight: true },
+      glassLight: { name: "Glass Light", isLight: true },
       sunset: { name: "Sunset", isLight: false },
-      emerald: { name: "Emerald", isLight: true },
-      reframeLight: { name: "Reframe Light", isLight: true },
     };
   return (
     <div className="join join-vertical bg-primary rounded-lg">

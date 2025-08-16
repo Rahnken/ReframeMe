@@ -11,6 +11,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter, faFontAwesome } from "@fortawesome/free-brands-svg-icons";
 import { AuthProvider, useAuth } from "./providers/auth.provider";
 import { ThemeProvider, useThemeProvider } from "./providers/theme.provider";
+import { Toaster } from "@/components/ui/sonner";
 
 library.add(fas, faTwitter, faFontAwesome);
 export const queryClient = new QueryClient();
@@ -29,7 +30,12 @@ declare module "@tanstack/react-router" {
 function InnerApp() {
   const auth = useAuth();
   const theme = useThemeProvider();
-  return <RouterProvider router={router} context={{ auth, theme }} />;
+  return (
+    <>
+      <RouterProvider router={router} context={{ auth, theme }} />
+      <Toaster />
+    </>
+  );
 }
 
 function App() {

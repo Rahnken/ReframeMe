@@ -15,6 +15,7 @@ export type AuthContextType = {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  handleAuthError: (error: any) => void;
 };
 
 const deriveAuthState = ({
@@ -55,12 +56,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("theme", "reframeDark");
     document.documentElement.setAttribute("data-theme", "reframeDark");
   };
+  
   const logout = async () => {
     setIsLoading(true);
     clearUser();
     resetThemeDefault();
     setUser(null);
     setIsLoading(false);
+    // Navigate to home page
+    window.location.href = '/';
+  };
+
+  const handleAuthError = (error: any) => {
+    // Check if it's a 401 Unauthorized or user not found error
+    if (error?.status === 401 || 
+        error?.message?.includes('user not found') ||
+        error?.message?.includes('User not found') ||
+        error?.message?.includes('unauthorized')) {
+      console.log('Auth error detected, logging out:', error);
+      logout();
+    }
   };
 
   const login = (data: User) => {
@@ -84,6 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         login,
         logout,
+        handleAuthError,
       }}
     >
       {children}
