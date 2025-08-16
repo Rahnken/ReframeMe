@@ -80,3 +80,101 @@ export const createUser = async (
  return await response.json()
   
 }
+
+// Email update
+const updateEmailRequestSchema = z.object({
+  newEmail: z.string().email(),
+  currentPassword: z.string(),
+});
+
+type UpdateEmailRequest = z.infer<typeof updateEmailRequestSchema>;
+
+export const updateUserEmail = async (
+  token: string,
+  body: UpdateEmailRequest
+): Promise<unknown> => {
+  const result = updateEmailRequestSchema.safeParse(body);
+  if (!result.success) throw new Error("Invalid request data");
+
+  const response = await fetch(`${BASE_URL}/email`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(result.data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update email");
+  }
+
+  return await response.json();
+};
+
+// Username update
+const updateUsernameRequestSchema = z.object({
+  newUsername: z.string().min(1),
+  currentPassword: z.string(),
+});
+
+type UpdateUsernameRequest = z.infer<typeof updateUsernameRequestSchema>;
+
+export const updateUserUsername = async (
+  token: string,
+  body: UpdateUsernameRequest
+): Promise<unknown> => {
+  const result = updateUsernameRequestSchema.safeParse(body);
+  if (!result.success) throw new Error("Invalid request data");
+
+  const response = await fetch(`${BASE_URL}/username`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(result.data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update username");
+  }
+
+  return await response.json();
+};
+
+// Password update
+const updatePasswordRequestSchema = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string().min(8),
+});
+
+type UpdatePasswordRequest = z.infer<typeof updatePasswordRequestSchema>;
+
+export const updateUserPassword = async (
+  token: string,
+  body: UpdatePasswordRequest
+): Promise<unknown> => {
+  const result = updatePasswordRequestSchema.safeParse(body);
+  if (!result.success) throw new Error("Invalid request data");
+
+  const response = await fetch(`${BASE_URL}/password`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(result.data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update password");
+  }
+
+  return await response.json();
+};
+
+export type { UpdateEmailRequest, UpdateUsernameRequest, UpdatePasswordRequest };

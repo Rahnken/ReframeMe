@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
+// Removed Checkbox import - no longer needed after UI refactor
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -25,12 +25,12 @@ import { getCurrentGoalWeek, getWeekDateRange } from "../utils/goalWeekCalculato
 interface GoalProgressTrackerProps {
   goal: TGoal;
   onClose: () => void;
-  onSave: (progressData: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSave: (progressData: any) => void; // Progress data has dynamic structure
 }
 
 export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrackerProps) {
   // Use goal cycle week instead of calendar week
-  // TODO: Remove hardcoded values when backend supports startDate/cycleDuration
   const currentWeek = goal.startDate ? getCurrentGoalWeek(goal.startDate, goal.cycleDuration || 12) : 1;
   const cycleDuration = goal.cycleDuration || 12;
   
@@ -99,30 +99,7 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
     onClose();
   };
 
-  const handleWeekToggle = (weekNumber: number) => {
-    const weekData = goal.goalWeeks?.find(w => w.weekNumber === weekNumber);
-    const isCurrentlyAchieved = weekProgress[weekNumber]?.achieved ?? weekData?.achieved ?? false;
-    const newAchieved = !isCurrentlyAchieved;
-    
-    // For simple goals (targetAmount = 1), completedAmount follows achieved status
-    // For complex goals (targetAmount > 1), use existing completedAmount or default to 0
-    let newCompletedAmount: number;
-    if (weekData?.targetAmount === 1) {
-      newCompletedAmount = newAchieved ? 1 : 0;
-    } else {
-      newCompletedAmount = weekProgress[weekNumber]?.completedAmount ?? weekData?.completedAmount ?? 0;
-    }
-    
-    setWeekProgress(prev => ({
-      ...prev,
-      [weekNumber]: {
-        ...prev[weekNumber],
-        achieved: newAchieved,
-        notes: prev[weekNumber]?.notes || weekData?.notes || '',
-        completedAmount: newCompletedAmount
-      }
-    }));
-  };
+  // Remove the toggle function since we'll auto-complete based on input value
 
   const handleNotesChange = (weekNumber: number, notes: string) => {
     setWeekProgress(prev => ({
@@ -143,10 +120,8 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
       [weekNumber]: {
         ...prev[weekNumber],
         completedAmount,
-        // For complex goals, achieved is based on whether completed >= target
-        achieved: weekData?.targetAmount === 1 ? 
-          (prev[weekNumber]?.achieved ?? false) : 
-          completedAmount >= targetAmount,
+        // Auto-mark as achieved when completed amount meets or exceeds target
+        achieved: completedAmount >= targetAmount,
         notes: prev[weekNumber]?.notes || weekData?.notes || ''
       }
     }));
@@ -161,7 +136,7 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
       <div className="sticky top-0 bg-background z-10 pb-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold">{goal.title}</h2>
+            <h2 className="text-2xl font-subheaders tracking-wide">{goal.title}</h2>
             <p className="text-muted-foreground mt-1">{goal.description}</p>
             <div className="flex items-center gap-4 mt-2 text-sm">
               <Badge variant="outline" className="gap-1">
@@ -183,7 +158,7 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
 
       {/* SMART Goals Display - Column Layout */}
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
+        <h3 className="text-lg font-subheaders flex items-center gap-2">
           <Target className="h-5 w-5" />
           SMART Goal Breakdown
         </h3>
@@ -214,7 +189,7 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
 
       {/* Weekly Progress Tracking */}
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
+        <h3 className="text-lg font-subheaders flex items-center gap-2">
           <Calendar className="h-5 w-5" />
           Weekly Progress
         </h3>
@@ -232,31 +207,54 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
               >
                 <CardContent className="p-4">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <StatusIcon className={`h-5 w-5 ${status.color}`} />
-                        <div>
-                          <h4 className="font-semibold">
-                            Week {weekNumber}
-                            {weekNumber === currentWeek && (
-                              <Badge className="ml-2 bg-primary">Current</Badge>
-                            )}
-                          </h4>
-                          <p className="text-sm text-muted-foreground">
-                            {weekData ? `${progress?.completedAmount ?? weekData.completedAmount} / ${weekData.targetAmount}` : 'No target set'}
-                            {goal.startDate && (
-                              <span className="ml-2 text-xs">
-                                ({getWeekDateRange(goal.startDate, weekNumber).weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})
-                              </span>
-                            )}
-                          </p>
-                        </div>
+                    {/* Week Header */}
+                    <div className="flex items-center gap-3">
+                      <StatusIcon className={`h-5 w-5 ${status.color}`} />
+                      <div className="flex-1">
+                        <h4 className="font-subheaders">
+                          Week {weekNumber}
+                          {weekNumber === currentWeek && (
+                            <Badge className="ml-2 bg-primary">Current</Badge>
+                          )}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {weekData ? `${progress?.completedAmount ?? weekData.completedAmount} / ${weekData.targetAmount}` : 'No target set'}
+                          {goal.startDate && (
+                            <span className="ml-2 text-xs">
+                              ({getWeekDateRange(goal.startDate, weekNumber).weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})
+                            </span>
+                          )}
+                        </p>
                       </div>
                       
-                      {weekNumber <= currentWeek && (
+                      {/* Progress Status */}
+                      {weekData && (progress?.achieved ?? weekData?.achieved) && (
+                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Complete
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    {weekNumber <= currentWeek && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Weekly Notes - Center */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <MessageSquare className="h-4 w-4" />
+                            <span>Weekly Notes</span>
+                          </div>
+                          <Textarea
+                            placeholder="Add notes about your progress this week..."
+                            value={progress?.notes || weekData?.feedback || ''}
+                            onChange={(e) => handleNotesChange(weekNumber, e.target.value)}
+                            className="min-h-[80px] resize-none"
+                          />
+                        </div>
+                        
+                        {/* Progress Input - Right Side */}
                         <div className="space-y-3">
-                          {/* Progress Amount Input for targetAmount > 1 */}
-                          {weekData && weekData.targetAmount > 1 && (
+                          {weekData && weekData.targetAmount ? (
                             <div className="space-y-2">
                               <Label htmlFor={`progress-${weekNumber}`} className="text-sm font-medium">
                                 Progress This Week
@@ -275,54 +273,32 @@ export function GoalProgressTracker({ goal, onClose, onSave }: GoalProgressTrack
                                   / {weekData.targetAmount}
                                 </span>
                               </div>
+                              {weekData.targetAmount === 1 && (
+                                <p className="text-xs text-muted-foreground">
+                                  Enter 1 to mark complete, 0 for incomplete
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="text-xs text-red-500">
+                              No week data found for week {weekNumber}
                             </div>
                           )}
                           
-                          {/* Achievement Checkbox */}
-                          <div className="flex items-center gap-2">
-                            <Checkbox
-                              id={`week-${weekNumber}`}
-                              checked={progress?.achieved ?? weekData?.achieved ?? false}
-                              onCheckedChange={() => handleWeekToggle(weekNumber)}
-                            />
-                            <Label 
-                              htmlFor={`week-${weekNumber}`}
-                              className="text-sm font-medium cursor-pointer"
-                            >
-                              {weekData?.targetAmount === 1 ? 'Goal Achieved' : 'Week Complete'}
-                            </Label>
-                          </div>
+                          {/* Progress Bar */}
+                          {weekData && (
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Progress</span>
+                                <span>{Math.round(((progress?.completedAmount ?? weekData.completedAmount) / weekData.targetAmount) * 100)}%</span>
+                              </div>
+                              <Progress 
+                                value={Math.min(((progress?.completedAmount ?? weekData.completedAmount) / weekData.targetAmount) * 100, 100)} 
+                                className="h-2" 
+                              />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-
-                    {weekNumber <= currentWeek && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <MessageSquare className="h-4 w-4" />
-                          <span>Weekly Notes</span>
-                        </div>
-                        <Textarea
-                          placeholder="Add notes about your progress this week..."
-                          value={progress?.notes || weekData?.feedback || ''}
-                          onChange={(e) => handleNotesChange(weekNumber, e.target.value)}
-                          className="min-h-[80px] resize-none"
-                        />
-                      </div>
-                    )}
-
-                    {weekData && weekData.targetAmount > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Progress</span>
-                          <span className="font-medium">
-                            {Math.round(((progress?.completedAmount ?? weekData.completedAmount) / weekData.targetAmount) * 100)}%
-                          </span>
-                        </div>
-                        <Progress 
-                          value={((progress?.completedAmount ?? weekData.completedAmount) / weekData.targetAmount) * 100} 
-                          className="h-2"
-                        />
                       </div>
                     )}
                   </div>

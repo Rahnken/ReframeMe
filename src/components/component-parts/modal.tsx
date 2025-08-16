@@ -70,7 +70,7 @@ export const Modal = ({
           {(title || showCloseButton) && (
             <div className="flex items-center justify-between p-6 border-b border-border">
               {title && (
-                <h3 className="text-2xl font-semibold text-card-foreground">
+                <h3 className="text-2xl font-subheaders text-card-foreground">
                   {title}
                 </h3>
               )}

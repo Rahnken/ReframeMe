@@ -1,3 +1,16 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Mission Script - Local font */
+@font-face {
+  font-family: 'Mission Script';
+  src: url('./assets/fonts/Mission-Script.woff') format('woff');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -102,6 +115,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-family: 'Lato', 'Inter', sans-serif;
   }
   .dark {
     --background: 222.2 15% 6%; /* Darker background for better contrast */
@@ -268,5 +282,68 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Date Picker Styles */
+@layer components {
+  /* Style the date input */
+  input[type="date"] {
+    position: relative;
+    color-scheme: dark light;
+  }
+  
+  /* Style the calendar icon */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: opacity(0.6);
+    transition: filter 0.2s;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: opacity(1);
+  }
+  
+  /* Theme-specific date picker colors */
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.6);
+  }
+  
+  .dark input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(1) opacity(1);
+  }
+  
+  /* Custom date picker dropdown styling (Chrome/Edge) */
+  input[type="date"]::-webkit-datetime-edit {
+    padding: 0;
+  }
+  
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    background: transparent;
+  }
+  
+  input[type="date"]::-webkit-datetime-edit-text {
+    color: hsl(var(--muted-foreground));
+    padding: 0 0.25em;
+  }
+  
+  input[type="date"]::-webkit-datetime-edit-month-field,
+  input[type="date"]::-webkit-datetime-edit-day-field,
+  input[type="date"]::-webkit-datetime-edit-year-field {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+  }
+  
+  input[type="date"]:focus::-webkit-datetime-edit-month-field,
+  input[type="date"]:focus::-webkit-datetime-edit-day-field,
+  input[type="date"]:focus::-webkit-datetime-edit-year-field {
+    color: hsl(var(--primary));
+  }
+  
+  /* Firefox date picker styling */
+  @-moz-document url-prefix() {
+    input[type="date"] {
+      background-color: hsl(var(--background));
+    }
   }
 }

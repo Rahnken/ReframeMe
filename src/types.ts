@@ -1,4 +1,16 @@
 
+export type TNotification = {
+    id: string;
+    user_id: string;
+    type: 'GROUP_INVITATION' | 'GROUP_REMOVAL' | 'GOAL_SHARED' | string;
+    title: string;
+    message: string;
+    data: string; // JSON string - contains groupId, groupName, invitedBy/removedBy/sharedBy, goalId, goalTitle
+    read: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export type TGoalProgress = {
     id:string;
     goal_id:string;
@@ -58,6 +70,8 @@ export type TGoal = {
     currentWeek?: number;
     isActive?: boolean;
     daysRemaining?: number;
+    // Group sharing
+    sharedToGroup?: string[];
 }
 export type TUserInfo = {
     profile_id: string;
@@ -84,3 +98,22 @@ export const LinkStyles =
 
 export const inputStyleClasses =
 "text-secondary placeholder-brandSecondary-200 border-2 focus:border-sky-900 hover:border-sky-900 border-brandPrimary-600 p-2 rounded-md ";
+
+// Backend notification types
+export type TNotification = {
+    id: string;
+    user_id: string;
+    type: 'GROUP_INVITATION';
+    title: string;
+    message: string;
+    data: string; // JSON string with notification-specific data
+    is_read: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export type TGroupInvitationData = {
+    groupId: string;
+    groupName: string;
+    invitedBy: string;
+}

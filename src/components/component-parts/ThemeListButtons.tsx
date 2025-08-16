@@ -22,7 +22,7 @@ export const ThemeListButtons = ({
     };
   return (
     <div className="join join-vertical bg-primary rounded-lg">
-      <h4 className="join-item text-primary-content p-4 font-bold text-lg text-center">
+      <h4 className="join-item text-primary-content p-4 font-subheaders text-lg text-center">
         {" "}
         Set Theme to
       </h4>

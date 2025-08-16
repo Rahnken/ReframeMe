@@ -59,7 +59,7 @@ export function MonthlyProgress() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Monthly Progress</h2>
+          <h2 className="text-2xl font-subheaders tracking-wide">Monthly Progress</h2>
           <p className="text-muted-foreground">
             Your performance overview for {currentMonth}
           </p>
@@ -77,7 +77,7 @@ export function MonthlyProgress() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
                 <BarChart3 className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No Progress Data Yet</h3>
+              <h3 className="text-lg font-subheaders mb-2">No Progress Data Yet</h3>
               <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                 Create some goals and start tracking your progress to see your monthly statistics and performance insights here.
               </p>
